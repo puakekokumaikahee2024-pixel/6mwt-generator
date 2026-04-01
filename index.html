@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===== SEO ===== -->
+<title>6分間歩行テスト 使用説明書・免責事項 | 医療従事者向けジェネレーター</title>
+<meta name="description" content="医療従事者向けの6分間歩行テスト（6MWT）実施ガイド。Borg指数の扱い・2回法の手順・中止基準・METs指標の説明を分かりやすく解説。指導資料ジェネレーターを無料提供。">
+<meta name="keywords" content="6分間歩行テスト,6MWT,医療従事者,リハビリ,Borg指数,歩行距離,心肺機能,運動耐容能,医療スタッフ">
+<meta name="author" content="6MWT Guide">
+<meta name="robots" content="index, follow">
+
+<!-- canonical（URLが確定したら差し替え） -->
+<link rel="canonical" href="https://puakekokumaikahee2024-pixel.github.io/6mwt-generator/">
+
+<!-- ===== OGP（URLが確定したら差し替え） ===== -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="6分間歩行テスト 使用説明書 | 医療従事者向けジェネレーター">
+<meta property="og:description" content="医療従事者向けの6MWT実施ガイド。Borg指数・2回法・中止基準を分かりやすく解説。指導資料ジェネレーターを無料提供。">
+<meta property="og:url" content="https://puakekokumaikahee2024-pixel.github.io/6mwt-generator/">
+<meta property="og:image" content="https://puakekokumaikahee2024-pixel.github.io/6mwt-generator/ogp.png">
+<meta property="og:site_name" content="6MWT ジェネレーター">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="6分間歩行テスト 使用説明書 | 医療従事者向け">
+<meta name="twitter:description" content="医療従事者向けの6MWT実施ガイド。Borg指数・2回法・中止基準を分かりやすく解説。">
+
+<!-- ===== Fonts ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- ===== Structured Data (JSON-LD) ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "6分間歩行テスト 使用説明書",
+  "description": "医療従事者向けの6MWT実施ガイド。Borg指数の扱い・2回法の手順・中止基準・METs指標の説明。",
+  "inLanguage": "ja",
+  "audience": {
+    "@type": "MedicalAudience",
+    "audienceType": "医療従事者・医療スタッフ・リハビリ関連職"
+  }
+}
+</script>
+
+<style>
+:root {
+  --blue: #1A5FA8;
+  --blue-light: #EEF4FB;
+  --blue-dark: #0d3b6e;
+  --green: #2D9E5C;
+  --green-light: #E8F4EC;
+  --orange: #E07B00;
+  --orange-light: #FFF4E5;
+  --red: #C0392B;
+  --red-light: #FDE0DE;
+  --gray: #5A7A9A;
+  --bg: #F0F5FA;
+  --text: #1a2332;
+  --toc-w: 220px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'BIZ UDPGothic', 'Hiragino Kaku Gothic ProN', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ===== SCROLL PROGRESS ===== */
+.scroll-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px; background: linear-gradient(90deg, var(--blue), #2d82d4);
+  transition: width 0.1s; z-index: 200;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, #0d3b6e 0%, #1A5FA8 60%, #2d82d4 100%);
+  padding: 36px 40px 28px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 220px; height: 220px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 50%;
+}
+.header::after {
+  content: '';
+  position: absolute; bottom: -60px; right: 120px;
+  width: 160px; height: 160px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 50%;
+}
+.header-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  margin-bottom: 10px; text-transform: uppercase;
+}
+.header-title { font-size: 28px; font-weight: 900; letter-spacing: 0.02em; }
+.header-sub { font-size: 13px; opacity: 0.75; margin-top: 6px; }
+.header-badges {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;
+}
+.header-badge {
+  font-size: 11px; font-weight: 700;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 3px 10px; border-radius: 20px; color: white;
+}
+
+/* ===== LAYOUT ===== */
+.layout {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 32px 20px 0;
+  display: grid;
+  grid-template-columns: var(--toc-w) 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ===== TOC（目次） ===== */
+.toc-wrap {
+  position: sticky;
+  top: 20px;
+}
+.toc {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 2px 12px rgba(26,95,168,0.08);
+  border: 1px solid rgba(26,95,168,0.08);
+}
+.toc-title {
+  font-size: 11px; font-weight: 900; color: var(--blue);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--blue-light);
+}
+.toc-list { list-style: none; }
+.toc-list li { margin: 2px 0; }
+.toc-list a {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--gray);
+  text-decoration: none;
+  padding: 5px 8px; border-radius: 6px;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+.toc-list a:hover {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+.toc-list a.active {
+  background: var(--blue-light);
+  color: var(--blue);
+  font-weight: 700;
+}
+.toc-num {
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  background: var(--blue-light); color: var(--blue);
+  border-radius: 50%;
+  font-size: 10px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+}
+.toc-list a.active .toc-num {
+  background: var(--blue); color: white;
+}
+
+.toc-cta {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+  border-radius: 8px;
+  text-align: center;
+  font-size: 12px; font-weight: 700; color: white;
+  cursor: pointer;
+  opacity: 0.4;
+  pointer-events: none;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: block;
+}
+.toc-cta.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.toc-cta.active:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(26,95,168,0.4);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main { min-width: 0; }
+
+/* ===== NOTICE BOX ===== */
+.notice-box {
+  background: white;
+  border-radius: 12px;
+  border-left: 5px solid var(--orange);
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(26,95,168,0.08);
+}
+.notice-box .notice-title {
+  font-size: 12px; font-weight: 900; color: var(--orange);
+  margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+}
+.notice-box p { font-size: 12px; color: var(--text); line-height: 1.8; }
+
+/* ===== AD SLOT ===== */
+.ad-slot {
+  background: white;
+  border-radius: 10px;
+  border: 1.5px dashed #c8d8e8;
+  padding: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  min-height: 90px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: #aac0d4;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* ===== SECTION ===== */
+.section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px 26px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(26,95,168,0.07);
+  border: 1px solid rgba(26,95,168,0.07);
+  opacity: 0;
+  transform: translateY(14px);
+  animation: fadeUp 0.4s ease forwards;
+  scroll-margin-top: 20px;
+}
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+.section:nth-child(1) { animation-delay: 0.05s; }
+.section:nth-child(2) { animation-delay: 0.08s; }
+.section:nth-child(3) { animation-delay: 0.11s; }
+.section:nth-child(4) { animation-delay: 0.14s; }
+.section:nth-child(5) { animation-delay: 0.17s; }
+.section:nth-child(6) { animation-delay: 0.20s; }
+.section:nth-child(7) { animation-delay: 0.23s; }
+.section:nth-child(8) { animation-delay: 0.26s; }
+.section:nth-child(9) { animation-delay: 0.29s; }
+
+.section-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--blue); color: white;
+  font-size: 11px; font-weight: 900; margin-right: 8px; flex-shrink: 0;
+}
+.section-title {
+  font-size: 14px; font-weight: 900; color: var(--blue);
+  display: flex; align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--blue-light);
+  margin-bottom: 16px;
+}
+.section-body { font-size: 13px; line-height: 1.9; color: var(--text); }
+.section-body p { margin-bottom: 10px; }
+.section-body p:last-child { margin-bottom: 0; }
+
+/* ===== SUB SECTION ===== */
+.sub-section {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 12px 0;
+}
+.sub-title {
+  font-size: 12px; font-weight: 900; color: var(--blue);
+  margin-bottom: 8px; letter-spacing: 0.04em;
+}
+
+/* ===== LIST ===== */
+ul.doc-list { padding-left: 0; list-style: none; }
+ul.doc-list li {
+  font-size: 13px; line-height: 1.8; padding: 3px 0 3px 18px;
+  position: relative; color: var(--text);
+}
+ul.doc-list li::before {
+  content: '・';
+  position: absolute; left: 0; color: var(--blue); font-weight: 700;
+}
+
+/* ===== INFO CARD ===== */
+.info-card {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--blue-light);
+  border-radius: 8px; padding: 12px 16px;
+  margin: 10px 0;
+  font-size: 12px; line-height: 1.8; color: var(--blue-dark);
+}
+.info-card-icon { font-size: 16px; flex-shrink: 0; }
+
+/* ===== BORG TABLE ===== */
+.borg-table {
+  width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px;
+}
+.borg-table th {
+  background: var(--blue); color: white; padding: 7px 12px;
+  font-weight: 700; text-align: left;
+}
+.borg-table td { padding: 7px 12px; border-bottom: 1px solid #e8eef4; }
+.borg-table tr:nth-child(even) td { background: var(--bg); }
+.borg-table .borg-ok { color: var(--green); font-weight: 700; }
+.borg-table .borg-target {
+  background: var(--green-light) !important;
+  font-weight: 700; color: var(--green);
+}
+.borg-table .borg-warn { color: var(--orange); font-weight: 700; }
+
+/* ===== STOP SIGNS ===== */
+.stop-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-top: 12px;
+}
+.stop-item {
+  background: var(--red-light);
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 12px; color: var(--red); font-weight: 700;
+  display: flex; align-items: center; gap: 6px;
+}
+@media (max-width: 500px) {
+  .stop-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== STEPS ===== */
+.step-flow {
+  display: flex; flex-direction: column; gap: 0; margin: 12px 0;
+}
+.step-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid #e8eef4;
+  position: relative;
+}
+.step-item:last-child { border-bottom: none; }
+.step-badge {
+  flex-shrink: 0;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 900; color: white;
+}
+.step-badge.blue { background: var(--blue); }
+.step-badge.green { background: var(--green); }
+.step-badge.gray { background: var(--gray); }
+.step-content { flex: 1; }
+.step-label { font-size: 13px; font-weight: 900; color: var(--text); margin-bottom: 4px; }
+.step-desc { font-size: 12px; color: var(--gray); line-height: 1.75; }
+
+/* ===== METS SECTION ===== */
+.mets-cards {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; margin-top: 12px;
+}
+.mets-card {
+  border-radius: 8px; padding: 12px 14px; text-align: center;
+}
+.mets-card.low { background: var(--green-light); color: var(--green); border: 1px solid #b8e0c8; }
+.mets-card.mid { background: var(--orange-light); color: var(--orange); border: 1px solid #f5d5a0; }
+.mets-card.high { background: var(--red-light); color: var(--red); border: 1px solid #f0bfbc; }
+.mets-val { font-size: 20px; font-weight: 900; }
+.mets-label { font-size: 11px; font-weight: 700; margin-top: 4px; }
+.mets-example { font-size: 11px; margin-top: 4px; opacity: 0.8; }
+@media (max-width: 480px) {
+  .mets-cards { grid-template-columns: 1fr; }
+}
+
+/* ===== DISCLAIMER ===== */
+.disclaimer {
+  background: #f8f0f0;
+  border: 1px solid #e8c8c8;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-top: 12px;
+}
+.disclaimer p { font-size: 12px; color: #8b4444; line-height: 1.8; }
+
+/* ===== CONSENT ===== */
+.consent-area {
+  background: white;
+  border-radius: 16px;
+  padding: 32px 28px;
+  margin-top: 20px;
+  box-shadow: 0 4px 24px rgba(26,95,168,0.12);
+  border: 2px solid var(--blue-light);
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 0.4s ease 0.4s forwards;
+}
+.consent-title {
+  font-size: 15px; font-weight: 900; color: var(--blue);
+  margin-bottom: 10px;
+}
+.consent-text {
+  font-size: 12px; color: var(--gray); line-height: 1.8;
+  margin-bottom: 20px;
+}
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  text-align: left; margin-bottom: 20px;
+  padding: 14px 16px;
+  background: var(--bg); border-radius: 8px;
+  cursor: pointer;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px;
+  accent-color: var(--blue); cursor: pointer;
+}
+.checkbox-row label {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  line-height: 1.6; cursor: pointer;
+}
+
+.btn-start {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, #1A5FA8, #2d82d4);
+  color: white;
+  border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.35;
+  pointer-events: none;
+  transition: all 0.25s;
+}
+.btn-start.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.btn-start.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26,95,168,0.45);
+}
+.btn-start.active:active { transform: scale(0.98); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .toc-wrap {
+    position: static;
+  }
+  .toc {
+    display: none; /* スマホは非表示（代わりにモバイルTOCを表示） */
+  }
+  .mobile-toc {
+    display: block !important;
+  }
+  .header { padding: 28px 20px 22px; }
+  .header-title { font-size: 22px; }
+}
+
+/* モバイル目次（折りたたみ） */
+.mobile-toc {
+  display: none;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(26,95,168,0.08);
+  overflow: hidden;
+}
+.mobile-toc-btn {
+  width: 100%; padding: 14px 18px;
+  background: none; border: none;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: inherit; font-size: 13px; font-weight: 900; color: var(--blue);
+  cursor: pointer;
+}
+.mobile-toc-btn .arrow {
+  transition: transform 0.25s;
+  font-size: 12px;
+}
+.mobile-toc-btn.open .arrow { transform: rotate(180deg); }
+.mobile-toc-body {
+  display: none;
+  padding: 0 16px 14px;
+}
+.mobile-toc-body.open { display: block; }
+.mobile-toc-body a {
+  display: block; padding: 6px 4px;
+  font-size: 13px; color: var(--gray); text-decoration: none;
+  border-bottom: 1px solid #eef2f6;
+}
+.mobile-toc-body a:last-child { border-bottom: none; }
+.mobile-toc-body a:hover { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<div class="scroll-bar" id="scrollBar"></div>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-tag">Rehabilitation Tool</div>
+  <div class="header-title">6分間歩行テスト</div>
+  <div class="header-sub">使用説明書 ／ 免責事項 — ジェネレーターご利用前にお読みください</div>
+  <div class="header-badges">
+    <span class="header-badge">🏥 医療従事者向け</span>
+    <span class="header-badge">📋 6MWT 実施ガイド</span>
+    <span class="header-badge">🆓 無料ツール</span>
+  </div>
+</div>
+
+<!-- ===== LAYOUT ===== -->
+<div class="layout">
+
+  <!-- ===== TOC（PC） ===== -->
+  <aside class="toc-wrap">
+    <nav class="toc" aria-label="目次">
+      <div class="toc-title">📋 目次</div>
+      <ul class="toc-list">
+        <li><a href="#s1" class="toc-link"><span class="toc-num">1</span>本資料の位置づけ</a></li>
+        <li><a href="#s2" class="toc-link"><span class="toc-num">2</span>テストの概要</a></li>
+        <li><a href="#s3" class="toc-link"><span class="toc-num">3</span>測定項目</a></li>
+        <li><a href="#s4" class="toc-link"><span class="toc-num">4</span>実施方法</a></li>
+        <li><a href="#s5" class="toc-link"><span class="toc-num">5</span>安全に関する注意</a></li>
+        <li><a href="#s6" class="toc-link"><span class="toc-num">6</span>結果の捉え方・METs</a></li>
+        <li><a href="#s7" class="toc-link"><span class="toc-num">7</span>広告・収益化</a></li>
+        <li><a href="#s8" class="toc-link"><span class="toc-num">8</span>免責事項</a></li>
+      </ul>
+      <a href="generator.html" class="toc-cta" id="tocBtn">
+        ✅ 同意してジェネレーターへ
+      </a>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+
+    <!-- モバイル目次 -->
+    <div class="mobile-toc">
+      <button class="mobile-toc-btn" onclick="toggleMobileToc(this)" aria-expanded="false">
+        📋 目次を見る <span class="arrow">▼</span>
+      </button>
+      <div class="mobile-toc-body">
+        <a href="#s1" onclick="closeMobileToc()">1. 本資料の位置づけ</a>
+        <a href="#s2" onclick="closeMobileToc()">2. テストの概要</a>
+        <a href="#s3" onclick="closeMobileToc()">3. 測定項目</a>
+        <a href="#s4" onclick="closeMobileToc()">4. 実施方法</a>
+        <a href="#s5" onclick="closeMobileToc()">5. 安全に関する注意</a>
+        <a href="#s6" onclick="closeMobileToc()">6. 結果の捉え方・METs</a>
+        <a href="#s7" onclick="closeMobileToc()">7. 広告・収益化</a>
+        <a href="#s8" onclick="closeMobileToc()">8. 免責事項</a>
+      </div>
+    </div>
+
+    <!-- 冒頭注意書き -->
+    <div class="notice-box">
+      <div class="notice-title">⚠️ ご利用前に必ずお読みください</div>
+      <p>本ツールは医療行為・運動処方を行うものではありません。実施の可否・継続・中止の判断は<strong>利用者本人または実施現場の責任</strong>で行ってください。</p>
+    </div>
+
+    <!-- 広告スロット（AdSense申請後にコードを挿入） -->
+    <div class="ad-slot" aria-label="広告">
+      <!-- Google AdSense コードをここに挿入 -->
+      広告
+    </div>
+
+    <!-- 1. 位置づけ -->
+    <section class="section" id="s1">
+      <div class="section-title"><span class="section-num">1</span>本資料の位置づけ</div>
+      <div class="section-body">
+        <p>本資料は、6分間歩行テスト（6MWT）の実施方法および結果の捉え方について、<strong>一般的な情報を提供することを目的としたもの</strong>です。</p>
+        <div class="disclaimer">
+          <p>
+            ・医療行為、診断、治療、リハビリテーション、運動処方を行うものではありません<br>
+            ・特定の個人に対する安全性や有効性を保証するものではありません<br>
+            ・本資料および関連ツールの利用によって生じたいかなる結果・不利益についても、<strong>作成者および提供者は責任を負いません</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 概要 -->
+    <section class="section" id="s2">
+      <div class="section-title"><span class="section-num">2</span>6分間歩行テストの概要</div>
+      <div class="section-body">
+        <p>6分間歩行テスト（6-Minute Walk Test：6MWT）は、<strong>6分間自分のペースで歩行し、歩行距離や身体反応から体力の目安を把握する</strong>シンプルなテストです。</p>
+        <div class="info-card">
+          <span class="info-card-icon">💡</span>
+          <span>競争ではありません。速く歩くことや限界まで頑張ることを目的としません。<strong>安全を最優先</strong>し、つらいと感じたらすぐに中止してください。</span>
+        </div>
+        <ul class="doc-list" style="margin-top:10px;">
+          <li>心肺機能・運動耐容能の評価に広く用いられるテストです</li>
+          <li>特別な機器を必要とせず、実施が比較的簡便です</li>
+          <li>高齢者・慢性疾患患者のリハビリ評価でも活用されます</li>
+          <li>結果は当日の状態に左右されるため、複数回の測定を参考にします</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 広告スロット（セクション間） -->
+    <div class="ad-slot" aria-label="広告">
+      <!-- Google AdSense コードをここに挿入 -->
+      広告
+    </div>
+
+    <!-- 3. 測定項目 -->
+    <section class="section" id="s3">
+      <div class="section-title"><span class="section-num">3</span>測定項目</div>
+      <div class="section-body">
+        <p>以下の項目を、<strong>各回ともに歩行前（安静時）および歩行後</strong>に測定・記録します。</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+          <div class="sub-section" style="margin:0;">
+            <div class="sub-title">📊 必須項目</div>
+            <ul class="doc-list">
+              <li>6分間の歩行距離</li>
+            </ul>
+          </div>
+          <div class="sub-section" style="margin:0;">
+            <div class="sub-title">📋 記録推奨項目</div>
+            <ul class="doc-list">
+              <li>血圧</li>
+              <li>脈拍</li>
+              <li>酸素飽和度（SpO₂）</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;color:var(--gray);">※測定値は状態把握のための参考情報であり、安全性を保証するものではありません。</p>
+      </div>
+    </section>
+
+    <!-- 4. 実施方法 -->
+    <section class="section" id="s4">
+      <div class="section-title"><span class="section-num">4</span>実施方法</div>
+      <div class="section-body">
+
+        <div class="sub-section">
+          <div class="sub-title">実施回数の原則</div>
+          <p>本ジェネレーターに基づく6分間歩行テストは、<strong>原則として2回実施</strong>します。<br>
+          体調・環境によっては1回のみの実施も選択できます（下記参照）。</p>
+        </div>
+
+        <div class="step-flow" style="margin-top:18px;">
+          <div class="step-item">
+            <div class="step-badge blue">1回目</div>
+            <div class="step-content">
+              <div class="step-label">自由速度での歩行</div>
+              <div class="step-desc">
+                被検者は<strong>自由に選んだ歩行速度</strong>で6分間歩行します。<br>
+                無理をせず、必要に応じて速度を落としたり中止して構いません。<br>
+                <strong>終了直後にBorg指数（0〜10点）を聴取します。</strong>
+              </div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-badge gray">休憩</div>
+            <div class="step-content">
+              <div class="step-label">15分以上の休息時間（必須）</div>
+              <div class="step-desc">
+                座位または安静を保ち、体調変化を確認します。<br>
+                回復が不十分と判断された場合は、<strong>2回目を実施しない判断を優先</strong>します。
+              </div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-badge green">2回目</div>
+            <div class="step-content">
+              <div class="step-label">Borg指数 3〜4 を目安とした歩行</div>
+              <div class="step-desc">
+                Borg指数（10点満点）3〜4（「やや楽〜ややきつい」）の範囲で歩き続けられるよう、<strong>被検者自身が歩行速度を調整</strong>します。<br>
+                他者が歩行速度を指示することは行いません。<br>
+                Borg指数が3〜4を超えたと感じた場合は、速度を落とす・中止する判断を優先します。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Borg表 -->
+        <div style="margin-top:18px;">
+          <div class="sub-title">Borg指数（修正版 0〜10点）早見表</div>
+          <table class="borg-table">
+            <thead>
+              <tr><th>点数</th><th>感覚</th><th>対応</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>0</td><td>まったく楽</td><td class="borg-ok">✅ 継続可</td></tr>
+              <tr><td>1</td><td>非常に楽</td><td class="borg-ok">✅ 継続可</td></tr>
+              <tr><td>2</td><td>楽</td><td class="borg-ok">✅ 継続可</td></tr>
+              <tr class="borg-target"><td>3</td><td>ややきつい（楽寄り）</td><td>🎯 2回目の目標域</td></tr>
+              <tr class="borg-target"><td>4</td><td>ややきつい</td><td>🎯 2回目の目標域</td></tr>
+              <tr><td>5</td><td>きつい</td><td class="borg-warn">⚠️ 速度を落とす</td></tr>
+              <tr><td>6〜7</td><td>かなりきつい</td><td class="borg-warn">⚠️ 中止を検討</td></tr>
+              <tr><td>8〜10</td><td>非常にきつい〜最大</td><td style="color:var(--red);font-weight:700;">🛑 直ちに中止</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 1回のみ -->
+        <div class="sub-section" style="margin-top:16px;">
+          <div class="sub-title">1回のみ実施とする場合</div>
+          <ul class="doc-list">
+            <li>被検者の体力・体調に不安がある場合</li>
+            <li>高齢、基礎疾患、強い疲労感がある場合</li>
+            <li>実施環境や人員の制約により、安全確保が十分でない場合</li>
+          </ul>
+          <p style="margin-top:8px;font-size:12px;">1回のみ実施時はBorg指数 <strong>3〜4を目安</strong>とし、それを超えない範囲で実施してください。</p>
+        </div>
+
+        <div class="disclaimer" style="margin-top:14px;">
+          <p>歩行速度の調整・継続・中止の判断は<strong>被検者本人の判断を最優先</strong>とします。実施回数の決定や2回目を実施しない判断は、被検者本人または実施現場の責任において行われます。</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. 安全 -->
+    <section class="section" id="s5">
+      <div class="section-title"><span class="section-num">5</span>安全に関する注意</div>
+      <div class="section-body">
+        <p>以下の症状が出た場合は、<strong>直ちに実施を中止してください。</strong></p>
+        <div class="stop-grid" style="margin-top:12px;">
+          <div class="stop-item">💓 胸の痛み・圧迫感</div>
+          <div class="stop-item">😮 強い息切れ</div>
+          <div class="stop-item">😵 めまい・吐き気・気分不良</div>
+          <div class="stop-item">🦵 下肢の強い痛み</div>
+          <div class="stop-item" style="grid-column:1/-1;">🛑 「これ以上続けられない」と感じた場合</div>
+        </div>
+        <p style="margin-top:12px;font-size:12px;color:var(--gray);">※途中で中止しても問題はありません。安全の確保を最優先してください。</p>
+      </div>
+    </section>
+
+    <!-- 広告スロット -->
+    <div class="ad-slot" aria-label="広告">
+      <!-- Google AdSense コードをここに挿入 -->
+      広告
+    </div>
+
+    <!-- 6. 結果の捉え方 -->
+    <section class="section" id="s6">
+      <div class="section-title"><span class="section-num">6</span>結果の捉え方とMETsの扱い</div>
+      <div class="section-body">
+        <ul class="doc-list">
+          <li>歩行距離や測定値は、<strong>当日の状態を反映した参考情報</strong>です</li>
+          <li>個人の体力や健康状態を断定するものではありません</li>
+          <li>体調・環境・時間帯によって結果は変動します</li>
+        </ul>
+
+        <div class="sub-section" style="margin-top:14px;">
+          <div class="sub-title">METs（メッツ）について</div>
+          <p style="font-size:12px;line-height:1.8;margin-bottom:10px;">
+            METsは「安静時を1とした場合に、ある活動が何倍のエネルギーを消費するか」を示す指標です。<br>
+            本ツールでは<strong>活動強度のイメージを伝える補助情報</strong>として使用します。
+          </p>
+          <div class="mets-cards">
+            <div class="mets-card low">
+              <div class="mets-val">1〜2</div>
+              <div class="mets-label">低強度</div>
+              <div class="mets-example">ゆっくり歩行など</div>
+            </div>
+            <div class="mets-card mid">
+              <div class="mets-val">3〜5</div>
+              <div class="mets-label">中強度</div>
+              <div class="mets-example">普通〜速歩きなど</div>
+            </div>
+            <div class="mets-card high">
+              <div class="mets-val">6以上</div>
+              <div class="mets-label">高強度</div>
+              <div class="mets-example">ジョギング相当以上</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card" style="margin-top:12px;">
+          <span class="info-card-icon">⚠️</span>
+          <div>
+            <strong>重要：</strong>METs値は推定値であり個人の実測値ではありません。年齢・体格・体力・健康状態・環境条件を反映しません。6MWTの結果を<strong>特定のMETs値に換算・断定することは行いません。</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 広告・収益化 -->
+    <section class="section" id="s7">
+      <div class="section-title"><span class="section-num">7</span>広告表示・収益化について</div>
+      <div class="section-body">
+        <ul class="doc-list">
+          <li>本資料および関連ツールは、今後広告表示や利用料が発生する場合があります</li>
+          <li>収益の有無にかかわらず、<strong>提供内容の位置づけおよび責任範囲は同一</strong>です</li>
+          <li>個別の評価、運動の安全性保証、運動処方を行うものではありません</li>
+          <li>広告はGoogle AdSense等の第三者配信を利用する場合があります</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 8. 免責事項 -->
+    <section class="section" id="s8">
+      <div class="section-title"><span class="section-num">8</span>免責事項</div>
+      <div class="section-body">
+        <div class="disclaimer">
+          <p>
+            ・本資料は不特定多数の利用を想定しており、個々の利用者の状態を考慮した指示・判断を行うものではありません<br>
+            ・実施の可否、方法、継続・中止の判断は<strong>利用者本人または実施現場の責任で行ってください</strong><br>
+            ・本資料および関連ツールの利用に起因するいかなる事象についても、<strong>作成者および提供者は責任を負いません</strong><br>
+            ・掲載情報は予告なく変更される場合があります
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 同意エリア -->
+    <div class="consent-area" id="consentArea">
+      <div class="consent-title">📋 ジェネレーターを使用する前に</div>
+      <div class="consent-text">
+        上記の説明書・免責事項をすべてお読みいただき、内容に同意した上でジェネレーターをご利用ください。
+      </div>
+      <div class="checkbox-row" onclick="toggleConsent()">
+        <input type="checkbox" id="consentCheck">
+        <label for="consentCheck">
+          説明書・免責事項をすべて読み、内容を理解・同意した上でジェネレーターを使用します
+        </label>
+      </div>
+      <a href="generator.html" class="btn-start" id="startBtn">
+        <span>ジェネレーターを開く</span>
+        <span>→</span>
+      </a>
+    </div>
+
+  </main>
+</div><!-- /.layout -->
+
+<script>
+// ===== スクロールプログレスバー =====
+window.addEventListener('scroll', () => {
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  const pct  = docH > 0 ? (window.scrollY / docH) * 100 : 0;
+  document.getElementById('scrollBar').style.width = pct + '%';
+  updateToc();
+});
+
+// ===== 目次アクティブ =====
+function updateToc() {
+  const links = document.querySelectorAll('.toc-link');
+  const sections = document.querySelectorAll('section.section');
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY + 80 >= s.offsetTop) current = s.id;
+  });
+  links.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+
+// ===== 同意チェックボックス =====
+function toggleConsent() {
+  const cb  = document.getElementById('consentCheck');
+  const btn = document.getElementById('startBtn');
+  const tocBtn = document.getElementById('tocBtn');
+  cb.checked = !cb.checked;
+  btn.classList.toggle('active', cb.checked);
+  if(tocBtn) tocBtn.classList.toggle('active', cb.checked);
+}
+document.getElementById('consentCheck').addEventListener('change', function() {
+  const active = this.checked;
+  document.getElementById('startBtn').classList.toggle('active', active);
+  const tocBtn = document.getElementById('tocBtn');
+  if(tocBtn) tocBtn.classList.toggle('active', active);
+});
+
+// ===== モバイル目次 =====
+function toggleMobileToc(btn) {
+  const body = btn.nextElementSibling;
+  const open = body.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open);
+}
+function closeMobileToc() {
+  const btn = document.querySelector('.mobile-toc-btn');
+  const body = document.querySelector('.mobile-toc-body');
+  if(btn && body) {
+    btn.classList.remove('open');
+    body.classList.remove('open');
+    btn.setAttribute('aria-expanded', false);
+  }
+}
+
+// ===== TOC スムーズスクロール =====
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if(target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+</body>
+</html>
