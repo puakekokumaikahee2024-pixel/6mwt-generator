@@ -426,6 +426,11 @@ ul.doc-list li::before {
 .checkbox-row input[type="checkbox"] {
   width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px;
   accent-color: var(--blue); cursor: pointer;
+  -webkit-appearance: checkbox;
+  appearance: checkbox;
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
 }
 .checkbox-row label {
   font-size: 13px; font-weight: 700; color: var(--text);
@@ -865,20 +870,15 @@ function updateToc() {
 }
 
 // ===== 同意チェックボックス =====
-function toggleConsent() {
-  const cb  = document.getElementById('consentCheck');
+function updateConsent() {
+  const cb = document.getElementById('consentCheck');
   const btn = document.getElementById('startBtn');
   const tocBtn = document.getElementById('tocBtn');
-  cb.checked = !cb.checked;
-  btn.classList.toggle('active', cb.checked);
-  if(tocBtn) tocBtn.classList.toggle('active', cb.checked);
-}
-document.getElementById('consentCheck').addEventListener('change', function() {
-  const active = this.checked;
-  document.getElementById('startBtn').classList.toggle('active', active);
-  const tocBtn = document.getElementById('tocBtn');
+  const active = cb.checked;
+  btn.classList.toggle('active', active);
   if(tocBtn) tocBtn.classList.toggle('active', active);
-});
+}
+document.getElementById('consentCheck').addEventListener('change', updateConsent);
 
 // ===== モバイル目次 =====
 function toggleMobileToc(btn) {
