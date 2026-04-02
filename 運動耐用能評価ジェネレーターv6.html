@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6分間歩行テスト 指導資料ジェネレーター</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap');
+
+:root {
+  --blue: #1A5FA8;
+  --blue-light: #EEF4FB;
+  --blue-mid: #4A90D9;
+  --green: #2D9E5C;
+  --green-light: #E8F4EC;
+  --orange: #E07B00;
+  --orange-light: #FFF4E5;
+  --red: #C0392B;
+  --red-light: #FDE0DE;
+  --gray: #5A7A9A;
+  --bg: #F0F5FA;
+  --card: #ffffff;
+  --text: #1a2332;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'BIZ UDPGothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0 0 60px;
+}
+
+/* HEADER */
+.app-header {
+  background: linear-gradient(135deg, #0d3b6e 0%, #1A5FA8 60%, #2d82d4 100%);
+  padding: 28px 40px 22px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.app-header::before {
+  content: '';
+  position: absolute; top: -30px; right: -30px;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.app-header::after {
+  content: '';
+  position: absolute; bottom: -50px; right: 100px;
+  width: 150px; height: 150px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 50%;
+}
+.header-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  margin-bottom: 8px; text-transform: uppercase;
+}
+.header-title { font-size: 26px; font-weight: 900; letter-spacing: 0.02em; }
+.header-sub { font-size: 12px; opacity: 0.75; margin-top: 4px; }
+
+/* MAIN */
+.main { max-width: 860px; margin: 0 auto; padding: 32px 20px 0; }
+
+/* CARD */
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(26,95,168,0.08);
+  border: 1px solid rgba(26,95,168,0.08);
+}
+.card-title {
+  font-size: 13px; font-weight: 900; letter-spacing: 0.08em;
+  color: var(--blue); margin-bottom: 18px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--blue-light);
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* GRID */
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) {
+  .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* FIELD */
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 11px; font-weight: 700; color: var(--gray);
+  letter-spacing: 0.06em;
+}
+.field input, .field select {
+  border: 1.5px solid #d0dcea;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 14px; font-family: 'BIZ UDPGothic', sans-serif;
+  color: var(--text);
+  background: #fafcff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.field select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1.5px solid #d0dcea;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235A7A9A' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.field input:focus, .field select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26,95,168,0.1);
+  background: white;
+}
+.field .unit {
+  font-size: 11px; color: var(--gray); margin-top: -2px;
+}
+
+/* VITAL SUB-GRID */
+.vital-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.vital-row-label {
+  font-size: 11px; font-weight: 700; color: var(--gray);
+  padding-top: 22px;
+}
+.vital-col-header {
+  font-size: 10px; font-weight: 700; color: var(--blue);
+  text-align: center; padding: 4px;
+  background: var(--blue-light); border-radius: 4px;
+}
+
+/* RESULTS */
+.results-panel {
+  display: none;
+  background: linear-gradient(135deg, #EEF4FB, #f8fbff);
+  border: 1.5px solid rgba(26,95,168,0.15);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+.results-panel.visible { display: block; }
+.results-title {
+  font-size: 13px; font-weight: 900; color: var(--blue);
+  margin-bottom: 16px; letter-spacing: 0.08em;
+}
+.results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.result-item {
+  background: white;
+  border-radius: 8px;
+  padding: 12px 16px;
+  border-left: 4px solid var(--blue);
+}
+.result-item.green { border-color: var(--green); }
+.result-item.orange { border-color: var(--orange); }
+.result-item .r-label { font-size: 10px; font-weight: 700; color: var(--gray); letter-spacing: 0.06em; }
+.result-item .r-value { font-size: 22px; font-weight: 900; color: var(--blue); margin-top: 2px; }
+.result-item.green .r-value { color: var(--green); }
+.result-item.orange .r-value { color: var(--orange); }
+.result-item .r-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+/* BUTTONS */
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 13px; font-weight: 700;
+  font-family: 'BIZ UDPGothic', sans-serif;
+  cursor: pointer; border: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.04em;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: linear-gradient(135deg, #1A5FA8, #2d82d4);
+  color: white;
+  box-shadow: 0 3px 10px rgba(26,95,168,0.3);
+}
+.btn-primary:hover { box-shadow: 0 5px 16px rgba(26,95,168,0.4); transform: translateY(-1px); }
+.btn-calc {
+  background: linear-gradient(135deg, #2D9E5C, #3dbf71);
+  color: white;
+  box-shadow: 0 3px 10px rgba(45,158,92,0.3);
+}
+.btn-calc:hover { box-shadow: 0 5px 16px rgba(45,158,92,0.4); transform: translateY(-1px); }
+.btn-secondary {
+  background: white;
+  color: var(--blue);
+  border: 1.5px solid var(--blue);
+}
+
+/* BORG REFERENCE */
+.borg-ref {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 10px;
+}
+.borg-chip {
+  text-align: center;
+  padding: 3px 2px;
+  border-radius: 4px;
+  background: #f0f4f8;
+  color: var(--gray);
+  font-weight: 500;
+}
+.borg-chip.ok { background: var(--green-light); color: var(--green); font-weight: 700; }
+.borg-chip.warn { background: var(--orange-light); color: var(--orange); font-weight: 700; }
+.borg-chip.ng { background: var(--red-light); color: var(--red); font-weight: 700; }
+
+/* NOTICE */
+.notice {
+  font-size: 11px; color: var(--gray);
+  background: var(--blue-light);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+/* DIVIDER */
+.divider {
+  height: 1px; background: linear-gradient(to right, var(--blue-light), transparent);
+  margin: 16px 0;
+}
+
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.badge {
+  display: inline-block; padding: 3px 10px;
+  border-radius: 12px; font-size: 11px; font-weight: 700;
+}
+.badge.safe { background: var(--green-light); color: var(--green); }
+.badge.caution { background: var(--orange-light); color: var(--orange); }
+
+/* RPP PANEL */
+.rpp-panel {
+  margin-top: 16px;
+  border-top: 2px solid var(--blue-light);
+  padding-top: 14px;
+}
+.rpp-title {
+  font-size: 12px; font-weight: 900; color: var(--blue);
+  letter-spacing: 0.06em; margin-bottom: 10px;
+}
+.rpp-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin-bottom: 10px;
+}
+@media (max-width: 500px) { .rpp-grid { grid-template-columns: 1fr; } }
+.rpp-item {
+  background: white; border-radius: 8px; padding: 10px 14px;
+  border-left: 4px solid var(--gray);
+}
+.rpp-item.low    { border-color: var(--green); }
+.rpp-item.mild   { border-color: #4A90D9; }
+.rpp-item.mod    { border-color: var(--orange); }
+.rpp-item.high   { border-color: var(--red); }
+.rpp-item .rpp-label { font-size: 10px; font-weight: 700; color: var(--gray); letter-spacing: 0.05em; }
+.rpp-item .rpp-val   { font-size: 20px; font-weight: 900; margin-top: 2px; }
+.rpp-item .rpp-judge { font-size: 11px; font-weight: 700; margin-top: 2px; }
+.rpp-item.low  .rpp-val, .rpp-item.low  .rpp-judge { color: var(--green); }
+.rpp-item.mild .rpp-val, .rpp-item.mild .rpp-judge { color: #1A5FA8; }
+.rpp-item.mod  .rpp-val, .rpp-item.mod  .rpp-judge { color: var(--orange); }
+.rpp-item.high .rpp-val, .rpp-item.high .rpp-judge { color: var(--red); }
+
+.discord-box {
+  border-radius: 8px; padding: 10px 14px; font-size: 12px; line-height: 1.7;
+  margin-top: 8px;
+}
+.discord-box.ok     { background: var(--green-light); color: #1A5A30; border-left: 4px solid var(--green); }
+.discord-box.warn   { background: var(--orange-light); color: #7A3A00; border-left: 4px solid var(--orange); }
+.discord-box.danger { background: var(--red-light); color: #7A1A10; border-left: 4px solid var(--red); }
+.discord-box .discord-title { font-weight: 900; margin-bottom: 4px; }
+
+.spo2-box {
+  border-radius: 8px; padding: 10px 14px; font-size: 12px; line-height: 1.7;
+  margin-top: 8px;
+}
+.spo2-box.ok   { background: var(--green-light); color: #1A5A30; border-left: 4px solid var(--green); }
+.spo2-box.warn { background: var(--red-light); color: #7A1A10; border-left: 4px solid var(--red); }
+
+/* LOADING */
+.loading { display: none; font-size: 12px; color: var(--blue); margin-top: 8px; }
+.loading.visible { display: block; }
+
+/* ACTIVITY TABS */
+.act-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--blue-light); margin-bottom: 16px; }
+.act-tab {
+  padding: 8px 20px; font-size: 12px; font-weight: 700; cursor: pointer;
+  border: none; background: none; color: var(--gray); letter-spacing: 0.04em;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
+  font-family: 'BIZ UDPGothic', sans-serif; transition: color 0.15s;
+}
+.act-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.act-tab-panel { display: none; }
+.act-tab-panel.active { display: block; }
+
+/* ACTIVITY SELECT */
+.act-search {
+  width: 100%; padding: 8px 12px; border: 1.5px solid #d0dcea;
+  border-radius: 8px; font-size: 13px; font-family: 'BIZ UDPGothic', sans-serif;
+  margin-bottom: 10px; outline: none; background: #fafcff;
+}
+.act-search:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,95,168,0.1); }
+.act-filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.cat-filter {
+  padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;
+  cursor: pointer; border: 1.5px solid #d0dcea; background: white; color: var(--gray);
+  font-family: 'BIZ UDPGothic', sans-serif; transition: all 0.15s;
+}
+.cat-filter.active { background: var(--blue); color: white; border-color: var(--blue); }
+
+.act-list {
+  max-height: 240px; overflow-y: auto; border: 1.5px solid #d0dcea;
+  border-radius: 8px; background: #fafcff;
+}
+.act-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 12px; cursor: pointer; border-bottom: 1px solid #eef2f7;
+  transition: background 0.1s; font-size: 12px; gap: 8px;
+}
+.act-item:last-child { border-bottom: none; }
+.act-item:hover { background: var(--blue-light); }
+.act-item.selected { background: #EEF4FB; }
+.act-item-name { flex: 1; color: var(--text); line-height: 1.4; }
+.act-item-mets {
+  font-weight: 700; font-size: 13px; white-space: nowrap;
+  padding: 2px 8px; border-radius: 8px;
+}
+.act-item-add {
+  font-size: 16px; color: var(--blue); font-weight: 900;
+  width: 20px; text-align: center; flex-shrink: 0;
+}
+
+/* SELECTED ACTIVITIES */
+.selected-acts { margin-top: 12px; }
+.selected-act-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px; margin-bottom: 6px;
+  border-left: 4px solid; font-size: 12px;
+}
+.selected-act-item .s-name { flex: 1; font-weight: 500; }
+.selected-act-item .s-mets { font-weight: 700; font-size: 13px; }
+.selected-act-item .s-judge { font-weight: 700; font-size: 12px; white-space: nowrap; }
+.selected-act-item .s-remove {
+  cursor: pointer; color: #999; font-size: 16px; line-height: 1;
+  padding: 0 4px; flex-shrink: 0;
+}
+.selected-act-item .s-remove:hover { color: var(--red); }
+.no-selected { font-size: 12px; color: var(--gray); padding: 8px 0; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-tag">Rehabilitation Tool</div>
+  <div class="header-title">6分間歩行テスト 指導資料ジェネレーター</div>
+  <div class="header-sub">被験者データを入力 → 自動計算 → Word指導資料を生成</div>
+</div>
+
+<div class="main">
+
+  <!-- 被験者基本情報 -->
+  <div class="card">
+    <div class="card-title">👤 被験者基本情報</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;">
+      <div class="field">
+        <label>氏名</label>
+        <input type="text" id="name" placeholder="山田 太郎">
+        <span class="unit">（資料上部に表示）</span>
+      </div>
+      <div class="field">
+        <label>年齢</label>
+        <input type="number" id="age" placeholder="72" min="18" max="110">
+        <span class="unit">歳</span>
+      </div>
+      <div class="field">
+        <label>身長</label>
+        <input type="number" id="height" placeholder="162" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+    <div style="margin-top:14px;" class="grid-3">
+      <div class="field">
+        <label>体重</label>
+        <input type="number" id="weight" placeholder="58.0" step="0.1">
+        <span class="unit">kg</span>
+      </div>
+      <div class="field">
+        <label>性別</label>
+        <select id="sex">
+          <option value="male">男性</option>
+          <option value="female">女性</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>指導日</label>
+        <input type="date" id="date">
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <div class="field">
+        <label>生活・就労状況（指導テンプレート選択）</label>
+        <select id="occupation">
+          <option value="" disabled selected>— 選択してください —</option>
+          <option value="security">夜間警備員</option>
+          <option value="office">事務職（デスクワーク中心）</option>
+          <option value="housewife">主婦・主夫（家事中心）</option>
+          <option value="retired">退職者・無職</option>
+          <option value="caregiver">介護職・福祉職</option>
+          <option value="sales">営業職・外回り</option>
+          <option value="manual">肉体労働（建設・製造など）</option>
+          <option value="medical">医療・看護職</option>
+          <option value="custom">その他（下に入力）</option>
+        </select>
+        <span class="unit">※Word資料の注意事項テンプレートに使用されます</span>
+      </div>
+      <div class="field" id="customOccField" style="display:none;margin-top:8px;">
+        <label>職種名（自由入力）</label>
+        <input type="text" id="customOcc" placeholder="例：農業、運転手、教員など">
+      </div>
+    </div>
+  </div>
+
+  <!-- 活動選択 -->
+  <div class="card">
+    <div class="card-title">🏃 職業動作・趣味・習慣的な運動の登録</div>
+    <div style="font-size:11px;color:var(--gray);margin-bottom:14px;line-height:1.6;">
+      活動表（2011 Compendium of Physical Activities）から活動を選択してください。<br>
+      計算後にAT相当METsと比較し、各活動が安全域かどうか自動判定されます。
+    </div>
+
+    <!-- タブ -->
+    <div class="act-tabs">
+      <button class="act-tab active" onclick="switchTab('job')">💼 職業動作</button>
+      <button class="act-tab" onclick="switchTab('hobby')">🎯 趣味・スポーツ</button>
+      <button class="act-tab" onclick="switchTab('exercise')">🏋️ 習慣的な運動</button>
+    </div>
+
+    <!-- 職業動作パネル -->
+    <div class="act-tab-panel active" id="panel-job">
+      <input class="act-search" type="text" placeholder="活動を検索…（例：大工、運転、歩行）" oninput="filterList('job', this.value)">
+      <div class="act-list" id="list-job"></div>
+    </div>
+
+    <!-- 趣味パネル -->
+    <div class="act-tab-panel" id="panel-hobby">
+      <div class="act-filter-row" id="filter-hobby"></div>
+      <input class="act-search" type="text" placeholder="活動を検索…（例：テニス、水泳、ゴルフ）" oninput="filterList('hobby', this.value)">
+      <div class="act-list" id="list-hobby"></div>
+    </div>
+
+    <!-- 習慣的な運動パネル -->
+    <div class="act-tab-panel" id="panel-exercise">
+      <div class="act-filter-row" id="filter-exercise"></div>
+      <input class="act-search" type="text" placeholder="活動を検索…（例：ジョギング、ヨガ、ストレッチ）" oninput="filterList('exercise', this.value)">
+      <div class="act-list" id="list-exercise"></div>
+    </div>
+
+    <!-- 選択済みリスト -->
+    <div class="selected-acts" id="selectedSection" style="display:none;">
+      <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px;padding-top:12px;border-top:1px solid var(--blue-light);">
+        📋 登録済み活動 <span id="selectedCount" style="font-size:11px;font-weight:400;color:var(--gray);"></span>
+      </div>
+      <div id="selectedList"></div>
+      <div style="font-size:10px;color:var(--gray);margin-top:6px;">
+        ※AT判定は計算ボタンを押した後に表示されます
+      </div>
+    </div>
+  </div>
+
+  <!-- 6MWT結果 -->
+  <div class="card">
+    <div class="card-title">🚶 6分間歩行試験 結果</div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>条件① 歩行距離（自由速度・Peak）</label>
+        <input type="number" id="dist1" placeholder="320" step="1">
+        <span class="unit">m</span>
+      </div>
+      <div class="field">
+        <label>条件① Borg指数（10点法）</label>
+        <input type="number" id="borg1" placeholder="5" min="0" max="10" step="0.5">
+        <span class="unit">点</span>
+      </div>
+      <div class="field">
+        <label>条件② 歩行距離（AT相当・Borg調整）</label>
+        <input type="number" id="dist2" placeholder="295" step="1">
+        <span class="unit">m</span>
+      </div>
+      <div class="field">
+        <label>条件② Borg指数（10点法）</label>
+        <input type="number" id="borg2" placeholder="3〜4" min="0" max="10" step="0.5">
+        <span class="unit">点（例：3.5）</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px;">Borg指数 参考</div>
+    <div class="borg-ref">
+      <div class="borg-chip">0 安静</div>
+      <div class="borg-chip ok">1 非常に楽</div>
+      <div class="borg-chip ok">2 楽</div>
+      <div class="borg-chip ok">3〜4 ↑ AT相当目安</div>
+      <div class="borg-chip warn">5 ややつらい</div>
+      <div class="borg-chip ng">7〜10 限界</div>
+    </div>
+  </div>
+
+  <!-- バイタルサイン -->
+  <div class="card">
+    <div class="card-title">💓 バイタルサイン</div>
+    <div class="vital-grid">
+      <div></div>
+      <div class="vital-col-header">血圧 (mmHg)<br><span style="font-size:9px;font-weight:400;">収縮期 / 拡張期</span></div>
+      <div class="vital-col-header">脈拍 (回/分)</div>
+      <div class="vital-col-header">SpO2 (%)</div>
+
+      <div class="vital-row-label">安静時①<br><span style="font-weight:400;font-size:10px;">（条件①前）</span></div>
+      <div class="field"><input type="text" id="bp_rest1" placeholder="135/79"></div>
+      <div class="field"><input type="number" id="hr_rest1" placeholder="62" min="30" max="200"></div>
+      <div class="field"><input type="number" id="spo2_rest1" placeholder="96" min="70" max="100"></div>
+
+      <div class="vital-row-label">条件①後<br><span style="font-weight:400;font-size:10px;">（自由速度直後）</span></div>
+      <div class="field"><input type="text" id="bp_ex1" placeholder="152/85"></div>
+      <div class="field"><input type="number" id="hr_ex1" placeholder="68" min="30" max="220"></div>
+      <div class="field"><input type="number" id="spo2_ex1" placeholder="95" min="70" max="100"></div>
+
+      <div class="vital-row-label">安静時②<br><span style="font-weight:400;font-size:10px;">（条件②前）</span></div>
+      <div class="field"><input type="text" id="bp_rest2" placeholder="135/79"></div>
+      <div class="field"><input type="number" id="hr_rest2" placeholder="62" min="30" max="200"></div>
+      <div class="field"><input type="number" id="spo2_rest2" placeholder="96" min="70" max="100"></div>
+
+      <div class="vital-row-label">条件②後<br><span style="font-weight:400;font-size:10px;">（Borg調整直後）</span></div>
+      <div class="field"><input type="text" id="bp_ex2" placeholder="137/82"></div>
+      <div class="field"><input type="number" id="hr_ex2" placeholder="66" min="30" max="220"></div>
+      <div class="field"><input type="number" id="spo2_ex2" placeholder="96" min="70" max="100"></div>
+    </div>
+  </div>
+
+  <!-- 計算ボタン -->
+  <div class="card">
+    <div class="card-title">⚙️ 計算・生成</div>
+    <div class="btn-row">
+      <button class="btn btn-calc" onclick="calculate()">📊 METs・VO₂ を計算する</button>
+      <button class="btn btn-secondary" onclick="clearAll()">リセット</button>
+    </div>
+  </div>
+
+  <!-- 計算結果表示 -->
+  <div class="results-panel" id="resultsPanel">
+    <div class="results-title">📈 計算結果</div>
+    <div class="results-grid" id="resultsGrid"></div>
+    <div class="badge-row" id="badgeRow"></div>
+
+    <!-- AT基準の職種別活動判定テーブル -->
+    <div class="divider"></div>
+    <div id="actJudgeSection" style="display:none;">
+      <div style="font-size:13px;font-weight:900;color:var(--blue);margin-bottom:4px;letter-spacing:0.06em;">
+        🏢 職種別 活動強度 AT判定
+      </div>
+      <div id="atThresholdBadges" style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;"></div>
+      <div style="font-size:11px;color:var(--gray);margin-bottom:10px;line-height:1.6;">
+        各活動のMETs上限を<strong>AT相当METs（条件②）</strong>と比較して判定しています。<br>
+        <span style="color:var(--green);font-weight:700;">✅ AT以下</span>＝有酸素域・継続可　
+        <span style="color:var(--orange);font-weight:700;">⚠️ ATをやや超える</span>＝短時間・要観察　
+        <span style="color:var(--red);font-weight:700;">❌ ATを大きく超える</span>＝原則回避
+      </div>
+      <div id="actJudgeTable"></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generateDocx()">📄 Word指導資料を生成・ダウンロード</button>
+    </div>
+    <div class="loading" id="loadingMsg">⏳ Word文書を生成中... （数秒かかる場合があります）</div>
+    <div class="notice">※生成されたWordファイルはそのまま印刷・編集してご使用ください。計算値は推定値です。</div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// Set today's date
+document.getElementById('date').valueAsDate = new Date();
+
+// Show/hide custom occupation field
+document.getElementById('occupation').addEventListener('change', function() {
+  document.getElementById('customOccField').style.display = this.value === 'custom' ? 'block' : 'none';
+});
+
+// =====================================================
+// ACTIVITY DATABASE (2011 Compendium of Physical Activities)
+// =====================================================
+const ACTIVITY_DB = {"hobby": [{"label": "ダウンヒル、アルペン、スノーボード、楽な労力、滑走時", "mets": 4.3, "cat": "スキー"}, {"label": "ダウンヒル、アルペン、スノーボード、ほどほどの労力、全般、滑走時", "mets": 5.3, "cat": "スキー"}, {"label": "クロスカントリースキー、4.0km/時、ゆっくり、または楽な労力、スキーウォーキング", "mets": 6.8, "cat": "スキー"}, {"label": "スキージャンプ：スキー板を持ってジャンプ台に上る", "mets": 7.0, "cat": "スキー"}, {"label": "全般", "mets": 7.0, "cat": "スキー"}, {"label": "クロスカントリースキー、6.4-7.9km/時、ほどほどの速さ、ほどほどの労力、全般", "mets": 9.0, "cat": "スキー"}, {"label": "クロスカントリースキー、8.0-12.7km/時、速い、きつい労力", "mets": 12.5, "cat": "スキー"}, {"label": "氷上、14.5km/時以下の速さ", "mets": 5.5, "cat": "スケート"}, {"label": "氷上、全般", "mets": 7.0, "cat": "スケート"}, {"label": "アイスダンス", "mets": 14.0, "cat": "スケート"}, {"label": "太極拳、気功、座位、楽な労力", "mets": 1.5, "cat": "スポーツ"}, {"label": "ビリヤード", "mets": 2.5, "cat": "スポーツ"}, {"label": "太極拳、気功、全般", "mets": 3.0, "cat": "スポーツ"}, {"label": "バレーボール：試合以外、6-9人チームで練習、全般", "mets": 3.0, "cat": "スポーツ"}, {"label": "フリスビー：全般", "mets": 3.0, "cat": "スポーツ"}, {"label": "ゴルフ：小規模のゴルフ、打ちっぱなし場", "mets": 3.0, "cat": "スポーツ"}, {"label": "ボウリング", "mets": 3.0, "cat": "スポーツ"}, {"label": "芝生でのボウリング：ボッチェボール、屋外", "mets": 3.3, "cat": "スポーツ"}, {"label": "トランポリン：気晴らし程度の", "mets": 3.5, "cat": "スポーツ"}, {"label": "ゴルフ：パワーカートを使う", "mets": 3.5, "cat": "スポーツ"}, {"label": "体操：全般", "mets": 3.8, "cat": "スポーツ"}, {"label": "乗馬：ウォーキング", "mets": 3.8, "cat": "スポーツ"}, {"label": "ボウリング：屋内、ボウリング場で", "mets": 3.8, "cat": "スポーツ"}, {"label": "卓球", "mets": 4.0, "cat": "スポーツ"}, {"label": "バレーボール", "mets": 4.0, "cat": "スポーツ"}, {"label": "ソフトボール：練習", "mets": 4.0, "cat": "スポーツ"}, {"label": "アメリカンフットボール：タッチフットボール、楽な労力", "mets": 4.0, "cat": "スポーツ"}, {"label": "ゴルフ：歩行、クラブを運ぶ", "mets": 4.3, "cat": "スポーツ"}, {"label": "テニス：ダブルス", "mets": 4.5, "cat": "スポーツ"}, {"label": "バスケットボール：シュート練習", "mets": 4.5, "cat": "スポーツ"}, {"label": "テニス：ボールを打つ、試合以外、ほどほどの労力", "mets": 5.0, "cat": "スポーツ"}, {"label": "スケートボード：全般、ほどほどの労力", "mets": 5.0, "cat": "スポーツ"}, {"label": "ソフトボール、または野球：速い、あるいは遅い投球、全般", "mets": 5.0, "cat": "スポーツ"}, {"label": "ロッククライミング：ラペリング", "mets": 5.0, "cat": "スポーツ"}, {"label": "武術：様々な種類、ゆっくり、初心者、練習", "mets": 5.3, "cat": "スポーツ"}, {"label": "ゴルフ：歩行、クラブを手で引く", "mets": 5.3, "cat": "スポーツ"}, {"label": "乗馬：全般", "mets": 5.5, "cat": "スポーツ"}, {"label": "ボクシング：サンドバッグを叩く", "mets": 5.5, "cat": "スポーツ"}, {"label": "ロッククライミング：岩に登る、横移動をする、低～中難易度", "mets": 5.8, "cat": "スポーツ"}, {"label": "こどもの遊びを大人が遊ぶ, moderate effort)", "mets": 5.8, "cat": "スポーツ"}, {"label": "テニス：ダブルス", "mets": 6.0, "cat": "スポーツ"}, {"label": "レスリング", "mets": 6.0, "cat": "スポーツ"}, {"label": "フェンシング", "mets": 6.0, "cat": "スポーツ"}, {"label": "バスケットボール：試合以外、全般", "mets": 6.0, "cat": "スポーツ"}, {"label": "バスケットボール：全般", "mets": 6.5, "cat": "スポーツ"}, {"label": "サッカー：形式ばらない、全般", "mets": 7.0, "cat": "スポーツ"}, {"label": "ラケットボール：全般", "mets": 7.0, "cat": "スポーツ"}, {"label": "ハンドボール：試合", "mets": 7.0, "cat": "スポーツ"}, {"label": "ローラーブレード：インラインスケート、14.4km/時、気晴らし程度のペース", "mets": 7.5, "cat": "スポーツ"}, {"label": "テニス：シングルス", "mets": 8.0, "cat": "スポーツ"}, {"label": "アメリカンフットボール：試合", "mets": 8.0, "cat": "スポーツ"}, {"label": "アメリカンフットボール：タッチフットボール、全般", "mets": 8.0, "cat": "スポーツ"}, {"label": "バスケットボール：試合", "mets": 8.0, "cat": "スポーツ"}, {"label": "オートレーシング：オープンホイールカー", "mets": 8.5, "cat": "スポーツ"}, {"label": "縄跳び：ゆっくり、毎分100ステップ未満、両足跳び、リズムに合わせて跳ぶ", "mets": 8.8, "cat": "スポーツ"}, {"label": "オリエンテーリング", "mets": 9.0, "cat": "スポーツ"}, {"label": "サッカー：試合", "mets": 10.0, "cat": "スポーツ"}, {"label": "ラケットボール：試合", "mets": 10.0, "cat": "スポーツ"}, {"label": "縄跳び：ほどほどのペース、毎分100-120ステップ、全般、両足跳び、単純な跳ねる動作", "mets": 11.8, "cat": "スポーツ"}, {"label": "スカッシュ", "mets": 12.0, "cat": "スポーツ"}, {"label": "ハンドボール：全般", "mets": 12.0, "cat": "スポーツ"}, {"label": "社交ダンス：ゆっくり", "mets": 3.0, "cat": "ダンス"}, {"label": "カリビアンダンス", "mets": 3.5, "cat": "ダンス"}, {"label": "民族舞踊や伝統舞踊", "mets": 4.5, "cat": "ダンス"}, {"label": "タップダンス", "mets": 4.8, "cat": "ダンス"}, {"label": "エアロビックダンス：弱い衝撃", "mets": 5.0, "cat": "ダンス"}, {"label": "エアロビックダンス：10.2cmのステップを伴う", "mets": 5.5, "cat": "ダンス"}, {"label": "社交ダンス：速い", "mets": 5.5, "cat": "ダンス"}, {"label": "アニシナベ族のジングルダンス", "mets": 5.5, "cat": "ダンス"}, {"label": "バレエ：モダン、ジャズ、公演、きつい労力", "mets": 6.8, "cat": "ダンス"}, {"label": "エアロビックダンス：全般", "mets": 7.3, "cat": "ダンス"}, {"label": "エアロビックダンス：強い衝撃", "mets": 7.3, "cat": "ダンス"}, {"label": "エアロビックダンス：15.2-20.3cmのステップを伴う", "mets": 7.5, "cat": "ダンス"}, {"label": "一般的なダンス", "mets": 7.8, "cat": "ダンス"}, {"label": "ベンチステップ教室：全般", "mets": 8.5, "cat": "ダンス"}, {"label": "エアロビックダンス：25.4-30.5cmのステップを伴う", "mets": 9.5, "cat": "ダンス"}, {"label": "エアロビックダンス：4.5-6.8kgの重りを身に着けて", "mets": 10.0, "cat": "ダンス"}, {"label": "社交ダンス：競技、全般", "mets": 11.3, "cat": "ダンス"}, {"label": "立ち泳ぎ、ほどほどの労力、全般", "mets": 3.5, "cat": "水泳"}, {"label": "背泳ぎ、レクリエーション", "mets": 4.8, "cat": "水泳"}, {"label": "平泳ぎ、レクリエーション", "mets": 5.3, "cat": "水泳"}, {"label": "往復水泳、自由形、クロール、ゆっくり、楽からほどほどの労力", "mets": 5.8, "cat": "水泳"}, {"label": "湖、海、川", "mets": 6.0, "cat": "水泳"}, {"label": "のんびりと泳ぐ、競泳用プール以外、全般", "mets": 6.0, "cat": "水泳"}, {"label": "横泳ぎ、全般", "mets": 7.0, "cat": "水泳"}, {"label": "クロール、ふつうの速さ、45.7m/分未満、きつい労力", "mets": 8.3, "cat": "水泳"}, {"label": "往復水泳、自由形、速い、きつい労力", "mets": 9.8, "cat": "水泳"}, {"label": "立ち泳ぎ、速い、きつい労力", "mets": 9.8, "cat": "水泳"}, {"label": "クロール、速い、68.6m/分未満、きつい労力", "mets": 10.0, "cat": "水泳"}, {"label": "レジャー、8.9km/時", "mets": 3.5, "cat": "自転車"}, {"label": "16.1km/時未満、レジャー、通勤、娯楽", "mets": 4.0, "cat": "自転車"}, {"label": "一輪車に乗る", "mets": 5.0, "cat": "自転車"}, {"label": "非舗装道や農道、ほどほどの速さ", "mets": 5.8, "cat": "自転車"}, {"label": "レジャー、15.1km/時", "mets": 5.8, "cat": "自転車"}, {"label": "通勤、自分で選んだペースで", "mets": 6.8, "cat": "自転車"}, {"label": "6.1-19.2km/時、レジャー、ゆっくり、楽な労力", "mets": 6.8, "cat": "自転車"}, {"label": "全般", "mets": 7.5, "cat": "自転車"}, {"label": "19.3-22.4km/時、レジャー、ほどほどの労力", "mets": 8.0, "cat": "自転車"}, {"label": "モトクロス用自転車", "mets": 8.5, "cat": "自転車"}, {"label": "山道、全般", "mets": 8.5, "cat": "自転車"}, {"label": "19.3km/時、ペダル毎分80回転", "mets": 8.5, "cat": "自転車"}, {"label": "19.3km/時、立ってこぐ、ペダル毎分60回転", "mets": 9.0, "cat": "自転車"}], "exercise": [{"label": "ヨガ：ナディショーダナ", "mets": 2.0, "cat": "コンディショニング運動"}, {"label": "映像を用いた運動：テレビのコンディショニングプログラム、楽な労力", "mets": 2.3, "cat": "コンディショニング運動"}, {"label": "ストレッチ：ゆったり", "mets": 2.3, "cat": "コンディショニング運動"}, {"label": "ヨガ：ハタ", "mets": 2.5, "cat": "コンディショニング運動"}, {"label": "上肢の運動：腕エルゴメータ", "mets": 2.8, "cat": "コンディショニング運動"}, {"label": "健康体操：楽な労力", "mets": 2.8, "cat": "コンディショニング運動"}, {"label": "ピラティス：全般", "mets": 3.0, "cat": "コンディショニング運動"}, {"label": "ヨガ：スリヤナマスカー", "mets": 3.3, "cat": "コンディショニング運動"}, {"label": "レジスタンストレーニング：複合的エクササイズ、様々な種類のレジスタンストレーニングを8-15回繰り返す", "mets": 3.5, "cat": "コンディショニング運動"}, {"label": "自転車エルゴメータ、30-50ワット、非常に楽な労力", "mets": 3.5, "cat": "コンディショニング運動"}, {"label": "健康体操：楽からほどほどの労力、全般、階段の上り下り", "mets": 3.5, "cat": "コンディショニング運動"}, {"label": "家庩での運動：全般", "mets": 3.8, "cat": "コンディショニング運動"}, {"label": "アクティブビデオゲーム：ほどほどの労力", "mets": 3.8, "cat": "コンディショニング運動"}, {"label": "健康体操：ほどほどの労力", "mets": 3.8, "cat": "コンディショニング運動"}, {"label": "映像を用いた運動：テレビのコンディショニングプログラム、ほどほどの労力", "mets": 4.0, "cat": "コンディショニング運動"}, {"label": "ヨガ：パワー", "mets": 4.0, "cat": "コンディショニング運動"}, {"label": "上肢の運動：エアダインエルゴメータで腕のみを用いて毎分40回転、ほどほどの労力", "mets": 4.3, "cat": "コンディショニング運動"}, {"label": "サーキットトレーニング：ほどほどの労力", "mets": 4.3, "cat": "コンディショニング運動"}, {"label": "ボート漕ぎ：ローイングエルゴメータ、全般、ほどほどの労力", "mets": 4.8, "cat": "コンディショニング運動"}, {"label": "自転車エルゴメータ、51-89ワット、楽からほどほどの労力", "mets": 4.8, "cat": "コンディショニング運動"}, {"label": "レジスタンストレーニング：スクワット、ゆっくりあるいは瞬発的な努力で", "mets": 5.0, "cat": "コンディショニング運動"}, {"label": "フィットネスクラブでの運動：全般、体操やウェイトトレーニングを組み合わせた1回あたりに行う運動", "mets": 5.0, "cat": "コンディショニング運動"}, {"label": "エリプティカルトレーナー、ほどほどの労力", "mets": 5.0, "cat": "コンディショニング運動"}, {"label": "アクアビクス：水中での健康体操、水中運動", "mets": 5.3, "cat": "コンディショニング運動"}, {"label": "フィットネスクラブでの運動：全般", "mets": 5.5, "cat": "コンディショニング運動"}, {"label": "映像を用いた運動：テレビのコンディショニンングプログラム、きつい労力", "mets": 6.0, "cat": "コンディショニング運動"}, {"label": "ボート漕ぎ：ローイングエルゴメータ、全般、きつい労力", "mets": 6.0, "cat": "コンディショニング運動"}, {"label": "スリムナスティックス、ジャザサイズ", "mets": 6.0, "cat": "コンディショニング運動"}, {"label": "運動教室の指導", "mets": 6.8, "cat": "コンディショニング運動"}, {"label": "自転車エルゴメータ、90-100ワット、ほどほどからきつい労力", "mets": 6.8, "cat": "コンディショニング運動"}, {"label": "アクティブビデオゲーム、アーケードゲーム：きつい労力", "mets": 7.2, "cat": "コンディショニング運動"}, {"label": "フィットネスクラブでの運動：コンディショニング教室", "mets": 7.8, "cat": "コンディショニング運動"}, {"label": "健康体操：きつい労力", "mets": 8.0, "cat": "コンディショニング運動"}, {"label": "サーキットトレーニング：ケトルベルを含", "mets": 8.0, "cat": "コンディショニング運動"}, {"label": "ステアートレッドミルエルゴメータ：全般", "mets": 9.0, "cat": "コンディショニング運動"}, {"label": "なわとび：全般", "mets": 12.3, "cat": "コンディショニング運動"}, {"label": "ジョギングと歩行の組み合わせ", "mets": 6.0, "cat": "ランニング"}, {"label": "6.4km/時、107.3m/分", "mets": 6.0, "cat": "ランニング"}, {"label": "全般", "mets": 7.0, "cat": "ランニング"}, {"label": "ランニング", "mets": 8.0, "cat": "ランニング"}, {"label": "トレーニング、車いすやベビーカーを押す", "mets": 8.0, "cat": "ランニング"}, {"label": "その場で", "mets": 8.0, "cat": "ランニング"}, {"label": "8.0km/時、134.1m/分", "mets": 8.3, "cat": "ランニング"}, {"label": "8.4km/時、139.4m/分", "mets": 9.0, "cat": "ランニング"}, {"label": "クロスカントリー", "mets": 9.0, "cat": "ランニング"}, {"label": "9.7km/時、160.9m/分", "mets": 9.8, "cat": "ランニング"}, {"label": "トラック、チーム練習", "mets": 10.0, "cat": "ランニング"}, {"label": "10.8km/時、179.7m/分", "mets": 10.5, "cat": "ランニング"}, {"label": "11.3km/時、187.7m/分", "mets": 11.0, "cat": "ランニング"}, {"label": "12.1km/時、201.1m/分", "mets": 11.5, "cat": "ランニング"}, {"label": "12.9km/時、214.5m/分", "mets": 11.8, "cat": "ランニング"}, {"label": "13.8km/時、230.6m/分", "mets": 12.3, "cat": "ランニング"}, {"label": "14.5km/時、241.4m/分", "mets": 12.8, "cat": "ランニング"}, {"label": "マラソン", "mets": 13.3, "cat": "ランニング"}, {"label": "16.1km/時、268.2m/分", "mets": 14.5, "cat": "ランニング"}, {"label": "階段を上がる", "mets": 15.0, "cat": "ランニング"}, {"label": "17.7km/時、295.0m/分", "mets": 16.0, "cat": "ランニング"}, {"label": "19.3km/時、321.8ｍ/分", "mets": 19.0, "cat": "ランニング"}, {"label": "20.9km/時、348.6m/分", "mets": 19.8, "cat": "ランニング"}, {"label": "22.5km/時、375.4m/分", "mets": 23.0, "cat": "ランニング"}, {"label": "横になって静かにテレビを観る 横になって静かにする", "mets": 1.0, "cat": "低強度活動"}, {"label": "睡眠", "mets": 1.0, "cat": "低強度活動"}, {"label": "瞑想する", "mets": 1.0, "cat": "低強度活動"}, {"label": "座って静かにテレビを見る", "mets": 1.3, "cat": "低強度活動"}, {"label": "座って静かにする：全般", "mets": 1.3, "cat": "低強度活動"}, {"label": "座位：喫煙する", "mets": 1.3, "cat": "低強度活動"}, {"label": "デスクに向かって座る：手を頭の後ろに組む", "mets": 1.3, "cat": "低強度活動"}, {"label": "立位で静かにする：列に並ぶ", "mets": 1.3, "cat": "低強度活動"}, {"label": "横になる：書く", "mets": 1.3, "cat": "低強度活動"}, {"label": "横になる：会話や電話をする", "mets": 1.3, "cat": "低強度活動"}, {"label": "横になる：読書", "mets": 1.3, "cat": "低強度活動"}, {"label": "座って静かにする：そわそわする、全般、手をそわそわさせる", "mets": 1.5, "cat": "低強度活動"}, {"label": "座位：音楽鑑賞、映画館での映画鑑賞", "mets": 1.5, "cat": "低強度活動"}, {"label": "座位：足をそわそわさせる", "mets": 1.8, "cat": "低強度活動"}, {"label": "立位：そわそわする", "mets": 1.8, "cat": "低強度活動"}, {"label": "家の中", "mets": 2.0, "cat": "歩行"}, {"label": "3.2km/時未満、水平な地面、散策、とてもゆっくり", "mets": 2.0, "cat": "歩行"}, {"label": "6.8kgの子どもを運ぶ：ゆっくり歩く", "mets": 2.3, "cat": "歩行"}, {"label": "離れ家までの往復", "mets": 2.5, "cat": "歩行"}, {"label": "家から車やバスまで歩く、車やバスから職場や目的地まで歩く", "mets": 2.5, "cat": "歩行"}, {"label": "近所づきあいで隣家や親類の家まで歩く", "mets": 2.5, "cat": "歩行"}, {"label": "バードウォッチング：ゆっくり歩く", "mets": 2.5, "cat": "歩行"}, {"label": "3.2km/時、ゆっくり、平らで固い地面", "mets": 2.8, "cat": "歩行"}, {"label": "犬の散歩", "mets": 3.0, "cat": "歩行"}, {"label": "4.0km/時、平らで固い地面", "mets": 3.0, "cat": "歩行"}, {"label": "4.0km/時、下り坂", "mets": 3.3, "cat": "歩行"}, {"label": "散歩、仕事の合間に歩く", "mets": 3.5, "cat": "歩行"}, {"label": "散歩", "mets": 3.5, "cat": "歩行"}, {"label": "4.5-5.1km/時、ほどほどの速さ、平らで固い地面", "mets": 3.5, "cat": "歩行"}, {"label": "車に荷を積む、車から荷を降ろす：歩行を伴う", "mets": 3.5, "cat": "歩行"}, {"label": "階段を降りる", "mets": 3.5, "cat": "歩行"}, {"label": "車いすを押す：仕事以外で", "mets": 3.8, "cat": "歩行"}, {"label": "通勤や通学", "mets": 4.0, "cat": "歩行"}, {"label": "ベビーカーを押しながら歩く、または子どもと一緒に歩く：4.0-5.0km/時", "mets": 4.0, "cat": "歩行"}, {"label": "階段を上る：ゆっくり", "mets": 4.0, "cat": "歩行"}, {"label": "5.6km/時、速い、平らで固い地面、運動目的で", "mets": 4.3, "cat": "歩行"}, {"label": "ふつうのペースで、耕された土や砂の上を歩く", "mets": 4.5, "cat": "歩行"}, {"label": "行進する：ほどほどの速さ、軍隊、荷物なし", "mets": 4.5, "cat": "歩行"}, {"label": "芝のトラック", "mets": 4.8, "cat": "歩行"}, {"label": "6.4km/時、平らで固い地面、とても速い", "mets": 5.0, "cat": "歩行"}, {"label": "6.8kgのものを運ぶ：水平な地面、または階段を降りる", "mets": 5.0, "cat": "歩行"}, {"label": "0.5-6.8kgの物を運ぶ：上の階へ", "mets": 5.0, "cat": "歩行"}, {"label": "4.7-5.6km/時、上り坂、1-5%の勾配", "mets": 5.3, "cat": "歩行"}, {"label": "野原や丘の斜面をふつうのペースでハイキングする、または歩く", "mets": 5.3, "cat": "歩行"}, {"label": "後ろ向きに、5.6km/時、水平な地面", "mets": 6.0, "cat": "歩行"}, {"label": "7.3-10.9kgの物を運ぶ：上の階へ", "mets": 6.0, "cat": "歩行"}, {"label": "ハイキング：クロスカントリー", "mets": 6.0, "cat": "歩行"}, {"label": "山を登る：荷物なし", "mets": 6.3, "cat": "歩行"}, {"label": "競歩", "mets": 6.5, "cat": "歩行"}, {"label": "0-4.1kgの荷物を持って山を登る", "mets": 6.5, "cat": "歩行"}, {"label": "7.2km/時、平らで固い地面、極めて速い", "mets": 7.0, "cat": "歩行"}, {"label": "バックパックを背負って歩く", "mets": 7.0, "cat": "歩行"}, {"label": "4.5-9.1kgの荷物を持って山を登る", "mets": 7.3, "cat": "歩行"}, {"label": "バックパックを背負って歩く：ディパックを背負ってハイキングや遠足に行く", "mets": 7.8, "cat": "歩行"}, {"label": "4.7-5.6km/時、上り坂、6-15%の勾配", "mets": 8.0, "cat": "歩行"}, {"label": "後ろ向きに、5.6km/時、上り坂、5%の勾配", "mets": 8.0, "cat": "歩行"}, {"label": "速く行進する：軍隊、荷物なし", "mets": 8.0, "cat": "歩行"}, {"label": "階段を上る：ハシゴを昇る", "mets": 8.0, "cat": "歩行"}, {"label": "11.3-22.2kgの物を運ぶ：上の階へ", "mets": 8.0, "cat": "歩行"}, {"label": "8.0km/時、平らで固い地面", "mets": 8.3, "cat": "歩行"}, {"label": "荷物を上の階へ運ぶ：全般", "mets": 8.3, "cat": "歩行"}, {"label": "9.5-19.1kgの荷物を持って山を登る", "mets": 8.3, "cat": "歩行"}, {"label": "階段を上る：速い", "mets": 8.8, "cat": "歩行"}, {"label": "19.1kg以上の荷物を持って山を登る", "mets": 9.0, "cat": "歩行"}, {"label": "8.0km/時、上り坂、3%の勾配", "mets": 9.8, "cat": "歩行"}, {"label": "22.7-33.6kgの物を運ぶ：上の階へ", "mets": 10.0, "cat": "歩行"}, {"label": "33.6kg以上の物を運ぶ：上の階へ", "mets": 12.0, "cat": "歩行"}], "job": [{"label": "タイピング：電子タイプライター、手動タイプライター、コンピュータのキーボード", "mets": 1.3}, {"label": "座位での打合せ：楽な労力、全般、談話を含む", "mets": 1.5}, {"label": "仕事中の歩行：3.2km/時未満、非常にゆっくり、オフィスや研究室内", "mets": 2.0}, {"label": "トラック運転：運送トラック、タクシー、シャトルバス、スクールバスの運転", "mets": 2.0}, {"label": "農作業：楽な労力", "mets": 2.0}, {"label": "道路工事：交通整備、立位", "mets": 2.0}, {"label": "パンづくり：楽な労力", "mets": 2.0}, {"label": "施設管理業務：楽な労力", "mets": 2.3}, {"label": "警察官：交通整理、立位", "mets": 2.5}, {"label": "警察官：パトロールカーを運転する、座位", "mets": 2.5}, {"label": "調理する：シェフ", "mets": 2.5}, {"label": "大工仕事：全般、楽な労力", "mets": 2.5}, {"label": "座位作業：ほどほどの労力", "mets": 2.5}, {"label": "重機の操作：自動運転、自分で操縦はしない", "mets": 2.5}, {"label": "肉体労働や単純労働：全般、楽な労力", "mets": 2.8}, {"label": "座位：ストレッチやヨガ、または強度の低い運動の指導をする", "mets": 2.8}, {"label": "製造業、楽からほどほどの労力light-to-moderate effort)", "mets": 3.0}, {"label": "立位作業：楽からほどほどの労力", "mets": 3.0}, {"label": "立位作業：楽な労力", "mets": 3.0}, {"label": "飛行機の客室乗務員", "mets": 3.0}, {"label": "電気関係の仕事", "mets": 3.3}, {"label": "洗濯業務", "mets": 3.3}, {"label": "塗装：家、家具、ほどほどの労力", "mets": 3.3}, {"label": "歩行：車いすを押して歩く", "mets": 3.5}, {"label": "立位：ほどほどの労力、断続的に22.7kgの物を持ち上げる、ロープを結ぶ/巻きつける)", "mets": 3.5}, {"label": "仕事中の歩行：4.0km/時、ゆっくり、11.3kg未満の軽い物を運ぶ", "mets": 3.5}, {"label": "施設管理業務：ほどほどの労力", "mets": 3.8}, {"label": "パンづくり：全般、ほどほどの労力", "mets": 4.0}, {"label": "警察官：逮捕する、立位", "mets": 4.0}, {"label": "ゴミの収集：歩行、トラックにゴミ袋を投げる", "mets": 4.0}, {"label": "芝生の管理：庭仕事、全般", "mets": 4.0}, {"label": "マッサージ師：立位", "mets": 4.0}, {"label": "客室係：ホテル等の客室業務、ベッドメイク、浴室清掃、カートを押す", "mets": 4.0}, {"label": "建築作業：屋外、改築、新築", "mets": 4.0}, {"label": "農作業：牛や馬に餌を不える", "mets": 4.3}, {"label": "馬の世話：餌やり、水やり、馬房の掃除、歩行や荷物の持ち上げ動作を含む", "mets": 4.3}, {"label": "大工仕事：全般、ほどほどの労力", "mets": 4.3}, {"label": "仕事中の歩行：5.6km/時、オフィス内、速い、何も持たずに", "mets": 4.3}, {"label": "歩行：4.8km/時、ほどほどの速さ、11.3kg未満の軽い物を運ぶ", "mets": 4.5}, {"label": "立位：ほどほどのまたはきつい労力", "mets": 4.5}, {"label": "立位：ほどほどの労力、物を持ち続ける、4.5-9.1kg、ほとんど歩行しない、あるいはじっとしている", "mets": 4.5}, {"label": "肉体労働や単純労働：全般、ほどほどの労力", "mets": 4.5}, {"label": "歩行：5.6km/時、速い、11.3kg未満の物を運ぶ", "mets": 4.8}, {"label": "農作業：ほどほどの労力", "mets": 4.8}, {"label": "シャベルで掘る：毎分4.5kg未満、ほどほどの労力", "mets": 5.0}, {"label": "歩行や階段を降りる、または立位：11.3-22.2kgの物を運ぶ", "mets": 5.0}, {"label": "道路工事：重機の運転", "mets": 6.0}, {"label": "圧縮空気を動力とする重たい電動工具を使う", "mets": 6.3}, {"label": "シャベルで掘る：毎分4.5-6.8kg、きつい労力", "mets": 6.5}, {"label": "肉体労働や単純労働：全般、きつい労力", "mets": 6.5}, {"label": "トラック運転：荷物を積むまたは積み下ろす、荷物をロープで固定する、立位、歩行や重い荷物の運搬を伴う", "mets": 6.5}, {"label": "大工仕事：全般、重労働、またはきつい労力", "mets": 7.0}, {"label": "引越し：重たい物を運ぶ、または押す、34.0kg以上、活動時に限る、", "mets": 7.5}, {"label": "農作業：きつい労力", "mets": 7.8}, {"label": "シャベルで掘る：溝を掘る", "mets": 7.8}, {"label": "シャベル、つるはし、じょうご、くわのような重たい道具を使うsuch as shovel, pick, tunnel bar, spade)", "mets": 8.0}, {"label": "ほどほどの重さの荷物を上の階に運ぶ：11.3-22.2kgの箱", "mets": 8.0}, {"label": "重い荷物の運搬", "mets": 8.0}, {"label": "シャベルで掘る：毎分7.3kg以上、深く掘る、きつい労力", "mets": 8.8}]};
+
+
+// =====================================================
+// ACTIVITY SELECTION UI
+// =====================================================
+
+// カテゴリ表示名マップ
+const CAT_LABELS = {
+  'スポーツ': 'スポーツ', 'ダンス': 'ダンス',
+  '自転車': '自転車', '水上・水中活動': '水中・水上',
+  '歩行': '歩行', 'ランニング': 'ランニング',
+  'コンディショニング運動': 'トレーニング'
+};
+
+// METs → 色クラス（ATなしの初期表示用）
+function metsColor(m) {
+  if (m < 3)  return { bg: '#F0F5FA', color: '#5A7A9A' };
+  if (m < 5)  return { bg: '#E8F4EC', color: '#1A7A45' };
+  if (m < 7)  return { bg: '#FFF4E5', color: '#B05E00' };
+  return              { bg: '#FDE0DE', color: '#C0392B' };
+}
+
+// 選択済み活動: [{label, mets, cat, tabKey}, ...]
+let selectedActivities = [];
+let activeTab = 'job';
+let catFilters = { hobby: null, exercise: null };
+
+// タブ切り替え
+function switchTab(key) {
+  activeTab = key;
+  document.querySelectorAll('.act-tab').forEach((el, i) => {
+    const keys = ['job', 'hobby', 'exercise'];
+    el.classList.toggle('active', keys[i] === key);
+  });
+  document.querySelectorAll('.act-tab-panel').forEach(el => el.classList.remove('active'));
+  document.getElementById(`panel-${key}`).classList.add('active');
+  _ensureTabInited(key); // 初めて開いたときだけ生成
+}
+
+// カテゴリフィルターボタン描画
+function buildCatFilters(tabKey) {
+  const data = ACTIVITY_DB[tabKey];
+  const cats = [...new Set(data.map(d => d.cat).filter(Boolean))];
+  const container = document.getElementById(`filter-${tabKey}`);
+  if (!container) return;
+  container.innerHTML = `<button class="cat-filter active" onclick="setCatFilter('${tabKey}', null, this)">すべて</button>` +
+    cats.map(c => `<button class="cat-filter" onclick="setCatFilter('${tabKey}', '${c}', this)">${CAT_LABELS[c]||c}</button>`).join('');
+}
+
+function setCatFilter(tabKey, cat, btn) {
+  catFilters[tabKey] = cat;
+  const container = document.getElementById(`filter-${tabKey}`);
+  container.querySelectorAll('.cat-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterList(tabKey, document.querySelector(`#panel-${tabKey} .act-search`)?.value || '');
+}
+
+// リスト描画（onclick内にラベル文字列を埋め込まず、data-indexで参照）
+let _listCache = {}; // { tabKey: filteredArray } — onclickから参照
+
+function filterList(tabKey, query) {
+  const data = ACTIVITY_DB[tabKey];
+  const q = query.toLowerCase().trim();
+  const catF = catFilters[tabKey];
+  const filtered = data.filter(d => {
+    const matchQ = !q || d.label.toLowerCase().includes(q);
+    const matchC = !catF || d.cat === catF;
+    return matchQ && matchC;
+  });
+  _listCache[tabKey] = filtered; // キャッシュ保存
+
+  const container = document.getElementById(`list-${tabKey}`);
+  const atMets = calcResults.mets2 ? parseFloat(calcResults.mets2) : null;
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="padding:12px;font-size:12px;color:var(--gray);">該当する活動が見つかりません</div>';
+    return;
+  }
+
+  const slice = filtered.slice(0, 60);
+  container.innerHTML = slice.map((d, idx) => {
+    const isSelected = selectedActivities.some(s => s.label === d.label && s.tabKey === tabKey);
+    let judgeBadge = '';
+    if (atMets) {
+      if (d.mets <= atMets)             judgeBadge = `<span style="font-size:10px;color:#1A7A45;font-weight:700;">✅AT以下</span>`;
+      else if (d.mets <= atMets * 1.3)  judgeBadge = `<span style="font-size:10px;color:#B05E00;font-weight:700;">⚠️要注意</span>`;
+      else                               judgeBadge = `<span style="font-size:10px;color:#C0392B;font-weight:700;">❌回避</span>`;
+    }
+    const { bg, color } = metsColor(d.mets);
+    const catTag = d.cat ? `<span style="font-size:9px;color:var(--gray);background:#f0f4f8;padding:1px 5px;border-radius:4px;">${CAT_LABELS[d.cat]||d.cat}</span> ` : '';
+    // onclick内に文字列を埋め込まず、data-tabとdata-idxだけ渡す
+    return `<div class="act-item${isSelected ? ' selected' : ''}" data-tab="${tabKey}" data-idx="${idx}" onclick="toggleActivityByIndex(this)">
+      <span class="act-item-name">${catTag}${d.label}</span>
+      ${judgeBadge}
+      <span class="act-item-mets" style="background:${bg};color:${color};">${d.mets}</span>
+      <span class="act-item-add">${isSelected ? '✓' : '+'}</span>
+    </div>`;
+  }).join('');
+
+  if (filtered.length > 60) {
+    container.innerHTML += `<div style="padding:8px 12px;font-size:11px;color:var(--gray);">…他 ${filtered.length - 60} 件（検索で絞り込んでください）</div>`;
+  }
+
+  // イベント委譲でクリック処理（innerHTML生成後に登録不要、data属性で対応済み）
+}
+
+// data-idx経由でtoggle（文字列エスケープ問題を完全回避）
+function toggleActivityByIndex(el) {
+  const tabKey = el.dataset.tab;
+  const idx    = parseInt(el.dataset.idx);
+  const d      = _listCache[tabKey]?.[idx];
+  if (!d) return;
+  toggleActivity(tabKey, d.label, d.mets, d.cat || '');
+}
+
+// 活動の追加/解除
+function toggleActivity(tabKey, label, mets, cat) {
+  const idx = selectedActivities.findIndex(s => s.label === label && s.tabKey === tabKey);
+  if (idx >= 0) {
+    selectedActivities.splice(idx, 1);
+  } else {
+    selectedActivities.push({ label, mets, cat, tabKey });
+  }
+  filterList(tabKey, document.querySelector(`#panel-${tabKey} .act-search`)?.value || '');
+  renderSelectedList();
+}
+
+// 選択済みリスト描画
+function renderSelectedList() {
+  const section = document.getElementById('selectedSection');
+  const container = document.getElementById('selectedList');
+  const atMets = calcResults.mets2 ? parseFloat(calcResults.mets2) : null;
+
+  if (selectedActivities.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+  document.getElementById('selectedCount').textContent = `（${selectedActivities.length}件）`;
+
+  container.innerHTML = selectedActivities.map((s, i) => {
+    let borderColor = '#5A7A9A', bg = '#F0F5FA', judgeText = `${s.mets} METs`;
+    if (atMets) {
+      if (s.mets <= atMets)            { borderColor='#1A7A45'; bg='#E8F4EC'; judgeText=`✅ AT以下（${s.mets} METs）`; }
+      else if (s.mets <= atMets*1.3)   { borderColor='#B05E00'; bg='#FFF4E5'; judgeText=`⚠️ 要注意（${s.mets} METs）`; }
+      else                              { borderColor='#C0392B'; bg='#FDE0DE'; judgeText=`❌ 原則回避（${s.mets} METs）`; }
+    }
+    const tabNames = { job:'職業', hobby:'趣味', exercise:'運動' };
+    const catTag = s.cat ? `${CAT_LABELS[s.cat]||s.cat} ／ ` : (tabNames[s.tabKey]||'') + ' ／ ';
+    return `<div class="selected-act-item" style="border-left-color:${borderColor};background:${bg};">
+      <div class="s-name"><span style="font-size:10px;color:#888;">${catTag}</span>${s.label}</div>
+      <div class="s-judge" style="color:${borderColor};">${judgeText}</div>
+      <div class="s-remove" onclick="removeSelected(${i})" title="削除">×</div>
+    </div>`;
+  }).join('');
+}
+
+function removeSelected(idx) {
+  const s = selectedActivities[idx];
+  selectedActivities.splice(idx, 1);
+  filterList(s.tabKey, document.querySelector(`#panel-${s.tabKey} .act-search`)?.value || '');
+  renderSelectedList();
+}
+
+// 初期化
+// 遅延初期化: 各タブは初めて表示されたときだけ生成
+const _tabInited = {};
+function initActivityLists() {
+  // 起動時はアクティブタブ(job)だけ初期化
+  _ensureTabInited('job');
+}
+function _ensureTabInited(key) {
+  if (_tabInited[key]) return;
+  _tabInited[key] = true;
+  if (key === 'hobby' || key === 'exercise') buildCatFilters(key);
+  filterList(key, '');
+}
+document.addEventListener('DOMContentLoaded', initActivityLists);
+
+// =====================================================
+let calcResults = {};
+
+// ===== OCCUPATION DATA =====
+// actRows構造: [活動名, METs上限(数値), 最大持続(分), 備考ポイント]
+// METs上限は「この動作が通常到達する最大強度」の実測・文献値
+const OCCUPATION_DATA = {
+  security: {
+    label: "夜間警備員",
+    sectionTitle: "⚠️ 夜間警備業務での注意点",
+    notes: [
+      "緊急時は走らず「早歩き」で対応する（走行は6 METs超）",
+      "深夜〜早朝は自律神経の影響で血圧変動が起きやすい",
+      "疲労蓄積時は同じ動作でも心拍数が上がりやすい",
+      "1〜2時間ごとに必ず座って休憩をとる",
+      "職場スタッフに心臓の状態を事前に伝えておく",
+      "体調不良・動悸・胸痛があれば直ちに業務を中断する",
+    ],
+    actRows: [
+      ["監視室での座位監視・デスクワーク", 1.5, null, "長時間でも心臓への負担は最小限"],
+      ["立位の軽作業・書類整理", 2.5, null, "こまめに座って休憩を挟む"],
+      ["施設内のゆっくり巡回歩行（3km/h相当）", 3.0, null, "安全域内・継続可"],
+      ["平地速歩（4〜5km/h相当）", 4.0, 20, "息が上がらない程度を維持する"],
+      ["広域巡回（速足・長距離）", 4.5, 10, "短時間にとどめ、休憩を挟む"],
+      ["重い機材・設備の運搬（10kg超）", 5.5, 5, "他者に依頼・台車を活用する"],
+      ["緊急時の駆け足・走行", 8.0, null, "早歩きで対応・絶対に走らない"],
+    ]
+  },
+  office: {
+    label: "事務職（デスクワーク中心）",
+    sectionTitle: "⚠️ 事務職・職場での注意点",
+    notes: [
+      "長時間の座位は血流停滞のリスク・1時間ごとに立って歩く",
+      "階段は急がずゆっくり一段ずつ昇る",
+      "昼休みの短い散歩（10〜15分）は積極的に行ってよい",
+      "繁忙期・残業時は疲労で同じ動作でも心拍数が上がりやすい",
+      "ストレス・緊張時も血圧が変動しやすい点に注意",
+      "職場の産業医・上司に状況を伝えておくことを推奨",
+    ],
+    actRows: [
+      ["デスクワーク・PC作業", 1.5, null, "長時間継続可・1時間ごとに立位を"],
+      ["立位の軽作業・コピー機操作", 2.5, null, "こまめに座って休憩を"],
+      ["社内のゆっくり歩行（廊下移動等）", 3.0, null, "安全域内"],
+      ["階段をゆっくり昇る（1〜2階程度）", 3.5, null, "急がず一段ずつ・手すり使用推奨"],
+      ["平地速歩・通勤歩行（4〜5km/h）", 4.0, 20, "息が上がらない程度を維持する"],
+      ["荷物の運搬・書庫整理（5〜10kg）", 4.5, 10, "重量と継続時間に注意する"],
+      ["駆け足・早急な移動（階段を急ぐ等）", 6.5, null, "早歩きで対応・走らない"],
+    ]
+  },
+  housewife: {
+    label: "主婦・主夫（家事中心）",
+    sectionTitle: "✅ 家事・日常生活での注意点",
+    notes: [
+      "日常家事（掃除・洗濯・料理）は基本的に安全域内",
+      "重い荷物（米袋・まとめ洗い）は小分けにして複数回に分ける",
+      "入浴は湯温41℃以下・長湯は避ける（温度変化で血圧変動）",
+      "庭仕事・草むしりは前傾姿勢が続くため15〜20分で休憩を",
+      "料理で立ちっぱなしが続く場合はこまめに座る",
+      "家族に心臓の状態を伝えておくと緊急時に安心",
+    ],
+    actRows: [
+      ["軽い掃除・整理整頓", 2.5, null, "日常的に行ってよい"],
+      ["料理・食事の準備（立位）", 3.0, null, "立ちっぱなしに注意・こまめに座る"],
+      ["買い物・ゆっくり歩行（荷物なし）", 3.0, null, "荷物は小分けにする"],
+      ["洗濯・布団の上げ下げ", 3.5, null, "まとめて行わず分割する"],
+      ["階段をゆっくり昇る（1〜2階）", 3.5, null, "急がず一段ずつ・手すり使用推奨"],
+      ["庭仕事・草むしり・軽い農作業", 4.5, 15, "短時間・こまめに休憩を挟む"],
+      ["重い荷物の運搬（米袋・10kg超）", 5.5, null, "家族・宅配に依頼する"],
+    ]
+  },
+  retired: {
+    label: "退職者・無職",
+    sectionTitle: "✅ 退職後の日常生活での注意点",
+    notes: [
+      "毎日の散歩（Borg 3〜4以内）は積極的に続けてよい",
+      "急に運動量を増やさず、少しずつ慣れていく",
+      "趣味活動（園芸・旅行など）は強度を確認しながら行う",
+      "旅行時は長距離歩行・荷物運搬・坂道に注意する",
+      "気温が高い日・寒い日は同じ動作でも心拍数が上がりやすい",
+      "かかりつけ医への定期受診を忘れずに",
+    ],
+    actRows: [
+      ["安静・読書・テレビ鑑賞", 1.5, null, "問題なし"],
+      ["入浴・シャワー（41℃以下）", 3.0, null, "湯温41℃以下・長湯を避ける"],
+      ["ゆっくりした散歩（3km/h）", 3.0, null, "毎日続けてよい・継続が大切"],
+      ["買い物・平地ウォーキング", 3.5, null, "荷物は小分けにする"],
+      ["平地速歩・軽い体操・ストレッチ", 4.0, 20, "息が上がらない程度を維持する"],
+      ["坂道・長距離ウォーキング", 4.5, 15, "短時間にとどめ途中で休憩を"],
+      ["重い荷物の運搬・引越し作業", 5.5, null, "他者に依頼する"],
+    ]
+  },
+  caregiver: {
+    label: "介護職・福祉職",
+    sectionTitle: "⚠️ 介護業務での注意点",
+    notes: [
+      "移乗・体位変換などの瞬間的な力仕事は心拍数が急上昇しやすい",
+      "できるだけ複数人で行うか福祉用具（リフト・スライドシート）を活用する",
+      "夜間勤務・不規則シフトは自律神経に影響しやすい",
+      "前屈位での長時間作業は呼吸抑制にも繋がるため短時間にとどめる",
+      "水分補給はこまめに行い、脱水を予防する",
+      "職場・上司に心臓の状態を事前に伝えておく",
+    ],
+    actRows: [
+      ["見守り・記録作業（座位）", 2.0, null, "問題なし"],
+      ["食事介助・会話補助", 2.5, null, "安全域内"],
+      ["病棟内のゆっくり歩行・移動", 3.0, null, "ゆっくり歩く"],
+      ["入浴介助（補助程度・立位）", 3.5, null, "短時間にとどめる・休憩を挟む"],
+      ["車いす操作・歩行補助", 4.0, 20, "息が上がらない程度を維持する"],
+      ["移乗介助（抱え上げ・体位変換）", 5.0, null, "福祉用具・リフトを使用・複数人で"],
+      ["緊急時の走行・急ぎ対応", 8.0, null, "早歩きで対応・走らない"],
+    ]
+  },
+  sales: {
+    label: "営業職・外回り",
+    sectionTitle: "⚠️ 営業・外回り業務での注意点",
+    notes: [
+      "炎天下・寒冷時の外回りは同じ動作でも体への負担が大きい",
+      "重いカバン・サンプル品は小分けにするか台車・宅配を活用する",
+      "移動の合間にこまめに座って休憩をとる",
+      "電車・バスの混雑時は人ごみ・ラッシュを避けるよう工夫する",
+      "精神的ストレスも血圧上昇・心拍数増加の原因になる",
+      "上司・同僚に状況を伝えておくことを推奨",
+    ],
+    actRows: [
+      ["デスクワーク・電話対応（座位）", 1.5, null, "問題なし"],
+      ["社内・近距離のゆっくり外歩き", 3.0, null, "安全域内"],
+      ["階段の昇降（1〜2階）", 3.5, null, "急がず一段ずつ・エレベータも活用"],
+      ["営業先への移動（速歩・4〜5km/h）", 4.0, 20, "息が上がらない程度を維持する"],
+      ["重い荷物を持っての歩行（5kg超）", 4.5, 10, "荷物を小分けに・休憩を挟む"],
+      ["急ぎ足・駆け込み乗車・階段を急ぐ", 6.0, null, "次の電車を待つ・走らない"],
+      ["重いサンプル品の長時間運搬", 5.5, null, "台車・宅配を活用する"],
+    ]
+  },
+  manual: {
+    label: "肉体労働（建設・製造など）",
+    sectionTitle: "⚠️ 肉体労働での注意点（重要）",
+    notes: [
+      "現在の運動耐容能では重労働は心臓への負担が非常に大きい",
+      "主治医・産業医と相談の上、業務内容・配置転換の調整を検討する",
+      "重量物の持ち上げは瞬間的に血圧が急上昇（バルサルバ効果）する",
+      "炎天下・高温環境での作業は特に注意が必要（熱中症+心臓負荷）",
+      "こまめな水分補給と定期休憩を必ず行う",
+      "職場に心臓の状態を必ず伝え、無理を強いられない環境を整備する",
+    ],
+    actRows: [
+      ["監視・点検作業（座位・デスク）", 2.0, null, "問題なし"],
+      ["ゆっくりした構内歩行", 3.0, null, "安全域内"],
+      ["軽作業・部品の組み立て（立位）", 3.5, null, "立ちっぱなしに注意"],
+      ["工具・資材の軽い運搬（5kg以下）", 4.0, 20, "重量と継続時間に十分注意する"],
+      ["中重量物の運搬・作業（10〜20kg）", 5.5, null, "他者・フォークリフト等に依頼する"],
+      ["重量物の持ち上げ（20kg超）", 7.5, null, "絶対に避ける・必ず機械を使用"],
+      ["炎天下・高温環境での連続作業", 6.0, null, "主治医・産業医に要相談・原則中止"],
+    ]
+  },
+  medical: {
+    label: "医療・看護職",
+    sectionTitle: "⚠️ 医療・看護業務での注意点",
+    notes: [
+      "夜間勤務・長時間勤務は自律神経・血圧変動に影響しやすい",
+      "急変対応時の走行は心拍数が瞬間的に急上昇する",
+      "患者の体位変換・移乗補助は瞬間的な力仕事に注意する",
+      "立ちっぱなしの処置は1時間ごとに座って休憩をとる",
+      "精神的ストレスも血圧上昇・心拍数増加の原因になりやすい",
+      "上司・師長に状況を伝え、無理のない勤務調整を相談する",
+    ],
+    actRows: [
+      ["記録・デスクワーク（座位）", 1.5, null, "問題なし"],
+      ["病棟内のゆっくり歩行・移動", 3.0, null, "安全域内"],
+      ["軽い処置・点滴管理（立位）", 3.5, null, "立位が続く場合はこまめに座る"],
+      ["配薬・回診補助", 3.5, null, "急がない・ゆっくり動く"],
+      ["患者の移動補助・車いす操作", 4.5, 15, "福祉用具・複数人での対応を推奨"],
+      ["患者の体位変換・移乗（介助）", 5.0, null, "複数人・スライドシート等を活用"],
+      ["急変対応・走行", 8.0, null, "早歩きで対応・走らない・他者に依頼"],
+    ]
+  },
+  custom: {
+    label: "",
+    sectionTitle: "⚠️ 業務・日常生活での注意点",
+    notes: [
+      "運動強度が高い作業はBorg指数を目安に確認する",
+      "Borg 5以上（ややつらい）を感じたら強度を下げる",
+      "重い荷物の運搬・急ぎ足は心拍数が急上昇しやすい",
+      "こまめな休憩と水分補給を必ず行う",
+      "体調が悪いと感じたときは無理をしない",
+      "職場・家族に心臓の状態を伝えておく",
+    ],
+    actRows: [
+      ["安静・座位作業", 1.5, null, "問題なし"],
+      ["ゆっくりした歩行・軽作業（立位）", 3.0, null, "安全域内"],
+      ["平地速歩・立位作業（4〜5km/h）", 4.0, 20, "息が上がらない程度を維持する"],
+      ["階段の昇降（1〜2階）", 3.5, null, "急がず一段ずつ昇る"],
+      ["やや負荷のある継続作業", 4.5, 15, "短時間にとどめ、こまめに休憩を"],
+      ["重い荷物の運搬（10kg超）", 5.5, null, "他者・台車に依頼する"],
+      ["駆け足・急ぎ対応・走行", 8.0, null, "早歩きで対応・走らない"],
+    ]
+  }
+};
+
+function parseBP(str) {
+  if (!str) return { sys: null, dia: null };
+  const parts = str.split('/');
+  return { sys: parseInt(parts[0]) || null, dia: parseInt(parts[1]) || null };
+}
+
+function calculate() {
+  const age = parseFloat(document.getElementById('age').value);
+  const height = parseFloat(document.getElementById('height').value);
+  const weight = parseFloat(document.getElementById('weight').value);
+  const sex = document.getElementById('sex').value;
+  const dist1 = parseFloat(document.getElementById('dist1').value);
+  const dist2 = parseFloat(document.getElementById('dist2').value);
+  const borg1 = parseFloat(document.getElementById('borg1').value);
+  const borg2 = parseFloat(document.getElementById('borg2').value);
+
+  if (!age || !height || !weight || !dist1 || !dist2) {
+    alert('年齢・身長・体重・歩行距離（両条件）を入力してください。');
+    return;
+  }
+
+  // Enright & Sherrill予測式
+  let predicted;
+  if (sex === 'male') {
+    predicted = 7.57 * height - 5.02 * age - 1.76 * weight - 309;
+  } else {
+    predicted = 2.11 * height - 2.29 * weight - 5.78 * age + 667;
+  }
+  predicted = Math.max(predicted, 1);
+
+  // Cahalin式 VO2
+  const vo2_1 = (0.03 * dist1) + 3.98;
+  const vo2_2 = (0.03 * dist2) + 3.98;
+  const mets1 = vo2_1 / 3.5;
+  const mets2 = vo2_2 / 3.5;
+  const pct1 = (dist1 / predicted * 100).toFixed(2);
+  const pct2 = (dist2 / predicted * 100).toFixed(2);
+
+  // BP diff
+  const bp_r1 = parseBP(document.getElementById('bp_rest1').value);
+  const bp_e1 = parseBP(document.getElementById('bp_ex1').value);
+  const bp_r2 = parseBP(document.getElementById('bp_rest2').value);
+  const bp_e2 = parseBP(document.getElementById('bp_ex2').value);
+  const bpDiff1 = (bp_e1.sys && bp_r1.sys) ? bp_e1.sys - bp_r1.sys : null;
+  const bpDiff2 = (bp_e2.sys && bp_r2.sys) ? bp_e2.sys - bp_r2.sys : null;
+  const hrDiff1_val = (document.getElementById('hr_ex1').value && document.getElementById('hr_rest1').value) ?
+    parseInt(document.getElementById('hr_ex1').value) - parseInt(document.getElementById('hr_rest1').value) : null;
+  const hrDiff2_val = (document.getElementById('hr_ex2').value && document.getElementById('hr_rest2').value) ?
+    parseInt(document.getElementById('hr_ex2').value) - parseInt(document.getElementById('hr_rest2').value) : null;
+
+  // ===== RPP計算 =====
+  const rpp1_rest = (bp_r1.sys && parseInt(document.getElementById('hr_rest1').value))
+    ? bp_r1.sys * parseInt(document.getElementById('hr_rest1').value) : null;
+  const rpp1_ex   = (bp_e1.sys && parseInt(document.getElementById('hr_ex1').value))
+    ? bp_e1.sys * parseInt(document.getElementById('hr_ex1').value) : null;
+  const rpp2_rest = (bp_r2.sys && parseInt(document.getElementById('hr_rest2').value))
+    ? bp_r2.sys * parseInt(document.getElementById('hr_rest2').value) : null;
+  const rpp2_ex   = (bp_e2.sys && parseInt(document.getElementById('hr_ex2').value))
+    ? bp_e2.sys * parseInt(document.getElementById('hr_ex2').value) : null;
+
+  // ===== SpO2変動 =====
+  const spo2_r1 = parseFloat(document.getElementById('spo2_rest1').value) || null;
+  const spo2_e1 = parseFloat(document.getElementById('spo2_ex1').value)  || null;
+  const spo2_r2 = parseFloat(document.getElementById('spo2_rest2').value) || null;
+  const spo2_e2 = parseFloat(document.getElementById('spo2_ex2').value)  || null;
+  const spo2Drop1 = (spo2_r1 && spo2_e1) ? spo2_r1 - spo2_e1 : null;
+  const spo2Drop2 = (spo2_r2 && spo2_e2) ? spo2_r2 - spo2_e2 : null;
+
+  calcResults = {
+    age, height, weight, sex, dist1, dist2, borg1, borg2,
+    predicted: predicted.toFixed(2),
+    vo2_1: vo2_1.toFixed(2), vo2_2: vo2_2.toFixed(2),
+    mets1: mets1.toFixed(2), mets2: mets2.toFixed(2),
+    pct1, pct2,
+    bpDiff1, bpDiff2, hrDiff1_val, hrDiff2_val,
+    rpp1_rest, rpp1_ex, rpp2_rest, rpp2_ex,
+    spo2Drop1, spo2Drop2,
+    bp_rest1: document.getElementById('bp_rest1').value,
+    bp_ex1: document.getElementById('bp_ex1').value,
+    bp_rest2: document.getElementById('bp_rest2').value,
+    bp_ex2: document.getElementById('bp_ex2').value,
+    hr_rest1: document.getElementById('hr_rest1').value,
+    hr_ex1: document.getElementById('hr_ex1').value,
+    hr_rest2: document.getElementById('hr_rest2').value,
+    hr_ex2: document.getElementById('hr_ex2').value,
+    spo2_rest1: document.getElementById('spo2_rest1').value,
+    spo2_ex1: document.getElementById('spo2_ex1').value,
+    spo2_rest2: document.getElementById('spo2_rest2').value,
+    spo2_ex2: document.getElementById('spo2_ex2').value,
+    name: document.getElementById('name').value || '　　　　　　　　',
+    date: document.getElementById('date').value,
+    occupation: document.getElementById('occupation').value,
+    customOcc: document.getElementById('customOcc').value,
+  };
+
+  // Show results
+  const panel = document.getElementById('resultsPanel');
+  panel.classList.add('visible');
+
+  document.getElementById('resultsGrid').innerHTML = `
+    <div class="result-item">
+      <div class="r-label">予測6MWT距離（Enright式）</div>
+      <div class="r-value">${calcResults.predicted} m</div>
+      <div class="r-sub">同年代・同体格の基準値</div>
+    </div>
+    <div class="result-item green">
+      <div class="r-label">条件② AT相当 推定METs</div>
+      <div class="r-value">${calcResults.mets2} METs</div>
+      <div class="r-sub">VO₂ ${calcResults.vo2_2} mL/kg/min ／ 達成率 ${calcResults.pct2}%</div>
+    </div>
+    <div class="result-item orange">
+      <div class="r-label">条件① Peak 推定METs</div>
+      <div class="r-value">${calcResults.mets1} METs</div>
+      <div class="r-sub">VO₂ ${calcResults.vo2_1} mL/kg/min ／ 達成率 ${calcResults.pct1}%</div>
+    </div>
+    <div class="result-item">
+      <div class="r-label">運動耐容能判定</div>
+      <div class="r-value" style="font-size:16px;margin-top:6px;">${parseFloat(calcResults.pct1) < 70 ? '⚠️ 中等度低下' : parseFloat(calcResults.pct1) < 85 ? '△ 軽度低下' : '✅ 正常範囲'}</div>
+      <div class="r-sub">予測値達成率 ${calcResults.pct1}% 基準</div>
+    </div>
+  `;
+
+  document.getElementById('badgeRow').innerHTML = `
+    <span class="badge safe">安全域：${calcResults.mets2} METs 以下</span>
+    <span class="badge caution">注意域：${calcResults.mets1} METs 前後</span>
+  `;
+
+  // ===== RPP・SpO2・乖離判定パネル =====
+  renderRPPPanel();
+
+  // 選択済み活動のAT判定を再描画
+  renderSelectedList();
+  // 現在のタブリストも更新（バッジ反映）
+  filterList(activeTab, document.querySelector(`#panel-${activeTab} .act-search`)?.value || '');
+
+  // ===== AT判定テーブルの動的生成 =====
+  renderActJudgeTable(parseFloat(calcResults.mets2));
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===== RPP・SpO2・乖離判定パネル描画 =====
+function getRppClass(rpp) {
+  if (!rpp) return '';
+  if (rpp <= 10000)  return 'low';
+  if (rpp <= 15000)  return 'mild';
+  if (rpp <= 20000)  return 'mod';
+  return 'high';
+}
+function getRppLabel(rpp) {
+  if (!rpp) return '—';
+  if (rpp <= 10000)  return '低負荷';
+  if (rpp <= 15000)  return '軽負荷';
+  if (rpp <= 20000)  return '中等負荷';
+  return '高負荷';
+}
+function getRppPanelHtml(label, rpp_rest, rpp_ex) {
+  const cls_rest = getRppClass(rpp_rest);
+  const cls_ex   = getRppClass(rpp_ex);
+  const fmt = v => v ? v.toLocaleString() : '—';
+  return `
+    <div class="rpp-item ${cls_rest}">
+      <div class="rpp-label">${label} 安静時RPP</div>
+      <div class="rpp-val">${fmt(rpp_rest)}</div>
+      <div class="rpp-judge">${rpp_rest ? getRppLabel(rpp_rest) : '未入力'}</div>
+    </div>
+    <div class="rpp-item ${cls_ex}">
+      <div class="rpp-label">${label} 運動後RPP</div>
+      <div class="rpp-val">${fmt(rpp_ex)}</div>
+      <div class="rpp-judge">${rpp_ex ? getRppLabel(rpp_ex) : '未入力'}</div>
+    </div>`;
+}
+
+function getDiscordHtml(borgLabel, borg, rpp_ex) {
+  if (!borg || !rpp_ex) return '';
+  // 乖離判定
+  // Borg(CR10) ≤ 3 かつ RPP ≥ 16,000 → 過大評価
+  // Borg(CR10) ≥ 6 かつ RPP ≤ 10,000 → 過小評価
+  if (borg <= 3 && rpp_ex >= 16000) {
+    return `<div class="discord-box danger">
+      <div class="discord-title">⚠️ ${borgLabel}：主観・客観の乖離（過大評価の可能性）</div>
+      Borg ${borg}（楽〜やや楽）にもかかわらず、二重積 ${rpp_ex.toLocaleString()} と客観的負荷が高い状態です。<br>
+      <strong>体力の過大評価・症状認知の低下（無症候性虚血など）</strong>が考えられます。バイタルを重視した指導が重要です。
+      <div style="font-size:10px;margin-top:4px;opacity:0.8;">参考：Joo et al. 2004 — 心臓リハビリ患者の80%がBorg処方域内でも実際には過負荷であった</div>
+    </div>`;
+  }
+  if (borg >= 6 && rpp_ex <= 10000) {
+    return `<div class="discord-box warn">
+      <div class="discord-title">⚠️ ${borgLabel}：主観・客観の乖離（過小評価の可能性）</div>
+      Borg ${borg}（かなりきつい）にもかかわらず、二重積 ${rpp_ex.toLocaleString()} と客観的負荷は低い状態です。<br>
+      <strong>体力の過小評価・不安・破局的思考・デコンディショニング</strong>の影響が考えられます。
+    </div>`;
+  }
+  return `<div class="discord-box ok">
+    <div class="discord-title">✅ ${borgLabel}：主観・客観評価が概ね一致</div>
+    Borg ${borg} と二重積 ${rpp_ex.toLocaleString()} は概ね対応しています。
+  </div>`;
+}
+
+function getSpo2Html(label, drop) {
+  if (drop === null) return '';
+  if (drop >= 3) {
+    return `<div class="spo2-box warn">
+      <div style="font-weight:900;">🫁 ${label}：運動誘発性低酸素の可能性</div>
+      SpO₂が安静時比 <strong>${drop.toFixed(1)}%低下</strong>しています（3%以上の低下は臨床的に注意）。<br>
+      呼吸器疾患の合併・心不全増悪・換気血流不均衡などを念頭に置いた評価を推奨します。
+    </div>`;
+  }
+  return `<div class="spo2-box ok">
+    🫁 ${label}：SpO₂変動は軽微（${drop >= 0 ? drop.toFixed(1)+'%低下' : Math.abs(drop).toFixed(1)+'%上昇'}）— 問題なし
+  </div>`;
+}
+
+function renderRPPPanel() {
+  const R = calcResults;
+  const panel = document.getElementById('resultsPanel');
+
+  // 既存パネルを削除して再生成
+  const old = document.getElementById('rppPanel');
+  if (old) old.remove();
+
+  const div = document.createElement('div');
+  div.id = 'rppPanel';
+  div.className = 'rpp-panel';
+
+  let html = '<div class="rpp-title">💓 二重積（Rate Pressure Product）／ SpO₂ ／ 主観・客観評価の一致性</div>';
+
+  // 条件① RPP
+  if (R.rpp1_ex || R.rpp1_rest) {
+    html += '<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px;">条件① 自由速度（Peak）</div>';
+    html += '<div class="rpp-grid">' + getRppPanelHtml('条件①', R.rpp1_rest, R.rpp1_ex) + '</div>';
+    html += getDiscordHtml('条件①', R.borg1, R.rpp1_ex);
+    html += getSpo2Html('条件①', R.spo2Drop1);
+  }
+
+  // 条件② RPP
+  if (R.rpp2_ex || R.rpp2_rest) {
+    html += '<div style="font-size:11px;font-weight:700;color:var(--gray);margin:12px 0 6px;">条件② Borg調整（AT相当）</div>';
+    html += '<div class="rpp-grid">' + getRppPanelHtml('条件②', R.rpp2_rest, R.rpp2_ex) + '</div>';
+    html += getDiscordHtml('条件②', R.borg2, R.rpp2_ex);
+    html += getSpo2Html('条件②', R.spo2Drop2);
+  }
+
+  if (!R.rpp1_ex && !R.rpp1_rest && !R.rpp2_ex && !R.rpp2_rest) {
+    html += '<div style="font-size:12px;color:var(--gray);">血圧・脈拍を入力すると二重積が表示されます。</div>';
+  }
+
+  html += '<div style="font-size:10px;color:var(--gray);margin-top:8px;line-height:1.6;">' +
+    '※二重積 = 収縮期血圧 × 心拍数。乖離判定基準：Borg(CR10) ≤ 3 かつ RPP ≥ 16,000 で過大評価、' +
+    'Borg ≥ 6 かつ RPP ≤ 10,000 で過小評価と判定（参考：Joo et al. 2004, PubMed）' +
+    '</div>';
+
+  div.innerHTML = html;
+
+  // badgeRowの後に挿入
+  const badgeRow = document.getElementById('badgeRow');
+  badgeRow.insertAdjacentElement('afterend', div);
+}
+
+
+/**
+ * AT相当METs（条件②）を基準に各活動を判定してUIに表示
+ * 判定基準：
+ *   ✅ AT以下 (metsMax <= atMets)         → 有酸素域・継続可
+ *   ⚠️ ATやや超 (atMets < metsMax <= atMets×1.3) → 短時間・要観察
+ *   ❌ AT大幅超 (metsMax > atMets×1.3)   → 原則回避
+ */
+function renderActJudgeTable(atMets) {
+  const occKey = document.getElementById('occupation').value;
+  const occData = OCCUPATION_DATA[occKey];
+  const section = document.getElementById('actJudgeSection');
+  section.style.display = 'block';
+
+  // ATしきい値バッジ
+  const atBound1 = atMets.toFixed(2);
+  const atBound2 = (atMets * 1.3).toFixed(2);
+  document.getElementById('atThresholdBadges').innerHTML = `
+    <span style="background:var(--green-light);color:var(--green);padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;">
+      ✅ AT以下 ≤ ${atBound1} METs
+    </span>
+    <span style="background:var(--orange-light);color:var(--orange);padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;">
+      ⚠️ AT超〜注意域 ${atBound1}〜${atBound2} METs
+    </span>
+    <span style="background:var(--red-light);color:var(--red);padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;">
+      ❌ 原則回避 > ${atBound2} METs
+    </span>
+  `;
+
+  // テーブル生成
+  let rows = '';
+  occData.actRows.forEach(([actName, metsMax, maxMin, note]) => {
+    // 判定ロジック
+    let judgeClass, judgeText, judgeColor, rowBg, metsColor;
+    if (metsMax <= atMets) {
+      judgeClass = 'safe';
+      judgeText = '✅ AT以下';
+      judgeColor = '#1A7A45';
+      rowBg = '#F3FBF6';
+      metsColor = '#1A7A45';
+    } else if (metsMax <= atMets * 1.3) {
+      judgeClass = 'caution';
+      judgeText = '⚠️ 要注意';
+      judgeColor = '#B05E00';
+      rowBg = '#FFFBF3';
+      metsColor = '#B05E00';
+    } else {
+      judgeClass = 'danger';
+      judgeText = '❌ 原則回避';
+      judgeColor = '#C0392B';
+      rowBg = '#FEF5F5';
+      metsColor = '#C0392B';
+    }
+
+    // 余裕度の表示（ATからの距離）
+    const margin = (metsMax - atMets).toFixed(2);
+    const marginText = margin > 0
+      ? `<span style="font-size:10px;color:${judgeColor};">AT+${margin}</span>`
+      : `<span style="font-size:10px;color:var(--green);">AT−${Math.abs(margin)}</span>`;
+
+    // 最大持続時間
+    const durText = maxMin
+      ? `<span style="font-size:10px;color:var(--gray);">最大${maxMin}分</span>`
+      : '';
+
+    rows += `
+      <tr style="background:${rowBg};">
+        <td style="padding:8px 12px;font-size:13px;border-bottom:1px solid #e8eef4;">${actName}</td>
+        <td style="padding:8px 12px;text-align:center;font-weight:700;font-size:14px;color:${metsColor};border-bottom:1px solid #e8eef4;">
+          ${metsMax}<br><span style="font-size:10px;font-weight:400;color:var(--gray);">METs上限</span>
+        </td>
+        <td style="padding:8px 12px;text-align:center;border-bottom:1px solid #e8eef4;">
+          <span style="font-weight:700;color:${judgeColor};">${judgeText}</span><br>
+          ${marginText} ${durText}
+        </td>
+        <td style="padding:8px 12px;font-size:12px;color:var(--gray);border-bottom:1px solid #e8eef4;">${note}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById('actJudgeTable').innerHTML = `
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(26,95,168,0.08);">
+        <thead>
+          <tr style="background:#1A5FA8;color:white;">
+            <th style="padding:10px 12px;text-align:left;font-size:12px;font-weight:700;width:35%;">活動内容</th>
+            <th style="padding:10px 12px;text-align:center;font-size:12px;font-weight:700;width:15%;">METs<br>（上限）</th>
+            <th style="padding:10px 12px;text-align:center;font-size:12px;font-weight:700;width:18%;">AT判定</th>
+            <th style="padding:10px 12px;text-align:left;font-size:12px;font-weight:700;">指導ポイント</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:var(--gray);line-height:1.6;">
+      ※METs上限は文献値（2011 Compendium of Physical Activities）に基づく推定値です。個人差・環境条件により変動します。
+    </div>
+  `;
+}
+
+function clearAll() {
+  document.querySelectorAll('input[type=number], input[type=text]').forEach(i => i.value = '');
+  document.getElementById('date').valueAsDate = new Date();
+  document.getElementById('resultsPanel').classList.remove('visible');
+  document.getElementById('actJudgeSection').style.display = 'none';
+  calcResults = {};
+  // 選択済みリストはそのまま保持（被験者変更時は手動で削除）
+  renderSelectedList();
+}
+
+// ===== DOCX GENERATION (Pure XML + ZIP, no external library) =====
+
+// ZIP生成（DEFLATEなし・stored方式でシンプルに）
+function buildDocx(files) {
+  // files: { path: Uint8Array or string }
+  const enc = new TextEncoder();
+  const entries = [];
+  let offset = 0;
+
+  function u32le(n) {
+    const b = new Uint8Array(4);
+    new DataView(b.buffer).setUint32(0, n >>> 0, true);
+    return b;
+  }
+  function u16le(n) {
+    const b = new Uint8Array(2);
+    new DataView(b.buffer).setUint16(0, n & 0xFFFF, true);
+    return b;
+  }
+
+  // CRC32テーブル
+  const crcTable = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    let c = i;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    crcTable[i] = c;
+  }
+  function crc32(data) {
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < data.length; i++) crc = (crc >>> 8) ^ crcTable[(crc ^ data[i]) & 0xFF];
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  const localHeaders = [];
+  const centralDir = [];
+
+  for (const [path, content] of Object.entries(files)) {
+    const data = typeof content === 'string' ? enc.encode(content) : content;
+    const name = enc.encode(path);
+    const crc  = crc32(data);
+    const size = data.length;
+
+    // Local file header
+    const lh = new Uint8Array(30 + name.length);
+    const ldv = new DataView(lh.buffer);
+    ldv.setUint32(0,  0x04034b50, true); // sig
+    ldv.setUint16(4,  20, true);          // version needed
+    ldv.setUint16(6,  0x0800, true);      // flags (UTF-8)
+    ldv.setUint16(8,  0, true);           // compression: stored
+    ldv.setUint16(10, 0, true);           // mod time
+    ldv.setUint16(12, 0, true);           // mod date
+    ldv.setUint32(14, crc, true);
+    ldv.setUint32(18, size, true);
+    ldv.setUint32(22, size, true);
+    ldv.setUint16(26, name.length, true);
+    ldv.setUint16(28, 0, true);
+    lh.set(name, 30);
+
+    entries.push(lh, data);
+
+    // Central directory entry
+    const cd = new Uint8Array(46 + name.length);
+    const cdv = new DataView(cd.buffer);
+    cdv.setUint32(0,  0x02014b50, true);
+    cdv.setUint16(4,  20, true);
+    cdv.setUint16(6,  20, true);
+    cdv.setUint16(8,  0x0800, true);
+    cdv.setUint16(10, 0, true);
+    cdv.setUint16(12, 0, true);
+    cdv.setUint16(14, 0, true);
+    cdv.setUint32(16, crc, true);
+    cdv.setUint32(20, size, true);
+    cdv.setUint32(24, size, true);
+    cdv.setUint16(28, name.length, true);
+    cdv.setUint16(30, 0, true);
+    cdv.setUint16(32, 0, true);
+    cdv.setUint16(34, 0, true);
+    cdv.setUint16(36, 0, true);
+    cdv.setUint32(38, 0, true);
+    cdv.setUint32(42, offset, true);
+    cd.set(name, 46);
+
+    centralDir.push(cd);
+    offset += lh.length + data.length;
+  }
+
+  const cdSize   = centralDir.reduce((s, b) => s + b.length, 0);
+  const eocd     = new Uint8Array(22);
+  const eocdv    = new DataView(eocd.buffer);
+  const numFiles = Object.keys(files).length;
+  eocdv.setUint32(0,  0x06054b50, true);
+  eocdv.setUint16(4,  0, true);
+  eocdv.setUint16(6,  0, true);
+  eocdv.setUint16(8,  numFiles, true);
+  eocdv.setUint16(10, numFiles, true);
+  eocdv.setUint32(12, cdSize, true);
+  eocdv.setUint32(16, offset, true);
+  eocdv.setUint16(20, 0, true);
+
+  const all = [...entries, ...centralDir, eocd];
+  const total = all.reduce((s, b) => s + b.length, 0);
+  const out = new Uint8Array(total);
+  let pos = 0;
+  for (const b of all) { out.set(b, pos); pos += b.length; }
+  return out;
+}
+
+// ===== XML ヘルパー =====
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function clr(hex) { return String(hex).replace('#','').toUpperCase(); }
+
+function run(text, {sz=18, bold=false, color='000000', font='HGP丸ゴシックM-PRO'}={}) {
+  // デフォルト値（HGP丸ゴシックM-PRO/18pt/000000）は省略してXMLを圧縮
+  const rpr = [];
+  if (font !== 'HGP丸ゴシックM-PRO') rpr.push(`<w:rFonts w:ascii="${font}" w:hAnsi="${font}" w:eastAsia="${font}" w:cs="${font}"/>`);
+  if (sz !== 18) rpr.push(`<w:sz w:val="${sz}"/><w:szCs w:val="${sz}"/>`);
+  if (color !== '000000') rpr.push(`<w:color w:val="${clr(color)}"/>`);
+  if (bold) rpr.push('<w:b/>');
+  const rprXml = rpr.length ? `<w:rPr>${rpr.join('')}</w:rPr>` : '';
+  return `<w:r>${rprXml}<w:t xml:space="preserve">${esc(text)}</w:t></w:r>`;
+}
+
+function para(runs, {align='left', before=40, after=40, borderBottom=null, bullet=false}={}) {
+  // デフォルト値は省略してXMLを圧縮
+  const ppr = [];
+  if (align !== 'left') ppr.push(`<w:jc w:val="${align}"/>`);
+  if (before !== 40 || after !== 40) ppr.push(`<w:spacing w:before="${before}" w:after="${after}"/>`);
+  if (borderBottom) ppr.push(`<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="${clr(borderBottom)}"/></w:pBdr>`);
+  if (bullet) ppr.push('<w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr>');
+  const pprXml = ppr.length ? `<w:pPr>${ppr.join('')}</w:pPr>` : '';
+  return `<w:p>${pprXml}${runs}</w:p>`;
+}
+
+function secHdr(text, color='1A5FA8') {
+  return para(run(text,{sz:22,bold:true,color,font:'HGP丸ゴシックM-PRO'}),{before:100,after:60,borderBottom:color});
+}
+
+function spacer(pt=80) {
+  return `<w:p><w:pPr><w:spacing w:before="${pt}" w:after="0"/></w:pPr></w:p>`;
+}
+
+function cell(content, wVal, {fill='FFFFFF', borders=null, padTop=50, padBottom=50, padLeft=100, padRight=100}={}) {
+  // デフォルトボーダー(AAAAAA/sz4)はTableGridスタイルで定義済みなので省略
+  // デフォルトマージン(50/100)も同様
+  const bdr = borders
+    ? `<w:tcBorders>${Object.entries(borders).map(([s,[c,sz]])=>`<w:${s} w:val="single" w:sz="${sz}" w:space="0" w:color="${clr(c)}"/>`).join('')}</w:tcBorders>`
+    : '';
+  const mar = (padTop===50 && padBottom===50 && padLeft===100 && padRight===100)
+    ? ''
+    : `<w:tcMar><w:top w:w="${padTop}" w:type="dxa"/><w:bottom w:w="${padBottom}" w:type="dxa"/><w:left w:w="${padLeft}" w:type="dxa"/><w:right w:w="${padRight}" w:type="dxa"/></w:tcMar>`;
+  const shd = fill !== 'FFFFFF' ? `<w:shd w:val="clear" w:color="auto" w:fill="${clr(fill)}"/>` : '';
+  return `<w:tc><w:tcPr><w:tcW w:w="${wVal}" w:type="dxa"/>${bdr}${shd}${mar}</w:tcPr>${content}</w:tc>`;
+}
+
+function tblRow(...cells) { return `<w:tr>${cells.join('')}</w:tr>`; }
+
+function tbl(rows, colWidths) {
+  const total = colWidths.reduce((s,w)=>s+w,0);
+  const grid  = colWidths.map(w=>`<w:gridCol w:w="${w}"/>`).join('');
+  return `<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="${total}" w:type="dxa"/><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>${grid}</w:tblGrid>${rows.join('')}</w:tbl>`;
+}
+
+// ===== HDR cell ヘルパー =====
+function hdrCell(text, wVal) {
+  return cell(para(run(text,{sz:16,bold:true,color:'FFFFFF'}),{before:0,after:0}), wVal, {fill:'1A5FA8'});
+}
+function hdrCell2(text, wVal, fillColor='2C5F8A') {
+  return cell(para(run(text,{sz:16,bold:true,color:'FFFFFF'}),{before:0,after:0}), wVal, {fill:fillColor});
+}
+
+// ===== AT判定 =====
+function getJudge(metsMax, atMets) {
+  if (metsMax <= atMets)        return {badge:'✅ AT以下',   bCol:'1A7A45', bBg:'E8F4EC'};
+  if (metsMax <= atMets * 1.3)  return {badge:'⚠️ 要注意',   bCol:'B05E00', bBg:'FFF4E5'};
+  return                               {badge:'❌ 原則回避', bCol:'C0392B', bBg:'FDE0DE'};
+}
+
+// ===== DOCUMENT.XML 生成 =====
+function buildDocumentXml(R, occData, occLabel, selectedActivities) {
+  const CW = 11906 - 1800; // content width
+  const atMets = parseFloat(R.mets2);
+  const parts = [];
+
+  const lb = (c) => ({top:['AAAAAA',4],bottom:['AAAAAA',4],left:[c,16],right:['AAAAAA',4]});
+  const lbNoRight = (c) => ({top:['AAAAAA',4],bottom:['AAAAAA',4],left:[c,16],right:['FFFFFF',0]});
+  const std = {padTop:80,padBottom:80,padLeft:120,padRight:120};
+  const sm  = {padTop:50,padBottom:50,padLeft:100,padRight:100};
+
+  // タイトル
+  parts.push(para(run('6分間歩行テスト　指導資料',{sz:30,bold:true,color:'1A5FA8',font:'HGP丸ゴシックM-PRO'}),{align:'center',before:0,after:60,borderBottom:'1A5FA8'}));
+  parts.push(para(run('6MWT結果にもとづく個別指導資料',{sz:18,color:'5A7A9A',font:'HGP丸ゴシックM-PRO'}),{align:'center',before:30,after:140}));
+
+  // 被験者情報
+  const infoContent = para(
+    run(`氏名：${R.name} 様　　`) + run(`年齢：${R.age}歳　身長：${R.height}cm　体重：${R.weight}kg　　`) + run(`指導日：${R.date||'　　　年　　月　　日'}`),
+    {before:0,after:0}
+  );
+  parts.push(tbl([tblRow(cell(infoContent,CW,{fill:'EEF4FB',borders:lb('1A5FA8'),...std}))],[CW]));
+  parts.push(spacer(80));
+
+  // ATバナー
+  const halfW = Math.floor(CW/2);
+  const bannerL =
+    para(run('✅  安全に続けられる運動強度（有酸素域）',{sz:17,bold:true,color:'1A7A45'}),{before:0,after:20})+
+    para(run(`${R.mets2} METs 以下`,{sz:28,bold:true,color:'1A7A45'}),{before:0,after:20})+
+    para(run(`Borg指数 ${R.borg2}（楽〜ややつらい）`,{sz:16,color:'2D6A40'}),{before:0,after:0})+
+    para(run('→ 時間を気にせず活動してOK',{sz:16,color:'2D6A40'}),{before:0,after:0});
+  const bannerR =
+    para(run('⚠️  できるだけ避けるか、時間を短くする強度',{sz:17,bold:true,color:'B05E00'}),{before:0,after:20})+
+    para(run(`${R.mets1} METs 前後`,{sz:28,bold:true,color:'B05E00'}),{before:0,after:20})+
+    para(run(`Borg指数 ${R.borg1}（ややつらい）・血圧上昇あり`,{sz:16,color:'7A4000'}),{before:0,after:0})+
+    para(run('→ 無酸素域の要素が出現するレベル',{sz:16,color:'7A4000'}),{before:0,after:0});
+  parts.push(tbl([tblRow(
+    cell(bannerL,halfW,{fill:'E8F4EC',borders:lbNoRight('2D9E5C'),...std}),
+    cell(bannerR,CW-halfW,{fill:'FFF4E5',borders:lb('E07B00'),...std})
+  )],[halfW,CW-halfW]));
+  parts.push(spacer(80));
+
+  // バイタル
+  parts.push(secHdr('バイタルサイン'));
+  const vW = [2400, 2426, 1560, 1560, 1760]; // 5列
+  const vHdr = (t,w) => cell(para(run(t,{sz:16,bold:true,color:'FFFFFF'}),{before:0,after:0}),w,{fill:'1A5FA8',...sm});
+  const vCell = (t,w,fill='FFFFFF') => cell(para(run(t,{sz:16}),{before:0,after:0}),w,{fill,...sm});
+
+  const bpD1 = R.bpDiff1!=null ? ` 収縮期${R.bpDiff1>=0?'+':''}${R.bpDiff1}mmHg`:''
+  const bpD2 = R.bpDiff2!=null ? ` 収縮期${R.bpDiff2>=0?'+':''}${R.bpDiff2}mmHg`:''
+  const hrD1 = R.hrDiff1_val!=null ? ` (${R.hrDiff1_val>=0?'+':''}${R.hrDiff1_val}回/分)`:'';
+  const hrD2 = R.hrDiff2_val!=null ? ` (${R.hrDiff2_val>=0?'+':''}${R.hrDiff2_val}回/分)`:'';
+
+  parts.push(tbl([
+    tblRow(vHdr('測定タイミング',vW[0]),vHdr('血圧 (mmHg)',vW[1]),vHdr('脈拍 (回/分)',vW[2]),vHdr('SpO2 (%)',vW[3])),
+    tblRow(vCell('安静時①（条件①前）',vW[0],'F4F8FC'),vCell(R.bp_rest1||'—',vW[1]),vCell(R.hr_rest1||'—',vW[2]),vCell(R.spo2_rest1||'—',vW[3])),
+    tblRow(vCell(`条件①後（直後）${bpD1}`,vW[0],'F4F8FC'),vCell(R.bp_ex1||'—',vW[1],'FFF9F0'),vCell(`${R.hr_ex1||'—'}${hrD1}`,vW[2],'FFF9F0'),vCell(R.spo2_ex1||'—',vW[3],'FFF9F0')),
+    tblRow(vCell('安静時②（条件②前）',vW[0],'F4F8FC'),vCell(R.bp_rest2||'—',vW[1]),vCell(R.hr_rest2||'—',vW[2]),vCell(R.spo2_rest2||'—',vW[3])),
+    tblRow(vCell(`条件②後（直後）${bpD2}`,vW[0],'F4F8FC'),vCell(R.bp_ex2||'—',vW[1],'F0FBF4'),vCell(`${R.hr_ex2||'—'}${hrD2}`,vW[2],'F0FBF4'),vCell(R.spo2_ex2||'—',vW[3],'F0FBF4')),
+  ],vW));
+  parts.push(spacer(80));
+
+  // 6MWT結果
+  parts.push(secHdr('6分間歩行試験 結果・推定値'));
+  const rW = [3600, Math.floor((CW-3600)/2), CW-3600-Math.floor((CW-3600)/2)];
+  const rHdr = (t,w) => cell(para(run(t,{sz:16,bold:true,color:'FFFFFF'}),{before:0,after:0}),w,{fill:'1A5FA8',...sm});
+  const rCell = (t,w,fill='FFFFFF',bold=false,color='000000') => cell(para(run(t,{sz:16,bold,color}),{before:0,after:0}),w,{fill,...sm});
+  parts.push(tbl([
+    tblRow(rHdr('指標',rW[0]),rHdr('条件① 自由速度（Peak）',rW[1]),rHdr('条件② Borg調整（AT相当）',rW[2])),
+    tblRow(rCell('歩行距離',rW[0],'F4F8FC'),rCell(`${R.dist1} m`,rW[1],'FFFFFF',true),rCell(`${R.dist2} m`,rW[2],'FFFFFF',true)),
+    tblRow(rCell('Borg指数（10点法）',rW[0],'F4F8FC'),rCell(`${R.borg1}（ややつらい）`,rW[1]),rCell(`${R.borg2}（楽〜ややつらい）`,rW[2])),
+    tblRow(rCell('予測6MWT距離',rW[0],'F4F8FC'),rCell(`${R.predicted} m`,rW[1]),rCell(`${R.predicted} m`,rW[2])),
+    tblRow(rCell('予測値達成率',rW[0],'F4F8FC'),rCell(`${R.pct1}%`,rW[1]),rCell(`${R.pct2}%`,rW[2])),
+    tblRow(rCell('推定VO₂',rW[0],'F4F8FC'),rCell(`${R.vo2_1} mL/kg/min`,rW[1]),rCell(`${R.vo2_2} mL/kg/min`,rW[2])),
+    tblRow(rCell('推定METs',rW[0],'F4F8FC'),rCell(`約 ${R.mets1} METs`,rW[1],'FFF4E5',true,'B05E00'),rCell(`約 ${R.mets2} METs`,rW[2],'E8F4EC',true,'1A7A45')),
+  ],rW));
+  parts.push(para(run('※予測値：Enright & Sherrill式（1998）　推定VO₂：Cahalin式（1996）',{sz:13,color:'888888'}),{before:20,after:0}));
+  parts.push(spacer(80));
+
+  // ===== RPP・SpO2・乖離判定セクション =====
+  parts.push(secHdr('二重積（RPP）・SpO₂変動・主観客観評価の一致性','2C5F8A'));
+
+  // RPP判定ヘルパー
+  const rppLabel = v => !v ? '未入力' : v <= 10000 ? '低負荷' : v <= 15000 ? '軽負荷' : v <= 20000 ? '中等負荷' : '高負荷';
+  const rppFill  = v => !v ? 'F4F8FC' : v <= 10000 ? 'E8F4EC' : v <= 15000 ? 'EEF4FB' : v <= 20000 ? 'FFF4E5' : 'FDE0DE';
+  const rppColor = v => !v ? '888888' : v <= 10000 ? '1A7A45' : v <= 15000 ? '1A5FA8' : v <= 20000 ? 'B05E00' : 'C0392B';
+  const fmtRpp   = v => v ? v.toLocaleString() : '—';
+
+  // RPP表
+  const rpW = [2400, 1350, 1350, 1350, CW-2400-1350-1350-1350];
+  const rpHdr = (t,w) => cell(para(run(t,{sz:15,bold:true,color:'FFFFFF'}),{before:0,after:0,align:'center'}),w,{fill:'2C5F8A',...sm});
+  const rpCell = (t,w,fill='FFFFFF',bold=false,color='000000') => cell(para(run(t,{sz:15,bold,color}),{before:0,after:0,align:'center'}),w,{fill,...sm});
+
+  parts.push(tbl([
+    tblRow(rpHdr('',rpW[0]),rpHdr('条件① 安静',rpW[1]),rpHdr('条件① 運動後',rpW[2]),rpHdr('条件② 安静',rpW[3]),rpHdr('条件② 運動後',rpW[4])),
+    tblRow(
+      cell(para(run('二重積 (RPP)',{sz:15,bold:true}),{before:0,after:0}),rpW[0],{fill:'F4F8FC',...sm}),
+      rpCell(fmtRpp(R.rpp1_rest),rpW[1],rppFill(R.rpp1_rest),true,rppColor(R.rpp1_rest)),
+      rpCell(fmtRpp(R.rpp1_ex),  rpW[2],rppFill(R.rpp1_ex),  true,rppColor(R.rpp1_ex)),
+      rpCell(fmtRpp(R.rpp2_rest),rpW[3],rppFill(R.rpp2_rest),true,rppColor(R.rpp2_rest)),
+      rpCell(fmtRpp(R.rpp2_ex),  rpW[4],rppFill(R.rpp2_ex),  true,rppColor(R.rpp2_ex)),
+    ),
+    tblRow(
+      cell(para(run('RPP判定',{sz:15,bold:true}),{before:0,after:0}),rpW[0],{fill:'F4F8FC',...sm}),
+      rpCell(rppLabel(R.rpp1_rest),rpW[1],rppFill(R.rpp1_rest),false,rppColor(R.rpp1_rest)),
+      rpCell(rppLabel(R.rpp1_ex),  rpW[2],rppFill(R.rpp1_ex),  false,rppColor(R.rpp1_ex)),
+      rpCell(rppLabel(R.rpp2_rest),rpW[3],rppFill(R.rpp2_rest),false,rppColor(R.rpp2_rest)),
+      rpCell(rppLabel(R.rpp2_ex),  rpW[4],rppFill(R.rpp2_ex),  false,rppColor(R.rpp2_ex)),
+    ),
+    tblRow(
+      cell(para(run('Borg指数（CR10）',{sz:15,bold:true}),{before:0,after:0}),rpW[0],{fill:'F4F8FC',...sm}),
+      rpCell(`${R.borg1}`,rpW[1],'FFFFFF',true,'000000'),
+      rpCell(`${R.borg1}`,rpW[2],'FFF9F0',true,'B05E00'),
+      rpCell(`${R.borg2}`,rpW[3],'FFFFFF',true,'000000'),
+      rpCell(`${R.borg2}`,rpW[4],'F0FBF4',true,'1A7A45'),
+    ),
+    tblRow(
+      cell(para(run('SpO₂変動',{sz:15,bold:true}),{before:0,after:0}),rpW[0],{fill:'F4F8FC',...sm}),
+      rpCell('—',rpW[1]),
+      rpCell(R.spo2Drop1 !== null ? `${R.spo2Drop1 >= 0 ? '-' : '+'}${Math.abs(R.spo2Drop1).toFixed(1)}%` : '—',
+             rpW[2], R.spo2Drop1 >= 3 ? 'FDE0DE' : 'FFFFFF',
+             R.spo2Drop1 >= 3, R.spo2Drop1 >= 3 ? 'C0392B' : '000000'),
+      rpCell('—',rpW[3]),
+      rpCell(R.spo2Drop2 !== null ? `${R.spo2Drop2 >= 0 ? '-' : '+'}${Math.abs(R.spo2Drop2).toFixed(1)}%` : '—',
+             rpW[4], R.spo2Drop2 >= 3 ? 'FDE0DE' : 'FFFFFF',
+             R.spo2Drop2 >= 3, R.spo2Drop2 >= 3 ? 'C0392B' : '000000'),
+    ),
+  ],rpW));
+
+  // 乖離判定コメント
+  const discordComment = (borgLabel, borg, rpp_ex) => {
+    if (!borg || !rpp_ex) return null;
+    if (borg <= 3 && rpp_ex >= 16000)
+      return para(
+        run(`⚠️ ${borgLabel} 主観・客観評価の乖離（過大評価の可能性）`, {sz:15,bold:true,color:'C0392B'}),
+        {before:0,after:20}
+      ) + para(
+        run(`Borg ${borg}（楽〜やや楽）に対し二重積 ${rpp_ex.toLocaleString()} は高値です。体力の過大評価・症状認知の低下（無症候性虚血など）が考えられます。バイタルを重視した指導が重要です。`,{sz:15,color:'000000'}),
+        {before:0,after:0}
+      );
+    if (borg >= 6 && rpp_ex <= 10000)
+      return para(
+        run(`⚠️ ${borgLabel} 主観・客観評価の乖離（過小評価の可能性）`, {sz:15,bold:true,color:'B05E00'}),
+        {before:0,after:20}
+      ) + para(
+        run(`Borg ${borg}（かなりきつい）に対し二重積 ${rpp_ex.toLocaleString()} は低値です。体力の過小評価・不安・デコンディショニングの影響が考えられます。`,{sz:15,color:'000000'}),
+        {before:0,after:0}
+      );
+    return para(
+      run(`✅ ${borgLabel} 主観・客観評価が概ね一致（Borg ${borg} ／ RPP ${rpp_ex.toLocaleString()}）`,{sz:15,bold:true,color:'1A7A45'}),
+      {before:0,after:0}
+    );
+  };
+
+  const spo2Comment = (borgLabel, drop) => {
+    if (drop === null) return null;
+    if (drop >= 3)
+      return para(
+        run(`🫁 ${borgLabel} 運動誘発性低酸素の可能性（SpO₂ ${drop.toFixed(1)}%低下）`,{sz:15,bold:true,color:'C0392B'})+
+        run(' — 呼吸器疾患の合併・心不全増悪などを念頭に置いた評価を推奨します。',{sz:15,color:'000000'}),
+        {before:0,after:0}
+      );
+    return null;
+  };
+
+  const rppNotesBox = (content) => tbl([tblRow(cell(content, CW, {
+    fill:'EEF4FB',
+    borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:['2C5F8A',12],right:['AAAAAA',4]},
+    padTop:80,padBottom:80,padLeft:120,padRight:120
+  }))],[CW]);
+
+  let noteContent = '';
+  const d1 = discordComment('条件①', R.borg1, R.rpp1_ex);
+  const d2 = discordComment('条件②', R.borg2, R.rpp2_ex);
+  const s1 = spo2Comment('条件①', R.spo2Drop1);
+  const s2 = spo2Comment('条件②', R.spo2Drop2);
+  if (d1) noteContent += d1 + spacer(30);
+  if (d2) noteContent += d2 + spacer(30);
+  if (s1) noteContent += s1 + spacer(30);
+  if (s2) noteContent += s2;
+  if (noteContent) parts.push(rppNotesBox(noteContent));
+
+  parts.push(para(run('※RPP（二重積）= 収縮期血圧 × 心拍数。乖離判定：Borg(CR10) ≤ 3 かつ RPP ≥ 16,000 で過大評価、Borg ≥ 6 かつ RPP ≤ 10,000 で過小評価（参考：Joo et al. 2004）',{sz:13,color:'888888'}),{before:20,after:0}));
+  parts.push(spacer(80));
+
+  // 職種別活動判定
+  parts.push(secHdr('日常生活・職場での活動目安（AT判定）'));
+  const aW = [3600,1100,1200,1400,CW-3600-1100-1200-1400];
+  const aRows = occData.actRows.map((r,i)=>{
+    const j = getJudge(r[1], atMets);
+    const bg = i%2===0 ? 'FFFFFF' : 'F4F8FC';
+    return tblRow(
+      cell(para(run(r[0],{sz:15}),{before:0,after:0}),aW[0],{fill:bg,...sm}),
+      cell(para(run(`${r[1]} METs`,{sz:15,bold:true}),{before:0,after:0,align:'center'}),aW[1],{fill:bg,...sm}),
+      cell(para(run(j.badge,{sz:15,bold:true,color:j.bCol}),{before:0,after:0,align:'center'}),aW[2],{fill:j.bBg,...sm}),
+      cell(para(run(r[2]?`最大${r[2]}分`:'—',{sz:14}),{before:0,after:0,align:'center'}),aW[3],{fill:bg,...sm}),
+      cell(para(run(r[3],{sz:14}),{before:0,after:0}),aW[4],{fill:bg,...sm})
+    );
+  });
+  parts.push(tbl([tblRow(hdrCell('活動内容',aW[0]),hdrCell('METs上限',aW[1]),hdrCell('AT判定',aW[2]),hdrCell('最大持続',aW[3]),hdrCell('指導ポイント',aW[4])), ...aRows],aW));
+  parts.push(para(
+    run(`✅ AT以下（≤${R.mets2} METs）有酸素域　`,{sz:13,bold:true,color:'1A7A45'})+
+    run(`⚠️ 要注意（〜${(atMets*1.3).toFixed(2)} METs）短時間・観察　`,{sz:13,bold:true,color:'B05E00'})+
+    run(`❌ 原則回避（>${(atMets*1.3).toFixed(2)} METs）AT大幅超`,{sz:13,bold:true,color:'C0392B'}),
+    {before:30,after:60}
+  ));
+
+  // 選択済み活動
+  const CAT_LABELS = {'スポーツ':'スポーツ','ダンス':'ダンス','自転車':'自転車','水上・水中活動':'水中・水上','歩行':'歩行','ランニング':'ランニング','コンディショニング運動':'トレーニング'};
+  if (selectedActivities && selectedActivities.length > 0) {
+    parts.push(secHdr('登録済み活動のAT判定（職業動作・趣味・習慣的な運動）','2C5F8A'));
+    const sW = [3800,1200,1400,CW-3800-1200-1400];
+    const sRows = selectedActivities.map((s,i)=>{
+      const j = getJudge(s.mets, atMets);
+      const tabMap = {job:'職業動作',hobby:'趣味・スポーツ',exercise:'習慣的な運動'};
+      const catLabel = s.cat ? (CAT_LABELS[s.cat]||s.cat) : (tabMap[s.tabKey]||'');
+      const bg = i%2===0 ? 'FFFFFF' : 'F4F8FC';
+      return tblRow(
+        cell(para(run(s.label,{sz:15}),{before:0,after:0}),sW[0],{fill:bg,...sm}),
+        cell(para(run(catLabel,{sz:13,color:'5A7A9A'}),{before:0,after:0,align:'center'}),sW[1],{fill:bg,...sm}),
+        cell(para(run(`${s.mets} METs`,{sz:15,bold:true}),{before:0,after:0,align:'center'}),sW[2],{fill:bg,...sm}),
+        cell(para(run(j.badge,{sz:15,bold:true,color:j.bCol}),{before:0,after:0,align:'center'}),sW[3],{fill:j.bBg,...sm})
+      );
+    });
+    parts.push(tbl([tblRow(hdrCell2('活動内容',sW[0]),hdrCell2('区分',sW[1]),hdrCell2('参考METs',sW[2]),hdrCell2('AT判定',sW[3])), ...sRows],sW));
+    parts.push(spacer(60));
+  }
+
+  // 注意事項
+  parts.push(secHdr(`${occLabel} の注意点 ／ 日常生活アドバイス`));
+  const col1W = Math.floor(CW * 0.48);
+  const col2W = CW - col1W;
+  const notesXml = occData.notes.map(n=>para(run(n,{sz:16,color:'5A3A00'}),{before:28,after:28,bullet:true})).join('');
+  const advL = para(run(occData.sectionTitle,{sz:17,bold:true,color:'B05E00'}),{before:0,after:50}) + notesXml;
+  const advR =
+    para(run('✅ 日常生活でのアドバイス',{sz:17,bold:true,color:'1A7A45'}),{before:0,after:30})+
+    para(run('積極的に行ってよい活動：',{sz:15,bold:true,color:'1A7A45'}),{before:0,after:20})+
+    ['ゆっくりした散歩・平地ウォーキング','軽いストレッチ・体操','買い物・家事（急がない範囲で）','自転車（平地・ゆっくり）'].map(t=>para(run(t,{sz:16,color:'1A3A20'}),{before:28,after:28,bullet:true})).join('')+
+    para(run('運動強度の目安（Borg指数）：',{sz:15,bold:true,color:'1A7A45'}),{before:50,after:20})+
+    ['Borg 3〜4（楽〜ややつらい） → OK','Borg 5以上（ややつらい〜） → 強度を下げる','「歌えるくらいの息」が目安'].map(t=>para(run(t,{sz:16,color:'1A3A20'}),{before:28,after:28,bullet:true})).join('');
+  parts.push(tbl([tblRow(
+    cell(advL, col1W, {fill:'FFF4E5', borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:['E07B00',12],right:['FFFFFF',0]},...std}),
+    cell(advR, col2W, {fill:'E8F4EC', borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:['2D9E5C',12],right:['AAAAAA',4]},...std})
+  )],[col1W,col2W]));
+  parts.push(spacer(80));
+
+  // 緊急症状
+  parts.push(secHdr('こんな症状が出たらすぐ休む','C0392B'));
+  const eW2 = Math.floor(CW/4);
+  const emerCells = [
+    ['💓 動悸・胸の不快感','FDE0DE','C0392B'],
+    ['😮 強い息切れ・めまい','FDE0DE','C0392B'],
+    ['💢 胸痛・冷や汗','FDE0DE','C0392B'],
+    ['🛑 すぐ活動を止め 座って安静に','FFF4E5','E07B00'],
+  ].map(([t,fill,bCol],i)=>cell(para(run(t,{sz:15,bold:true,color:bCol}),{before:40,after:40,align:'center'}),eW2,{fill,borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:[bCol,12],right:['AAAAAA',4]},...sm}));
+  parts.push(tbl([tblRow(...emerCells)],[eW2,eW2,eW2,eW2]));
+  parts.push(spacer(50));
+  parts.push(tbl([tblRow(cell(
+    para(run('🏥 こんなときはすぐに受診してください',{sz:18,bold:true,color:'C0392B'}),{before:0,after:40})+
+    para(run('胸の痛み・締め付け感が続く　／　安静にしても動悸・息切れが治まらない　／　足のむくみが急に強くなった　／　体重が2〜3日で2kg以上増えた（水分貯留のサイン）',{sz:16}),{before:0,after:0}),
+    CW,{fill:'FDE0DE',borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:['C0392B',16],right:['AAAAAA',4]},...std}
+  ))],[CW]));
+  parts.push(spacer(50));
+
+  // フッター
+  parts.push(para(run('※本資料は6分間歩行試験の結果にもとづく個別指導資料です。計算値はすべて推定値であり、臨床判断を補助するものです。　　担当療法士：＿＿＿＿＿＿＿＿＿',{sz:14,color:'7A7A7A'}),{before:70,after:0}));
+
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:body>${parts.join('')}
+<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="720" w:right="900" w:bottom="720" w:left="900"/></w:sectPr>
+</w:body></w:document>`;
+}
+
+// ===== 静的XMLパーツ =====
+const DOCX_STATIC = {
+  '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>`,
+  '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`,
+  'word/_rels/document.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/></Relationships>`,
+  'word/styles.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="HGP丸ゴシックM-PRO" w:hAnsi="HGP丸ゴシックM-PRO" w:cs="HGP丸ゴシックM-PRO" w:eastAsia="HGP丸ゴシックM-PRO"/><w:sz w:val="18"/><w:szCs w:val="18"/><w:color w:val="000000"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:before="40" w:after="40"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:styleId="Normal" w:default="1"><w:name w:val="Normal"/><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:style><w:style w:type="table" w:styleId="TableGrid" w:default="1"><w:name w:val="Table Grid"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:left w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:right w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/></w:tblBorders><w:tblCellMar><w:top w:w="50" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="50" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr></w:style></w:styles>`,
+  'word/numbering.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="0"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="・"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="360" w:hanging="200"/></w:pPr></w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>`,
+  'word/settings.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:defaultTabStop w:val="720"/></w:settings>`,
+};
+
+// ===== メインのgenerateDocx =====
+function generateDocx() {
+  if (!calcResults.dist1) { alert('先に計算を実行してください。'); return; }
+
+  const btn = document.querySelector('.btn-primary');
+  btn.disabled = true;
+  document.getElementById('loadingMsg').classList.add('visible');
+
+  // 非同期でUIを先行描画してから生成
+  setTimeout(() => {
+    try {
+      const R = calcResults;
+      const occKey   = R.occupation || 'retired';
+      const occData  = OCCUPATION_DATA[occKey];
+      const occLabel = occKey === 'custom' ? (R.customOcc || 'その他') : occData.label;
+
+      const docXml = buildDocumentXml(R, occData, occLabel, selectedActivities);
+
+      const files = { ...DOCX_STATIC, 'word/document.xml': docXml };
+      const bytes = buildDocx(files);
+      const blob  = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const url   = URL.createObjectURL(blob);
+      const a     = document.createElement('a');
+      a.href      = url;
+      const nameStr = document.getElementById('name').value ? `_${document.getElementById('name').value}` : '';
+      a.download  = `6MWT指導資料${nameStr}.docx`;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    } catch(e) {
+      alert('生成エラー: ' + e.message);
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      document.getElementById('loadingMsg').classList.remove('visible');
+    }
+  }, 30);
+}
+
+</script>
+</body>
+</html>
