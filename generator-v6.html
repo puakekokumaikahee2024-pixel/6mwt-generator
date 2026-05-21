@@ -351,40 +351,6 @@ body {
     </div>
   </div>
 
-  <!-- 活動選択 - 新UI -->
-  <div class="card">
-    <div class="card-title">🏃 活動の登録</div>
-    <div style="font-size:11px;color:var(--gray);margin-bottom:14px;line-height:1.6;">
-      日常生活・職場・趣味で行う活動を選択してください(複数可)。<br>
-      計算後にAT相当METsと比較され、各活動が安全域かどうか自動判定されます。
-    </div>
-
-    <!-- 歩行クイックアクセス -->
-    <div class="walking-section">
-      <div class="walking-section-title">
-        🚶 歩行<span style="font-size:11px;font-weight:400;color:var(--gray);margin-left:8px;">最も使用頻度が高い活動</span>
-      </div>
-      <div id="walkingSubTabs" class="act-filter-row"></div>
-      <div class="act-list" id="list-walking" style="max-height:200px;"></div>
-    </div>
-
-    <!-- その他の活動 -->
-    <div style="font-size:13px;font-weight:900;color:var(--gray);margin-bottom:10px;">📋 その他の活動を探す</div>
-    <input class="act-search" type="text" id="globalSearch" placeholder="活動を検索(例:大工、テニス、ヨガ、料理)" oninput="filterAllActivities(this.value)">
-    <div class="act-filter-row" id="bigCategoryChips"></div>
-    <div class="act-filter-row" id="midCategoryChips" style="display:none;"></div>
-    <div class="act-list" id="list-other"></div>
-
-    <!-- 選択済み -->
-    <div class="selected-acts" id="selectedSection" style="display:none;">
-      <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px;padding-top:12px;border-top:1px solid var(--blue-light);">
-        📋 登録済み活動 <span id="selectedCount" style="font-size:11px;font-weight:400;color:var(--gray);"></span>
-      </div>
-      <div id="selectedList"></div>
-      <div style="font-size:10px;color:var(--gray);margin-top:6px;">※AT判定は計算ボタンを押した後に表示されます</div>
-    </div>
-  </div>
-
   <!-- 6MWT結果 -->
   <div class="card">
     <div class="card-title">🚶 6分間歩行試験 結果</div>
@@ -522,6 +488,48 @@ body {
     </div>
 
     <div class="divider"></div>
+    <div style="text-align:center;font-size:12px;color:var(--gray);padding:8px;background:var(--blue-light);border-radius:6px;">
+      👇 下に表示される活動を選択した後、Word/PDF出力をしてください
+    </div>
+  </div>
+
+  <!-- 活動選択 - 新UI(計算結果の後ろに独立カードとして表示) -->
+  <div class="card" id="activityCard">
+    <div class="card-title">🏃 活動の登録</div>
+    <div style="font-size:11px;color:var(--gray);margin-bottom:14px;line-height:1.6;">
+      日常生活・職場・趣味で行う活動を選択してください(複数可)。<br>
+      <span id="activityHintBefore">計算ボタンを押すと、各活動がAT相当METsと比較されて自動判定されます。</span>
+      <span id="activityHintAfter" style="display:none;color:var(--green);font-weight:700;">✅ AT判定可能です。活動を選択すると緑/黄/赤で表示されます。</span>
+    </div>
+
+    <!-- 歩行クイックアクセス -->
+    <div class="walking-section">
+      <div class="walking-section-title">
+        🚶 歩行<span style="font-size:11px;font-weight:400;color:var(--gray);margin-left:8px;">最も使用頻度が高い活動</span>
+      </div>
+      <div id="walkingSubTabs" class="act-filter-row"></div>
+      <div class="act-list" id="list-walking" style="max-height:200px;"></div>
+    </div>
+
+    <!-- その他の活動 -->
+    <div style="font-size:13px;font-weight:900;color:var(--gray);margin-bottom:10px;">📋 その他の活動を探す</div>
+    <input class="act-search" type="text" id="globalSearch" placeholder="活動を検索(例:大工、テニス、ヨガ、料理)" oninput="filterAllActivities(this.value)">
+    <div class="act-filter-row" id="bigCategoryChips"></div>
+    <div class="act-filter-row" id="midCategoryChips" style="display:none;"></div>
+    <div class="act-list" id="list-other"></div>
+
+    <!-- 選択済み -->
+    <div class="selected-acts" id="selectedSection" style="display:none;">
+      <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px;padding-top:12px;border-top:1px solid var(--blue-light);">
+        📋 登録済み活動 <span id="selectedCount" style="font-size:11px;font-weight:400;color:var(--gray);"></span>
+      </div>
+      <div id="selectedList"></div>
+    </div>
+  </div>
+
+  <!-- Word/PDF出力カード(活動選択の後) -->
+  <div class="card" id="exportCard" style="display:none;">
+    <div class="card-title">📄 指導資料の出力</div>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="generateDocx()">📄 Word出力</button>
       <button class="btn btn-pdf" onclick="generatePdf()">📕 PDF出力</button>
@@ -767,12 +775,23 @@ function renderActList(container, items, listType) {
   container.innerHTML = slice.map((d, idx) => {
     const isSelected = isActivitySelected(d.label, d.mets);
     let judgeBadge = '';
+    let metsBg, metsColorVal;
     if (atMets) {
-      if (d.mets <= atMets) judgeBadge = `<span style="font-size:10px;color:#1A7A45;font-weight:700;">✅AT以下</span>`;
-      else if (d.mets <= atMets * 1.3) judgeBadge = `<span style="font-size:10px;color:#B05E00;font-weight:700;">⚠️要注意</span>`;
-      else judgeBadge = `<span style="font-size:10px;color:#C0392B;font-weight:700;">❌回避</span>`;
+      // 計算後: AT判定色
+      if (d.mets <= atMets) {
+        judgeBadge = `<span style="font-size:10px;color:#1A7A45;font-weight:700;">✅AT以下</span>`;
+        metsBg = '#E8F4EC'; metsColorVal = '#1A7A45';
+      } else if (d.mets <= atMets * 1.3) {
+        judgeBadge = `<span style="font-size:10px;color:#B05E00;font-weight:700;">⚠️要注意</span>`;
+        metsBg = '#FFF4E5'; metsColorVal = '#B05E00';
+      } else {
+        judgeBadge = `<span style="font-size:10px;color:#C0392B;font-weight:700;">❌回避</span>`;
+        metsBg = '#FDE0DE'; metsColorVal = '#C0392B';
+      }
+    } else {
+      // 計算前: グレー一色
+      metsBg = '#F0F5FA'; metsColorVal = '#5A7A9A';
     }
-    const {bg, color} = metsColor(d.mets);
     let catTag = '';
     if (listType === 'walking') {
       catTag = `<span style="font-size:9px;color:var(--gray);background:#f0f4f8;padding:1px 5px;border-radius:4px;">${currentWalkingSub}</span> `;
@@ -783,7 +802,7 @@ function renderActList(container, items, listType) {
     return `<div class="act-item${isSelected?' selected':''}" onclick="toggleActivityNew('${listType}', ${idx})">
       <span class="act-item-name">${catTag}${d.label}</span>
       ${judgeBadge}
-      <span class="act-item-mets" style="background:${bg};color:${color};">${d.mets}</span>
+      <span class="act-item-mets" style="background:${metsBg};color:${metsColorVal};">${d.mets}</span>
       <span class="act-item-add">${isSelected?'✓':'+'}</span>
     </div>`;
   }).join('');
@@ -987,6 +1006,17 @@ function calculate(){
   renderWalkingList();
   renderOtherList();
   renderActJudgeTable(parseFloat(calcResults.mets2));
+
+  // 活動セクションのヒントを「AT判定可能」モードに切り替え
+  const hintBefore = document.getElementById('activityHintBefore');
+  const hintAfter = document.getElementById('activityHintAfter');
+  if (hintBefore) hintBefore.style.display = 'none';
+  if (hintAfter) hintAfter.style.display = 'inline';
+
+  // Word/PDF出力カードを表示
+  const exportCard = document.getElementById('exportCard');
+  if (exportCard) exportCard.style.display = 'block';
+
   panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -1062,6 +1092,14 @@ function clearAll(){
   renderSelectedList();
   renderWalkingList();
   renderOtherList();
+  // 活動セクションのヒントを「計算前」モードに戻す
+  const hintBefore = document.getElementById('activityHintBefore');
+  const hintAfter = document.getElementById('activityHintAfter');
+  if (hintBefore) hintBefore.style.display = 'inline';
+  if (hintAfter) hintAfter.style.display = 'none';
+  // Word/PDF出力カードを非表示に戻す
+  const exportCard = document.getElementById('exportCard');
+  if (exportCard) exportCard.style.display = 'none';
   clearStorage();
 }
 
