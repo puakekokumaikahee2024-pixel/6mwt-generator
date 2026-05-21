@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6分間歩行テスト 指導資料ジェネレーター | 医療従事者向け無料ツール</title>
+<meta name="description" content="6分間歩行テスト(6MWT)の患者向け指導資料をその場で作成できる無料ジェネレーター。歩行速度・METs・AT判定・中止基準をわかりやすく出力。医療従事者向け。">
+<meta name="keywords" content="6分間歩行テスト,6MWT,指導資料,ジェネレーター,リハビリ,METs,運動耐容能,PT,OT">
+<meta name="author" content="6MWT Guide">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://puakekokumaikahee2024-pixel.github.io/6mwt-generator/generator.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="6分間歩行テスト 指導資料ジェネレーター | 医療従事者向け無料ツール">
+<meta property="og:description" content="6MWTの患者向け指導資料をその場で作成できる無料ジェネレーター。歩行速度・METs・AT判定・中止基準を出力。">
+<meta property="og:url" content="https://puakekokumaikahee2024-pixel.github.io/6mwt-generator/generator.html">
+<meta property="og:image" content="https://puakekokumaikahee2024-pixel.github.io/6mwt-generator/ogp.png">
+<meta property="og:site_name" content="6MWT ジェネレーター">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="6分間歩行テスト 指導資料ジェネレーター">
+<meta name="twitter:description" content="6MWTの患者向け指導資料をその場で作成できる無料ジェネレーター。医療従事者向け。">
+<script src="activity_db.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap');
+
+:root {
+  --blue: #1A5FA8;
+  --blue-light: #EEF4FB;
+  --blue-mid: #4A90D9;
+  --green: #2D9E5C;
+  --green-light: #E8F4EC;
+  --orange: #E07B00;
+  --orange-light: #FFF4E5;
+  --red: #C0392B;
+  --red-light: #FDE0DE;
+  --gray: #5A7A9A;
+  --bg: #F0F5FA;
+  --card: #ffffff;
+  --text: #1a2332;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'BIZ UDPGothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0 0 60px;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #0d3b6e 0%, #1A5FA8 60%, #2d82d4 100%);
+  padding: 28px 40px 22px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.app-header::before {
+  content: ''; position: absolute; top: -30px; right: -30px;
+  width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;
+}
+.header-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  margin-bottom: 8px; text-transform: uppercase;
+}
+.header-title { font-size: 26px; font-weight: 900; letter-spacing: 0.02em; }
+.header-sub { font-size: 12px; opacity: 0.75; margin-top: 4px; }
+
+.main { max-width: 860px; margin: 0 auto; padding: 32px 20px 0; }
+
+.card {
+  background: var(--card); border-radius: 12px;
+  padding: 24px 28px; margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(26,95,168,0.08);
+  border: 1px solid rgba(26,95,168,0.08);
+}
+.card-title {
+  font-size: 13px; font-weight: 900; letter-spacing: 0.08em;
+  color: var(--blue); margin-bottom: 18px;
+  padding-bottom: 8px; border-bottom: 2px solid var(--blue-light);
+}
+
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-name-age-height { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 11px; font-weight: 700; color: var(--gray); letter-spacing: 0.06em;
+}
+.field input, .field select {
+  border: 1.5px solid #d0dcea; border-radius: 8px;
+  padding: 9px 12px; font-size: 14px;
+  font-family: 'BIZ UDPGothic', sans-serif; color: var(--text);
+  background: #fafcff; outline: none; width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field select {
+  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235A7A9A' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+}
+.field input:focus, .field select:focus {
+  border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,95,168,0.1); background: white;
+}
+.field .unit { font-size: 11px; color: var(--gray); margin-top: -2px; }
+
+.vital-wrap { width: 100%; }
+.vital-grid { display: grid; grid-template-columns: 110px 1fr 80px 75px; gap: 8px; align-items: center; }
+.vital-row-label { font-size: 11px; font-weight: 700; color: var(--gray); padding-top: 22px; line-height: 1.4; }
+.vital-col-header {
+  font-size: 10px; font-weight: 700; color: var(--blue);
+  text-align: center; padding: 4px 2px;
+  background: var(--blue-light); border-radius: 4px; line-height: 1.3;
+}
+.vital-sp { display: none; }
+.vital-sp-row {
+  background: #fafcff; border: 1.5px solid #d0dcea;
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 12px;
+}
+.vital-sp-title {
+  font-size: 12px; font-weight: 700; color: var(--blue);
+  margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--blue-light);
+}
+.vital-sp-fields { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.vital-sp-field label { font-size: 10px; font-weight: 700; color: var(--gray); display: block; margin-bottom: 4px; }
+.vital-sp-field input {
+  width: 100%; border: 1.5px solid #d0dcea; border-radius: 8px;
+  padding: 8px 6px; font-size: 14px;
+  font-family: 'BIZ UDPGothic', sans-serif; color: var(--text);
+  background: white; outline: none; box-sizing: border-box;
+}
+.vital-sp-field input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,95,168,0.1); }
+
+.results-panel {
+  display: none;
+  background: linear-gradient(135deg, #EEF4FB, #f8fbff);
+  border: 1.5px solid rgba(26,95,168,0.15);
+  border-radius: 12px; padding: 24px 28px; margin-bottom: 20px;
+}
+.results-panel.visible { display: block; }
+.results-title { font-size: 13px; font-weight: 900; color: var(--blue); margin-bottom: 16px; letter-spacing: 0.08em; }
+.results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.result-item {
+  background: white; border-radius: 8px; padding: 12px 16px;
+  border-left: 4px solid var(--blue);
+}
+.result-item.green { border-color: var(--green); }
+.result-item.orange { border-color: var(--orange); }
+.result-item .r-label { font-size: 10px; font-weight: 700; color: var(--gray); letter-spacing: 0.06em; }
+.result-item .r-value { font-size: 22px; font-weight: 900; color: var(--blue); margin-top: 2px; }
+.result-item.green .r-value { color: var(--green); }
+.result-item.orange .r-value { color: var(--orange); }
+.result-item .r-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+@media (max-width: 500px) { .results-grid { grid-template-columns: 1fr; } }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  padding: 12px 24px; border-radius: 8px;
+  font-size: 13px; font-weight: 700;
+  font-family: 'BIZ UDPGothic', sans-serif;
+  cursor: pointer; border: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.04em;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: linear-gradient(135deg, #1A5FA8, #2d82d4); color: white;
+  box-shadow: 0 3px 10px rgba(26,95,168,0.3);
+}
+.btn-primary:hover { box-shadow: 0 5px 16px rgba(26,95,168,0.4); transform: translateY(-1px); }
+.btn-pdf {
+  background: linear-gradient(135deg, #C0392B, #E55B4D); color: white;
+  box-shadow: 0 3px 10px rgba(192,57,43,0.3);
+}
+.btn-pdf:hover { box-shadow: 0 5px 16px rgba(192,57,43,0.4); transform: translateY(-1px); }
+.btn-calc {
+  background: linear-gradient(135deg, #2D9E5C, #3dbf71); color: white;
+  box-shadow: 0 3px 10px rgba(45,158,92,0.3);
+}
+.btn-calc:hover { box-shadow: 0 5px 16px rgba(45,158,92,0.4); transform: translateY(-1px); }
+.btn-secondary { background: white; color: var(--blue); border: 1.5px solid var(--blue); }
+
+.borg-ref { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-top: 8px; font-size: 10px; }
+.borg-chip { text-align: center; padding: 3px 2px; border-radius: 4px; background: #f0f4f8; color: var(--gray); font-weight: 500; }
+.borg-chip.ok { background: var(--green-light); color: var(--green); font-weight: 700; }
+.borg-chip.warn { background: var(--orange-light); color: var(--orange); font-weight: 700; }
+.borg-chip.ng { background: var(--red-light); color: var(--red); font-weight: 700; }
+@media (max-width: 500px) { .borg-ref { grid-template-columns: repeat(3, 1fr); } }
+
+.notice {
+  font-size: 11px; color: var(--gray);
+  background: var(--blue-light); border-radius: 6px;
+  padding: 8px 12px; margin-top: 8px; line-height: 1.6;
+}
+
+.divider { height: 1px; background: linear-gradient(to right, var(--blue-light), transparent); margin: 16px 0; }
+
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+.badge.safe { background: var(--green-light); color: var(--green); }
+.badge.caution { background: var(--orange-light); color: var(--orange); }
+
+.rpp-panel { margin-top: 16px; border-top: 2px solid var(--blue-light); padding-top: 14px; }
+.rpp-title { font-size: 12px; font-weight: 900; color: var(--blue); letter-spacing: 0.06em; margin-bottom: 10px; }
+.rpp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+@media (max-width: 500px) { .rpp-grid { grid-template-columns: 1fr; } }
+.rpp-item { background: white; border-radius: 8px; padding: 10px 14px; border-left: 4px solid var(--gray); }
+.rpp-item.low { border-color: var(--green); }
+.rpp-item.mild { border-color: #4A90D9; }
+.rpp-item.mod { border-color: var(--orange); }
+.rpp-item.high { border-color: var(--red); }
+.rpp-item .rpp-label { font-size: 10px; font-weight: 700; color: var(--gray); letter-spacing: 0.05em; }
+.rpp-item .rpp-val { font-size: 20px; font-weight: 900; margin-top: 2px; }
+.rpp-item .rpp-judge { font-size: 11px; font-weight: 700; margin-top: 2px; }
+.rpp-item.low .rpp-val, .rpp-item.low .rpp-judge { color: var(--green); }
+.rpp-item.mild .rpp-val, .rpp-item.mild .rpp-judge { color: #1A5FA8; }
+.rpp-item.mod .rpp-val, .rpp-item.mod .rpp-judge { color: var(--orange); }
+.rpp-item.high .rpp-val, .rpp-item.high .rpp-judge { color: var(--red); }
+
+.discord-box { border-radius: 8px; padding: 10px 14px; font-size: 12px; line-height: 1.7; margin-top: 8px; }
+.discord-box.ok { background: var(--green-light); color: #1A5A30; border-left: 4px solid var(--green); }
+.discord-box.warn { background: var(--orange-light); color: #7A3A00; border-left: 4px solid var(--orange); }
+.discord-box.danger { background: var(--red-light); color: #7A1A10; border-left: 4px solid var(--red); }
+.discord-box .discord-title { font-weight: 900; margin-bottom: 4px; }
+
+.spo2-box { border-radius: 8px; padding: 10px 14px; font-size: 12px; line-height: 1.7; margin-top: 8px; }
+.spo2-box.ok { background: var(--green-light); color: #1A5A30; border-left: 4px solid var(--green); }
+.spo2-box.warn { background: var(--red-light); color: #7A1A10; border-left: 4px solid var(--red); }
+
+.loading { display: none; font-size: 12px; color: var(--blue); margin-top: 8px; }
+.loading.visible { display: block; }
+
+.act-search {
+  width: 100%; padding: 8px 12px; border: 1.5px solid #d0dcea;
+  border-radius: 8px; font-size: 13px;
+  font-family: 'BIZ UDPGothic', sans-serif;
+  margin-bottom: 10px; outline: none; background: #fafcff;
+}
+.act-search:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,95,168,0.1); }
+.act-filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.cat-filter {
+  padding: 3px 10px; border-radius: 12px;
+  font-size: 11px; font-weight: 700;
+  cursor: pointer; border: 1.5px solid #d0dcea;
+  background: white; color: var(--gray);
+  font-family: 'BIZ UDPGothic', sans-serif; transition: all 0.15s;
+}
+.cat-filter.active { background: var(--blue); color: white; border-color: var(--blue); }
+
+.act-list {
+  max-height: 240px; overflow-y: auto;
+  border: 1.5px solid #d0dcea; border-radius: 8px; background: #fafcff;
+}
+.act-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 12px; cursor: pointer; border-bottom: 1px solid #eef2f7;
+  transition: background 0.1s; font-size: 12px; gap: 8px;
+}
+.act-item:last-child { border-bottom: none; }
+.act-item:hover { background: var(--blue-light); }
+.act-item.selected { background: #EEF4FB; }
+.act-item-name { flex: 1; color: var(--text); line-height: 1.4; }
+.act-item-mets { font-weight: 700; font-size: 13px; white-space: nowrap; padding: 2px 8px; border-radius: 8px; }
+.act-item-add { font-size: 16px; color: var(--blue); font-weight: 900; width: 20px; text-align: center; flex-shrink: 0; }
+
+.selected-acts { margin-top: 12px; }
+.selected-act-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px; margin-bottom: 6px;
+  border-left: 4px solid; font-size: 12px;
+}
+.selected-act-item .s-name { flex: 1; font-weight: 500; }
+.selected-act-item .s-judge { font-weight: 700; font-size: 12px; white-space: nowrap; }
+.selected-act-item .s-remove { cursor: pointer; color: #999; font-size: 16px; line-height: 1; padding: 0 4px; flex-shrink: 0; }
+.selected-act-item .s-remove:hover { color: var(--red); }
+
+.borg-warning {
+  background: #FDE0DE; border-left: 4px solid #C0392B;
+  border-radius: 8px; padding: 14px 18px;
+  margin-top: 14px; color: #7A1A10; line-height: 1.6;
+}
+
+.flow-info {
+  background: #FFF4E5; padding: 10px 14px; border-radius: 8px;
+  font-size: 11px; color: #7A4000; margin-bottom: 14px; line-height: 1.6;
+  border-left: 4px solid var(--orange);
+}
+
+.walking-section {
+  background: #EEF4FB; border-radius: 10px; padding: 14px 16px;
+  margin-bottom: 16px; border-left: 4px solid var(--blue);
+}
+.walking-section-title {
+  font-size: 13px; font-weight: 900; color: var(--blue); margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-tag">Rehabilitation Tool v2</div>
+  <div class="header-title">6分間歩行テスト 指導資料ジェネレーター</div>
+  <div class="header-sub">被験者データを入力 → 自動計算 → Word/PDF指導資料を生成</div>
+</div>
+
+<div class="main">
+
+  <!-- 被験者基本情報 -->
+  <div class="card">
+    <div class="card-title">👤 被験者基本情報</div>
+    <div class="grid-name-age-height">
+      <div class="field"><label>氏名</label><input type="text" id="name" placeholder="山田 太郎"><span class="unit">(資料上部に表示)</span></div>
+      <div class="field"><label>年齢</label><input type="number" id="age" placeholder="72" min="18" max="110"><span class="unit">歳</span></div>
+      <div class="field"><label>身長</label><input type="number" id="height" placeholder="162" step="0.1"><span class="unit">cm</span></div>
+    </div>
+    <div style="margin-top:14px;" class="grid-3">
+      <div class="field"><label>体重</label><input type="number" id="weight" placeholder="58.0" step="0.1"><span class="unit">kg</span></div>
+      <div class="field"><label>性別</label><select id="sex"><option value="male">男性</option><option value="female">女性</option></select></div>
+      <div class="field"><label>指導日</label><input type="date" id="date"></div>
+    </div>
+    <div style="margin-top:14px;">
+      <div class="field">
+        <label>生活・就労状況(指導テンプレート選択)</label>
+        <select id="occupation">
+          <option value="" disabled selected>— 選択してください —</option>
+          <option value="security">夜間警備員</option>
+          <option value="office">事務職(デスクワーク中心)</option>
+          <option value="housewife">主婦・主夫(家事中心)</option>
+          <option value="retired">退職者・無職</option>
+          <option value="caregiver">介護職・福祉職</option>
+          <option value="sales">営業職・外回り</option>
+          <option value="manual">肉体労働(建設・製造など)</option>
+          <option value="medical">医療・看護職</option>
+          <option value="custom">その他(下に入力)</option>
+        </select>
+        <span class="unit">※Word資料の注意事項テンプレートに使用されます</span>
+      </div>
+      <div class="field" id="customOccField" style="display:none;margin-top:8px;">
+        <label>職種名(自由入力)</label>
+        <input type="text" id="customOcc" placeholder="例:農業、運転手、教員など">
+      </div>
+    </div>
+    <div class="notice" style="margin-top:14px;background:#FFF4E5;color:#7A4000;border-left:3px solid var(--orange);">
+      ⚠️ 入力データはブラウザに自動保存されます(localStorage)。共有PCで使用する場合は、使用後に「リセット」ボタンでデータをクリアしてください。
+    </div>
+  </div>
+
+  <!-- 活動選択 - 新UI -->
+  <div class="card">
+    <div class="card-title">🏃 活動の登録</div>
+    <div style="font-size:11px;color:var(--gray);margin-bottom:14px;line-height:1.6;">
+      日常生活・職場・趣味で行う活動を選択してください(複数可)。<br>
+      計算後にAT相当METsと比較され、各活動が安全域かどうか自動判定されます。
+    </div>
+
+    <!-- 歩行クイックアクセス -->
+    <div class="walking-section">
+      <div class="walking-section-title">
+        🚶 歩行<span style="font-size:11px;font-weight:400;color:var(--gray);margin-left:8px;">最も使用頻度が高い活動</span>
+      </div>
+      <div id="walkingSubTabs" class="act-filter-row"></div>
+      <div class="act-list" id="list-walking" style="max-height:200px;"></div>
+    </div>
+
+    <!-- その他の活動 -->
+    <div style="font-size:13px;font-weight:900;color:var(--gray);margin-bottom:10px;">📋 その他の活動を探す</div>
+    <input class="act-search" type="text" id="globalSearch" placeholder="活動を検索(例:大工、テニス、ヨガ、料理)" oninput="filterAllActivities(this.value)">
+    <div class="act-filter-row" id="bigCategoryChips"></div>
+    <div class="act-filter-row" id="midCategoryChips" style="display:none;"></div>
+    <div class="act-list" id="list-other"></div>
+
+    <!-- 選択済み -->
+    <div class="selected-acts" id="selectedSection" style="display:none;">
+      <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px;padding-top:12px;border-top:1px solid var(--blue-light);">
+        📋 登録済み活動 <span id="selectedCount" style="font-size:11px;font-weight:400;color:var(--gray);"></span>
+      </div>
+      <div id="selectedList"></div>
+      <div style="font-size:10px;color:var(--gray);margin-top:6px;">※AT判定は計算ボタンを押した後に表示されます</div>
+    </div>
+  </div>
+
+  <!-- 6MWT結果 -->
+  <div class="card">
+    <div class="card-title">🚶 6分間歩行試験 結果</div>
+
+    <div class="flow-info">
+      <strong>📍 6MWT実施フロー</strong><br>
+      ① <strong>1回目: 自由速度歩行</strong> ─ 本人のペースで歩いてもらい、Borg指数を体感的に理解させる<br>
+      ② <strong>2回目: AT域歩行(Borg 3〜4を目標に調整)</strong> ─ <strong>この結果がAT相当METsとして指導基準値になる</strong>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>1回目 歩行距離(自由速度)</label>
+        <input type="number" id="dist1" placeholder="320" step="1">
+        <span class="unit">m</span>
+      </div>
+      <div class="field">
+        <label>1回目 Borg指数(体感)</label>
+        <input type="number" id="borg1" placeholder="5" min="0" max="10" step="0.5">
+        <span class="unit">点</span>
+      </div>
+      <div class="field">
+        <label>2回目 歩行距離(AT域)⭐</label>
+        <input type="number" id="dist2" placeholder="295" step="1">
+        <span class="unit">m(AT相当の指導基準)</span>
+      </div>
+      <div class="field">
+        <label>2回目 Borg指数(目標:3〜4)⭐</label>
+        <input type="number" id="borg2" placeholder="3.5" min="0" max="10" step="0.5">
+        <span class="unit">点(3〜4が目標範囲)</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px;">Borg指数 参考</div>
+    <div class="borg-ref">
+      <div class="borg-chip">0 安静</div>
+      <div class="borg-chip ok">1 非常に楽</div>
+      <div class="borg-chip ok">2 楽</div>
+      <div class="borg-chip ok">3〜4 ↑ AT相当目安</div>
+      <div class="borg-chip warn">5 ややつらい</div>
+      <div class="borg-chip ng">7〜10 限界</div>
+    </div>
+  </div>
+
+  <!-- バイタルサイン -->
+  <div class="card">
+    <div class="card-title">💓 バイタルサイン</div>
+    <div class="vital-wrap">
+      <div class="vital-grid" id="vitalGrid">
+        <div></div>
+        <div class="vital-col-header">血圧 (mmHg)<br><span style="font-size:9px;font-weight:400;">収縮期 / 拡張期</span></div>
+        <div class="vital-col-header">脈拍<br><span style="font-size:9px;font-weight:400;">(回/分)</span></div>
+        <div class="vital-col-header">SpO2<br><span style="font-size:9px;font-weight:400;">(%)</span></div>
+        <div class="vital-row-label">安静時①<br><span style="font-weight:400;font-size:10px;">(1回目前)</span></div>
+        <div class="field"><input type="text" id="bp_rest1" placeholder="135/79"></div>
+        <div class="field"><input type="number" id="hr_rest1" placeholder="62" min="30" max="200"></div>
+        <div class="field"><input type="number" id="spo2_rest1" placeholder="96" min="70" max="100"></div>
+        <div class="vital-row-label">1回目後<br><span style="font-weight:400;font-size:10px;">(自由速度直後)</span></div>
+        <div class="field"><input type="text" id="bp_ex1" placeholder="152/85"></div>
+        <div class="field"><input type="number" id="hr_ex1" placeholder="68" min="30" max="220"></div>
+        <div class="field"><input type="number" id="spo2_ex1" placeholder="95" min="70" max="100"></div>
+        <div class="vital-row-label">安静時②<br><span style="font-weight:400;font-size:10px;">(2回目前)</span></div>
+        <div class="field"><input type="text" id="bp_rest2" placeholder="135/79"></div>
+        <div class="field"><input type="number" id="hr_rest2" placeholder="62" min="30" max="200"></div>
+        <div class="field"><input type="number" id="spo2_rest2" placeholder="96" min="70" max="100"></div>
+        <div class="vital-row-label">2回目後<br><span style="font-weight:400;font-size:10px;">(AT域歩行直後)</span></div>
+        <div class="field"><input type="text" id="bp_ex2" placeholder="137/82"></div>
+        <div class="field"><input type="number" id="hr_ex2" placeholder="66" min="30" max="220"></div>
+        <div class="field"><input type="number" id="spo2_ex2" placeholder="96" min="70" max="100"></div>
+      </div>
+    </div>
+    <div class="vital-sp" id="vitalSp">
+      <div class="vital-sp-row">
+        <div class="vital-sp-title">🔵 安静時①(1回目前)</div>
+        <div class="vital-sp-fields">
+          <div class="vital-sp-field"><label>血圧 (mmHg)</label><input type="text" placeholder="135/79" oninput="document.getElementById('bp_rest1').value=this.value;saveInputsToStorage();"></div>
+          <div class="vital-sp-field"><label>脈拍 (回/分)</label><input type="number" placeholder="62" oninput="document.getElementById('hr_rest1').value=this.value;saveInputsToStorage();"></div>
+          <div class="vital-sp-field"><label>SpO2 (%)</label><input type="number" placeholder="96" oninput="document.getElementById('spo2_rest1').value=this.value;saveInputsToStorage();"></div>
+        </div>
+      </div>
+      <div class="vital-sp-row">
+        <div class="vital-sp-title">🔴 1回目後(自由速度直後)</div>
+        <div class="vital-sp-fields">
+          <div class="vital-sp-field"><label>血圧 (mmHg)</label><input type="text" placeholder="152/85" oninput="document.getElementById('bp_ex1').value=this.value;saveInputsToStorage();"></div>
+          <div class="vital-sp-field"><label>脈拍 (回/分)</label><input type="number" placeholder="68" oninput="document.getElementById('hr_ex1').value=this.value;saveInputsToStorage();"></div>
+          <div class="vital-sp-field"><label>SpO2 (%)</label><input type="number" placeholder="95" oninput="document.getElementById('spo2_ex1').value=this.value;saveInputsToStorage();"></div>
+        </div>
+      </div>
+      <div class="vital-sp-row">
+        <div class="vital-sp-title">🔵 安静時②(2回目前)</div>
+        <div class="vital-sp-fields">
+          <div class="vital-sp-field"><label>血圧 (mmHg)</label><input type="text" placeholder="135/79" oninput="document.getElementById('bp_rest2').value=this.value;saveInputsToStorage();"></div>
+          <div class="vital-sp-field"><label>脈拍 (回/分)</label><input type="number" placeholder="62" oninput="document.getElementById('hr_rest2').value=this.value;saveInputsToStorage();"></div>
+          <div class="vital-sp-field"><label>SpO2 (%)</label><input type="number" placeholder="96" oninput="document.getElementById('spo2_rest2').value=this.value;saveInputsToStorage();"></div>
+        </div>
+      </div>
+      <div class="vital-sp-row">
+        <div class="vital-sp-title">🔴 2回目後(AT域歩行直後)</div>
+        <div class="vital-sp-fields">
+          <div class="vital-sp-field"><label>血圧 (mmHg)</label><input type="text" placeholder="137/82" oninput="document.getElementById('bp_ex2').value=this.value;saveInputsToStorage();"></div>
+          <div class="vital-sp-field"><label>脈拍 (回/分)</label><input type="number" placeholder="66" oninput="document.getElementById('hr_ex2').value=this.value;saveInputsToStorage();"></div>
+          <div class="vital-sp-field"><label>SpO2 (%)</label><input type="number" placeholder="96" oninput="document.getElementById('spo2_ex2').value=this.value;saveInputsToStorage();"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 計算ボタン -->
+  <div class="card">
+    <div class="card-title">⚙️ 計算・生成</div>
+    <div class="btn-row">
+      <button class="btn btn-calc" onclick="calculate()">📊 METs・VO₂ を計算する</button>
+      <button class="btn btn-secondary" onclick="clearAll()">リセット</button>
+    </div>
+  </div>
+
+  <!-- 結果表示 -->
+  <div class="results-panel" id="resultsPanel">
+    <div class="results-title">📈 計算結果</div>
+    <div class="results-grid" id="resultsGrid"></div>
+    <div class="badge-row" id="badgeRow"></div>
+
+    <div class="divider"></div>
+    <div id="actJudgeSection" style="display:none;">
+      <div style="font-size:13px;font-weight:900;color:var(--blue);margin-bottom:4px;letter-spacing:0.06em;">🏢 職種別 活動強度 AT判定</div>
+      <div id="atThresholdBadges" style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;"></div>
+      <div style="font-size:11px;color:var(--gray);margin-bottom:10px;line-height:1.6;">
+        各活動のMETs上限を<strong>AT相当METs(2回目)</strong>と比較して判定しています。<br>
+        <span style="color:var(--green);font-weight:700;">✅ AT以下</span>=有酸素域・継続可　
+        <span style="color:var(--orange);font-weight:700;">⚠️ ATをやや超える</span>=短時間・要観察　
+        <span style="color:var(--red);font-weight:700;">❌ ATを大きく超える</span>=原則回避
+      </div>
+      <div id="actJudgeTable" style="overflow-x:auto;"></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generateDocx()">📄 Word出力</button>
+      <button class="btn btn-pdf" onclick="generatePdf()">📕 PDF出力</button>
+    </div>
+    <div class="loading" id="loadingMsg">⏳ 文書を生成中... (数秒かかる場合があります)</div>
+    <div class="notice">※生成されたファイルはそのまま印刷・編集してご使用ください。計算値は推定値です。</div>
+  </div>
+
+</div>
+
+<script>
+// ============================================
+// レイアウト切替(スマホ対応)
+// ============================================
+function applySpLayout() {
+  var w = window.innerWidth;
+  var isSp = w <= 600;
+  var nameGrid = document.querySelector('.grid-name-age-height');
+  if (nameGrid) nameGrid.style.gridTemplateColumns = isSp ? '1fr' : '2fr 1fr 1fr';
+  document.querySelectorAll('.grid-3').forEach(function(el) { el.style.gridTemplateColumns = isSp ? '1fr' : '1fr 1fr 1fr'; });
+  document.querySelectorAll('.grid-2').forEach(function(el) { el.style.gridTemplateColumns = isSp ? '1fr' : '1fr 1fr'; });
+  var vitalGrid = document.getElementById('vitalGrid');
+  var vitalSp = document.getElementById('vitalSp');
+  if (vitalGrid && vitalSp) {
+    vitalGrid.style.display = isSp ? 'none' : 'grid';
+    vitalSp.style.display = isSp ? 'block' : 'none';
+  }
+  if (isSp) {
+    document.querySelectorAll('.card').forEach(function(el) { el.style.padding = '18px 14px'; });
+    var header = document.querySelector('.app-header');
+    if (header) header.style.padding = '20px 16px 16px';
+    var main = document.querySelector('.main');
+    if (main) main.style.padding = '16px 12px 0';
+    var title = document.querySelector('.header-title');
+    if (title) title.style.fontSize = '20px';
+  }
+}
+window.addEventListener('DOMContentLoaded', applySpLayout);
+window.addEventListener('resize', applySpLayout);
+
+// ============================================
+// localStorage 自動保存
+// ============================================
+const STORAGE_KEY = 'hokudesign_6mwt_inputs_v2';
+const SAVED_FIELDS = [
+  'name','age','height','weight','sex','occupation','customOcc',
+  'dist1','dist2','borg1','borg2',
+  'bp_rest1','hr_rest1','spo2_rest1','bp_ex1','hr_ex1','spo2_ex1',
+  'bp_rest2','hr_rest2','spo2_rest2','bp_ex2','hr_ex2','spo2_ex2','date'
+];
+
+function saveInputsToStorage(){
+  try {
+    const data = {};
+    SAVED_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) data[id] = el.value;
+    });
+    data._selectedActivities = selectedActivities;
+    data._savedAt = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) { console.warn('保存失敗:', e); }
+}
+
+function loadInputsFromStorage(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return false;
+    const data = JSON.parse(raw);
+    SAVED_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if(el && data[id] !== undefined && data[id] !== '') el.value = data[id];
+    });
+    if(Array.isArray(data._selectedActivities)){
+      selectedActivities = data._selectedActivities;
+    }
+    if(data.occupation === 'custom'){
+      document.getElementById('customOccField').style.display = 'block';
+    }
+    return true;
+  } catch(e) { console.warn('復元失敗:', e); return false; }
+}
+
+function clearStorage(){ try { localStorage.removeItem(STORAGE_KEY); } catch(e) {} }
+
+function attachAutoSave(){
+  SAVED_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if(el){
+      el.addEventListener('input', saveInputsToStorage);
+      el.addEventListener('change', saveInputsToStorage);
+    }
+  });
+}
+
+document.getElementById('date').valueAsDate = new Date();
+document.getElementById('occupation').addEventListener('change', function() {
+  document.getElementById('customOccField').style.display = this.value === 'custom' ? 'block' : 'none';
+});
+
+// ============================================
+// 活動DB(新UI)
+// ============================================
+const BIG_CAT_META = {
+  "移動・交通": { icon: "🚗" },
+  "職業活動（労働）": { icon: "💼" },
+  "競技スポーツ": { icon: "⚽" },
+  "趣味・余暇・レクリエーション": { icon: "🎯" },
+  "運動（健康・体力づくり）": { icon: "🏋️" },
+  "生活活動（家事・身の回り）": { icon: "🏠" },
+  "育児・介護・支援": { icon: "👶" }
+};
+
+let selectedActivities = [];
+let currentWalkingSub = null;
+let currentBigCat = null;
+let currentMidCat = null;
+let globalSearchQuery = '';
+let calcResults = {};
+let _listCacheWalking = [];
+let _listCacheOther = [];
+
+function metsColor(m){
+  if(m<3) return {bg:'#F0F5FA', color:'#5A7A9A'};
+  if(m<5) return {bg:'#E8F4EC', color:'#1A7A45'};
+  if(m<7) return {bg:'#FFF4E5', color:'#B05E00'};
+  return {bg:'#FDE0DE', color:'#C0392B'};
+}
+
+function initActivityUI() {
+  if (typeof ACTIVITY_DB === 'undefined') {
+    document.getElementById('list-walking').innerHTML = '<div style="padding:12px;color:var(--red);">⚠️ activity_db.js が読み込まれていません。</div>';
+    document.getElementById('list-other').innerHTML = '<div style="padding:12px;color:var(--red);">⚠️ activity_db.js が読み込まれていません。</div>';
+    return;
+  }
+  // 歩行サブタブ
+  const subTabs = document.getElementById('walkingSubTabs');
+  const walkingCats = Object.keys(ACTIVITY_DB.walking);
+  subTabs.innerHTML = walkingCats.map((cat, i) =>
+    `<button class="cat-filter${i===0?' active':''}" onclick="selectWalkingSub('${cat}', this)">${cat} (${ACTIVITY_DB.walking[cat].length})</button>`
+  ).join('');
+  currentWalkingSub = walkingCats[0];
+  renderWalkingList();
+
+  // 大項目チップ
+  const bigChips = document.getElementById('bigCategoryChips');
+  const otherCats = Object.keys(ACTIVITY_DB.other);
+  bigChips.innerHTML = `<button class="cat-filter active" onclick="selectBigCat(null, this)">すべて</button>` +
+    otherCats.map(cat => {
+      const meta = BIG_CAT_META[cat] || { icon: "" };
+      const count = Object.values(ACTIVITY_DB.other[cat]).reduce((s, arr) => s + arr.length, 0);
+      return `<button class="cat-filter" onclick="selectBigCat('${cat}', this)">${meta.icon} ${cat.replace(/[（）]/g,'')}(${count})</button>`;
+    }).join('');
+  renderOtherList();
+  renderSelectedList();
+}
+
+function selectWalkingSub(cat, btn) {
+  currentWalkingSub = cat;
+  document.querySelectorAll('#walkingSubTabs .cat-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderWalkingList();
+}
+
+function selectBigCat(cat, btn) {
+  currentBigCat = cat;
+  currentMidCat = null;
+  document.querySelectorAll('#bigCategoryChips .cat-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const midChips = document.getElementById('midCategoryChips');
+  if (cat && ACTIVITY_DB.other[cat]) {
+    const mids = Object.keys(ACTIVITY_DB.other[cat]);
+    midChips.innerHTML = `<button class="cat-filter active" onclick="selectMidCat(null, this)">すべて</button>` +
+      mids.map(mid => `<button class="cat-filter" onclick="selectMidCat('${mid.replace(/'/g,"\\'")}', this)">${mid}(${ACTIVITY_DB.other[cat][mid].length})</button>`).join('');
+    midChips.style.display = 'flex';
+  } else {
+    midChips.innerHTML = '';
+    midChips.style.display = 'none';
+  }
+  renderOtherList();
+}
+
+function selectMidCat(mid, btn) {
+  currentMidCat = mid;
+  document.querySelectorAll('#midCategoryChips .cat-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOtherList();
+}
+
+function filterAllActivities(query) {
+  globalSearchQuery = query.toLowerCase().trim();
+  renderWalkingList();
+  renderOtherList();
+}
+
+function renderWalkingList() {
+  const container = document.getElementById('list-walking');
+  let items = (ACTIVITY_DB.walking[currentWalkingSub] || []).slice();
+  if (globalSearchQuery) {
+    items = items.filter(d => d.label.toLowerCase().includes(globalSearchQuery));
+  }
+  _listCacheWalking = items;
+  renderActList(container, items, 'walking');
+}
+
+function renderOtherList() {
+  const container = document.getElementById('list-other');
+  let items = [];
+  if (globalSearchQuery) {
+    Object.entries(ACTIVITY_DB.other).forEach(([big, mids]) => {
+      Object.entries(mids).forEach(([mid, arr]) => {
+        arr.forEach(d => {
+          if (d.label.toLowerCase().includes(globalSearchQuery) || mid.toLowerCase().includes(globalSearchQuery)) {
+            items.push({...d, _big: big, _mid: mid});
+          }
+        });
+      });
+    });
+  } else if (currentBigCat) {
+    if (currentMidCat) {
+      items = (ACTIVITY_DB.other[currentBigCat][currentMidCat] || []).map(d => ({...d, _big: currentBigCat, _mid: currentMidCat}));
+    } else {
+      Object.entries(ACTIVITY_DB.other[currentBigCat]).forEach(([mid, arr]) => {
+        arr.forEach(d => items.push({...d, _big: currentBigCat, _mid: mid}));
+      });
+    }
+  } else {
+    container.innerHTML = '<div style="padding:20px;text-align:center;font-size:12px;color:var(--gray);">↑ 上の大項目を選択するか、検索ボックスから探してください</div>';
+    _listCacheOther = [];
+    return;
+  }
+  _listCacheOther = items;
+  renderActList(container, items, 'other');
+}
+
+function renderActList(container, items, listType) {
+  const atMets = calcResults.mets2 ? parseFloat(calcResults.mets2) : null;
+  if (items.length === 0) {
+    container.innerHTML = '<div style="padding:12px;font-size:12px;color:var(--gray);">該当する活動が見つかりません</div>';
+    return;
+  }
+  const slice = items.slice(0, 80);
+  container.innerHTML = slice.map((d, idx) => {
+    const isSelected = isActivitySelected(d.label, d.mets);
+    let judgeBadge = '';
+    if (atMets) {
+      if (d.mets <= atMets) judgeBadge = `<span style="font-size:10px;color:#1A7A45;font-weight:700;">✅AT以下</span>`;
+      else if (d.mets <= atMets * 1.3) judgeBadge = `<span style="font-size:10px;color:#B05E00;font-weight:700;">⚠️要注意</span>`;
+      else judgeBadge = `<span style="font-size:10px;color:#C0392B;font-weight:700;">❌回避</span>`;
+    }
+    const {bg, color} = metsColor(d.mets);
+    let catTag = '';
+    if (listType === 'walking') {
+      catTag = `<span style="font-size:9px;color:var(--gray);background:#f0f4f8;padding:1px 5px;border-radius:4px;">${currentWalkingSub}</span> `;
+    } else if (d._big) {
+      const meta = BIG_CAT_META[d._big] || {};
+      catTag = `<span style="font-size:9px;color:var(--gray);background:#f0f4f8;padding:1px 5px;border-radius:4px;">${meta.icon || ''}${d._mid}</span> `;
+    }
+    return `<div class="act-item${isSelected?' selected':''}" onclick="toggleActivityNew('${listType}', ${idx})">
+      <span class="act-item-name">${catTag}${d.label}</span>
+      ${judgeBadge}
+      <span class="act-item-mets" style="background:${bg};color:${color};">${d.mets}</span>
+      <span class="act-item-add">${isSelected?'✓':'+'}</span>
+    </div>`;
+  }).join('');
+  if (items.length > 80) {
+    container.innerHTML += `<div style="padding:8px 12px;font-size:11px;color:var(--gray);">…他 ${items.length-80} 件(検索で絞り込んでください)</div>`;
+  }
+}
+
+function isActivitySelected(label, mets) {
+  return selectedActivities.some(s => s.label === label && s.mets === mets);
+}
+
+function toggleActivityNew(listType, idx) {
+  const cache = listType === 'walking' ? _listCacheWalking : _listCacheOther;
+  const d = cache[idx];
+  if (!d) return;
+  const found = selectedActivities.findIndex(s => s.label === d.label && s.mets === d.mets);
+  if (found >= 0) {
+    selectedActivities.splice(found, 1);
+  } else {
+    selectedActivities.push({
+      label: d.label,
+      mets: d.mets,
+      cat: d._mid || (listType === 'walking' ? '歩行' : ''),
+      _big: d._big || '歩行'
+    });
+  }
+  if (listType === 'walking') renderWalkingList();
+  else renderOtherList();
+  renderSelectedList();
+  saveInputsToStorage();
+}
+
+function renderSelectedList() {
+  const section = document.getElementById('selectedSection');
+  const container = document.getElementById('selectedList');
+  const atMets = calcResults.mets2 ? parseFloat(calcResults.mets2) : null;
+  if (selectedActivities.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+  document.getElementById('selectedCount').textContent = `(${selectedActivities.length}件)`;
+  container.innerHTML = selectedActivities.map((s, i) => {
+    let borderColor = '#5A7A9A', bg = '#F0F5FA', judgeText = `${s.mets} METs`;
+    if (atMets) {
+      if (s.mets <= atMets) { borderColor='#1A7A45'; bg='#E8F4EC'; judgeText=`✅ AT以下(${s.mets} METs)`; }
+      else if (s.mets <= atMets * 1.3) { borderColor='#B05E00'; bg='#FFF4E5'; judgeText=`⚠️ 要注意(${s.mets} METs)`; }
+      else { borderColor='#C0392B'; bg='#FDE0DE'; judgeText=`❌ 原則回避(${s.mets} METs)`; }
+    }
+    return `<div class="selected-act-item" style="border-left-color:${borderColor};background:${bg};">
+      <div class="s-name">${s.label}</div>
+      <div class="s-judge" style="color:${borderColor};">${judgeText}</div>
+      <div class="s-remove" onclick="removeSelected(${i})" title="削除">×</div>
+    </div>`;
+  }).join('');
+}
+
+function removeSelected(idx) {
+  selectedActivities.splice(idx, 1);
+  renderWalkingList();
+  renderOtherList();
+  renderSelectedList();
+  saveInputsToStorage();
+}
+
+// ============================================
+// 職業データ
+// ============================================
+const OCCUPATION_DATA = {
+  security: {label:"夜間警備員",sectionTitle:"⚠️ 夜間警備業務での注意点",notes:["緊急時は走らず「早歩き」で対応する(走行は6 METs超)","深夜〜早朝は自律神経の影響で血圧変動が起きやすい","疲労蓄積時は同じ動作でも心拍数が上がりやすい","1〜2時間ごとに必ず座って休憩をとる","職場スタッフに心臓の状態を事前に伝えておく","体調不良・動悸・胸痛があれば直ちに業務を中断する"],actRows:[["監視室での座位監視・デスクワーク",1.5,null,"長時間でも心臓への負担は最小限"],["立位の軽作業・書類整理",2.5,null,"こまめに座って休憩を挟む"],["施設内のゆっくり巡回歩行(3km/h相当)",3.0,null,"安全域内・継続可"],["平地速歩(4〜5km/h相当)",4.0,20,"息が上がらない程度を維持する"],["広域巡回(速足・長距離)",4.5,10,"短時間にとどめ、休憩を挟む"],["重い機材・設備の運搬(10kg超)",5.5,5,"他者に依頼・台車を活用する"],["緊急時の駆け足・走行",8.0,null,"早歩きで対応・絶対に走らない"]]},
+  office: {label:"事務職(デスクワーク中心)",sectionTitle:"⚠️ 事務職・職場での注意点",notes:["長時間の座位は血流停滞のリスク・1時間ごとに立って歩く","階段は急がずゆっくり一段ずつ昇る","昼休みの短い散歩(10〜15分)は積極的に行ってよい","繁忙期・残業時は疲労で同じ動作でも心拍数が上がりやすい","ストレス・緊張時も血圧が変動しやすい点に注意","職場の産業医・上司に状況を伝えておくことを推奨"],actRows:[["デスクワーク・PC作業",1.5,null,"長時間継続可・1時間ごとに立位を"],["立位の軽作業・コピー機操作",2.5,null,"こまめに座って休憩を"],["社内のゆっくり歩行(廊下移動等)",3.0,null,"安全域内"],["階段をゆっくり昇る(1〜2階程度)",3.5,null,"急がず一段ずつ・手すり使用推奨"],["平地速歩・通勤歩行(4〜5km/h)",4.0,20,"息が上がらない程度を維持する"],["荷物の運搬・書庫整理(5〜10kg)",4.5,10,"重量と継続時間に注意する"],["駆け足・早急な移動(階段を急ぐ等)",6.5,null,"早歩きで対応・走らない"]]},
+  housewife: {label:"主婦・主夫(家事中心)",sectionTitle:"✅ 家事・日常生活での注意点",notes:["日常家事(掃除・洗濯・料理)は基本的に安全域内","重い荷物(米袋・まとめ洗い)は小分けにして複数回に分ける","入浴は湯温41℃以下・長湯は避ける(温度変化で血圧変動)","庭仕事・草むしりは前傾姿勢が続くため15〜20分で休憩を","料理で立ちっぱなしが続く場合はこまめに座る","家族に心臓の状態を伝えておくと緊急時に安心"],actRows:[["軽い掃除・整理整頓",2.5,null,"日常的に行ってよい"],["料理・食事の準備(立位)",3.0,null,"立ちっぱなしに注意・こまめに座る"],["買い物・ゆっくり歩行(荷物なし)",3.0,null,"荷物は小分けにする"],["洗濯・布団の上げ下げ",3.5,null,"まとめて行わず分割する"],["階段をゆっくり昇る(1〜2階)",3.5,null,"急がず一段ずつ・手すり使用推奨"],["庭仕事・草むしり・軽い農作業",4.5,15,"短時間・こまめに休憩を挟む"],["重い荷物の運搬(米袋・10kg超)",5.5,null,"家族・宅配に依頼する"]]},
+  retired: {label:"退職者・無職",sectionTitle:"✅ 退職後の日常生活での注意点",notes:["毎日の散歩(Borg 3〜4以内)は積極的に続けてよい","急に運動量を増やさず、少しずつ慣れていく","趣味活動(園芸・旅行など)は強度を確認しながら行う","旅行時は長距離歩行・荷物運搬・坂道に注意する","気温が高い日・寒い日は同じ動作でも心拍数が上がりやすい","かかりつけ医への定期受診を忘れずに"],actRows:[["安静・読書・テレビ鑑賞",1.5,null,"問題なし"],["入浴・シャワー(41℃以下)",3.0,null,"湯温41℃以下・長湯を避ける"],["ゆっくりした散歩(3km/h)",3.0,null,"毎日続けてよい・継続が大切"],["買い物・平地ウォーキング",3.5,null,"荷物は小分けにする"],["平地速歩・軽い体操・ストレッチ",4.0,20,"息が上がらない程度を維持する"],["坂道・長距離ウォーキング",4.5,15,"短時間にとどめ途中で休憩を"],["重い荷物の運搬・引越し作業",5.5,null,"他者に依頼する"]]},
+  caregiver: {label:"介護職・福祉職",sectionTitle:"⚠️ 介護業務での注意点",notes:["移乗・体位変換などの瞬間的な力仕事は心拍数が急上昇しやすい","できるだけ複数人で行うか福祉用具を活用する","夜間勤務・不規則シフトは自律神経に影響しやすい","前屈位での長時間作業は短時間にとどめる","水分補給はこまめに行い、脱水を予防する","職場・上司に心臓の状態を事前に伝えておく"],actRows:[["見守り・記録作業(座位)",2.0,null,"問題なし"],["食事介助・会話補助",2.5,null,"安全域内"],["病棟内のゆっくり歩行・移動",3.0,null,"ゆっくり歩く"],["入浴介助(補助程度・立位)",3.5,null,"短時間にとどめる・休憩を挟む"],["車いす操作・歩行補助",4.0,20,"息が上がらない程度を維持する"],["移乗介助(抱え上げ・体位変換)",5.0,null,"福祉用具・リフトを使用・複数人で"],["緊急時の走行・急ぎ対応",8.0,null,"早歩きで対応・走らない"]]},
+  sales: {label:"営業職・外回り",sectionTitle:"⚠️ 営業・外回り業務での注意点",notes:["炎天下・寒冷時の外回りは同じ動作でも体への負担が大きい","重いカバン・サンプル品は小分けにするか台車・宅配を活用する","移動の合間にこまめに座って休憩をとる","電車・バスのラッシュを避けるよう工夫する","精神的ストレスも血圧上昇・心拍数増加の原因になる","上司・同僚に状況を伝えておくことを推奨"],actRows:[["デスクワーク・電話対応(座位)",1.5,null,"問題なし"],["社内・近距離のゆっくり外歩き",3.0,null,"安全域内"],["階段の昇降(1〜2階)",3.5,null,"急がず一段ずつ・エレベータも活用"],["営業先への移動(速歩・4〜5km/h)",4.0,20,"息が上がらない程度を維持する"],["重い荷物を持っての歩行(5kg超)",4.5,10,"荷物を小分けに・休憩を挟む"],["急ぎ足・駆け込み乗車・階段を急ぐ",6.0,null,"次の電車を待つ・走らない"],["重いサンプル品の長時間運搬",5.5,null,"台車・宅配を活用する"]]},
+  manual: {label:"肉体労働(建設・製造など)",sectionTitle:"⚠️ 肉体労働での注意点(重要)",notes:["現在の運動耐容能では重労働は心臓への負担が非常に大きい","主治医・産業医と相談の上、業務内容・配置転換の調整を検討する","重量物の持ち上げは瞬間的に血圧が急上昇する","炎天下・高温環境での作業は特に注意が必要","こまめな水分補給と定期休憩を必ず行う","職場に心臓の状態を必ず伝える"],actRows:[["監視・点検作業(座位・デスク)",2.0,null,"問題なし"],["ゆっくりした構内歩行",3.0,null,"安全域内"],["軽作業・部品の組み立て(立位)",3.5,null,"立ちっぱなしに注意"],["工具・資材の軽い運搬(5kg以下)",4.0,20,"重量と継続時間に十分注意する"],["中重量物の運搬・作業(10〜20kg)",5.5,null,"他者・フォークリフト等に依頼する"],["重量物の持ち上げ(20kg超)",7.5,null,"絶対に避ける・必ず機械を使用"],["炎天下・高温環境での連続作業",6.0,null,"主治医・産業医に要相談"]]},
+  medical: {label:"医療・看護職",sectionTitle:"⚠️ 医療・看護業務での注意点",notes:["夜間勤務・長時間勤務は自律神経・血圧変動に影響しやすい","急変対応時の走行は心拍数が瞬間的に急上昇する","患者の体位変換・移乗補助は瞬間的な力仕事に注意する","立ちっぱなしの処置は1時間ごとに座って休憩をとる","精神的ストレスも血圧上昇・心拍数増加の原因になりやすい","上司・師長に状況を伝え、無理のない勤務調整を相談する"],actRows:[["記録・デスクワーク(座位)",1.5,null,"問題なし"],["病棟内のゆっくり歩行・移動",3.0,null,"安全域内"],["軽い処置・点滴管理(立位)",3.5,null,"立位が続く場合はこまめに座る"],["配薬・回診補助",3.5,null,"急がない・ゆっくり動く"],["患者の移動補助・車いす操作",4.5,15,"福祉用具・複数人での対応を推奨"],["患者の体位変換・移乗(介助)",5.0,null,"複数人・スライドシート等を活用"],["急変対応・走行",8.0,null,"早歩きで対応・走らない・他者に依頼"]]},
+  custom: {label:"",sectionTitle:"⚠️ 業務・日常生活での注意点",notes:["運動強度が高い作業はBorg指数を目安に確認する","Borg 5以上(ややつらい)を感じたら強度を下げる","重い荷物の運搬・急ぎ足は心拍数が急上昇しやすい","こまめな休憩と水分補給を必ず行う","体調が悪いと感じたときは無理をしない","職場・家族に心臓の状態を伝えておく"],actRows:[["安静・座位作業",1.5,null,"問題なし"],["ゆっくりした歩行・軽作業(立位)",3.0,null,"安全域内"],["平地速歩・立位作業(4〜5km/h)",4.0,20,"息が上がらない程度を維持する"],["階段の昇降(1〜2階)",3.5,null,"急がず一段ずつ昇る"],["やや負荷のある継続作業",4.5,15,"短時間にとどめ、こまめに休憩を"],["重い荷物の運搬(10kg超)",5.5,null,"他者・台車に依頼する"],["駆け足・急ぎ対応・走行",8.0,null,"早歩きで対応・走らない"]]}
+};
+
+function parseBP(str){if(!str)return{sys:null,dia:null};const parts=str.split('/');return{sys:parseInt(parts[0])||null,dia:parseInt(parts[1])||null};}
+
+// ============================================
+// 計算ロジック
+// ============================================
+function calculate(){
+  const age=parseFloat(document.getElementById('age').value);
+  const height=parseFloat(document.getElementById('height').value);
+  const weight=parseFloat(document.getElementById('weight').value);
+  const sex=document.getElementById('sex').value;
+  const dist1=parseFloat(document.getElementById('dist1').value);
+  const dist2=parseFloat(document.getElementById('dist2').value);
+  const borg1=parseFloat(document.getElementById('borg1').value);
+  const borg2=parseFloat(document.getElementById('borg2').value);
+
+  // バリデーション
+  if(!age||!height||!weight||!dist1||!dist2){
+    alert('年齢・身長・体重・歩行距離(両条件)を入力してください。');
+    return;
+  }
+  if(age < 18 || age > 110) { alert('年齢は18〜110歳の範囲で入力してください。'); return; }
+  if(height < 100 || height > 220) { alert('身長は100〜220cmの範囲で入力してください。'); return; }
+  if(weight < 20 || weight > 200) { alert('体重は20〜200kgの範囲で入力してください。'); return; }
+
+  // 職種未選択チェック
+  const occupation = document.getElementById('occupation').value;
+  if(!occupation){
+    alert('生活・就労状況(職種)を選択してください。');
+    document.getElementById('occupation').focus();
+    return;
+  }
+  if(occupation === 'custom'){
+    const customOcc = document.getElementById('customOcc').value.trim();
+    if(!customOcc){
+      alert('「その他」を選択した場合は職種名を入力してください。');
+      document.getElementById('customOcc').focus();
+      return;
+    }
+  }
+
+  let predicted=sex==='male'?7.57*height-5.02*age-1.76*weight-309:2.11*height-2.29*weight-5.78*age+667;
+  predicted=Math.max(predicted,1);
+  const vo2_1=(0.03*dist1)+3.98, vo2_2=(0.03*dist2)+3.98;
+  const mets1=vo2_1/3.5, mets2=vo2_2/3.5;
+  const pct1=(dist1/predicted*100).toFixed(2), pct2=(dist2/predicted*100).toFixed(2);
+
+  const bp_r1=parseBP(document.getElementById('bp_rest1').value);
+  const bp_e1=parseBP(document.getElementById('bp_ex1').value);
+  const bp_r2=parseBP(document.getElementById('bp_rest2').value);
+  const bp_e2=parseBP(document.getElementById('bp_ex2').value);
+  const bpDiff1=(bp_e1.sys&&bp_r1.sys)?bp_e1.sys-bp_r1.sys:null;
+  const bpDiff2=(bp_e2.sys&&bp_r2.sys)?bp_e2.sys-bp_r2.sys:null;
+  const hrDiff1_val=(document.getElementById('hr_ex1').value&&document.getElementById('hr_rest1').value)?parseInt(document.getElementById('hr_ex1').value)-parseInt(document.getElementById('hr_rest1').value):null;
+  const hrDiff2_val=(document.getElementById('hr_ex2').value&&document.getElementById('hr_rest2').value)?parseInt(document.getElementById('hr_ex2').value)-parseInt(document.getElementById('hr_rest2').value):null;
+  const rpp1_rest=(bp_r1.sys&&parseInt(document.getElementById('hr_rest1').value))?bp_r1.sys*parseInt(document.getElementById('hr_rest1').value):null;
+  const rpp1_ex=(bp_e1.sys&&parseInt(document.getElementById('hr_ex1').value))?bp_e1.sys*parseInt(document.getElementById('hr_ex1').value):null;
+  const rpp2_rest=(bp_r2.sys&&parseInt(document.getElementById('hr_rest2').value))?bp_r2.sys*parseInt(document.getElementById('hr_rest2').value):null;
+  const rpp2_ex=(bp_e2.sys&&parseInt(document.getElementById('hr_ex2').value))?bp_e2.sys*parseInt(document.getElementById('hr_ex2').value):null;
+  const spo2_r1=parseFloat(document.getElementById('spo2_rest1').value)||null;
+  const spo2_e1=parseFloat(document.getElementById('spo2_ex1').value)||null;
+  const spo2_r2=parseFloat(document.getElementById('spo2_rest2').value)||null;
+  const spo2_e2=parseFloat(document.getElementById('spo2_ex2').value)||null;
+  const spo2Drop1=(spo2_r1&&spo2_e1)?spo2_r1-spo2_e1:null;
+  const spo2Drop2=(spo2_r2&&spo2_e2)?spo2_r2-spo2_e2:null;
+
+  calcResults={age,height,weight,sex,dist1,dist2,borg1,borg2,predicted:predicted.toFixed(2),vo2_1:vo2_1.toFixed(2),vo2_2:vo2_2.toFixed(2),mets1:mets1.toFixed(2),mets2:mets2.toFixed(2),pct1,pct2,bpDiff1,bpDiff2,hrDiff1_val,hrDiff2_val,rpp1_rest,rpp1_ex,rpp2_rest,rpp2_ex,spo2Drop1,spo2Drop2,bp_rest1:document.getElementById('bp_rest1').value,bp_ex1:document.getElementById('bp_ex1').value,bp_rest2:document.getElementById('bp_rest2').value,bp_ex2:document.getElementById('bp_ex2').value,hr_rest1:document.getElementById('hr_rest1').value,hr_ex1:document.getElementById('hr_ex1').value,hr_rest2:document.getElementById('hr_rest2').value,hr_ex2:document.getElementById('hr_ex2').value,spo2_rest1:document.getElementById('spo2_rest1').value,spo2_ex1:document.getElementById('spo2_ex1').value,spo2_rest2:document.getElementById('spo2_rest2').value,spo2_ex2:document.getElementById('spo2_ex2').value,name:document.getElementById('name').value||'　　　　　　　　',date:document.getElementById('date').value,occupation,customOcc:document.getElementById('customOcc').value};
+
+  const panel=document.getElementById('resultsPanel');
+  panel.classList.add('visible');
+
+  // ★2回目AT域を最優先で表示
+  document.getElementById('resultsGrid').innerHTML=`
+    <div class="result-item green" style="grid-column:1/-1;background:#E8F4EC;border-left-width:6px;padding:18px 22px;">
+      <div class="r-label" style="font-size:11px;">⭐ 2回目 AT域歩行の結果 (指導の基準値)</div>
+      <div class="r-value" style="font-size:28px;">${calcResults.mets2} METs</div>
+      <div class="r-sub">歩行距離 ${calcResults.dist2}m / Borg ${calcResults.borg2} / 推定VO₂ ${calcResults.vo2_2} mL/kg/min / 達成率 ${calcResults.pct2}%</div>
+    </div>
+    <div class="result-item">
+      <div class="r-label">予測6MWT距離(Enright式)</div>
+      <div class="r-value">${calcResults.predicted} m</div>
+      <div class="r-sub">同年代・同体格の基準値</div>
+    </div>
+    <div class="result-item">
+      <div class="r-label">運動耐容能判定</div>
+      <div class="r-value" style="font-size:16px;margin-top:6px;">${parseFloat(calcResults.pct2)<70?'⚠️ 中等度低下':parseFloat(calcResults.pct2)<85?'△ 軽度低下':'✅ 正常範囲'}</div>
+      <div class="r-sub">2回目達成率 ${calcResults.pct2}% 基準</div>
+    </div>
+    <div class="result-item orange" style="grid-column:1/-1;opacity:0.85;">
+      <div class="r-label">📝 1回目 自由速度歩行(参考値)</div>
+      <div class="r-value" style="font-size:18px;">${calcResults.mets1} METs</div>
+      <div class="r-sub">歩行距離 ${calcResults.dist1}m / Borg ${calcResults.borg1} / 推定VO₂ ${calcResults.vo2_1} mL/kg/min / 達成率 ${calcResults.pct1}%<br>※自由速度歩行のため、AT判定基準ではなく参考値です</div>
+    </div>
+  `;
+
+  document.getElementById('badgeRow').innerHTML=`<span class="badge safe">安全域:${calcResults.mets2} METs 以下</span><span class="badge caution">参考(1回目):${calcResults.mets1} METs</span>`;
+
+  // 2回目Borg警告
+  const oldWarn = document.getElementById('borgWarning');
+  if(oldWarn) oldWarn.remove();
+  if(borg2 < 3 || borg2 > 4){
+    const warningDiv = document.createElement('div');
+    warningDiv.id = 'borgWarning';
+    warningDiv.className = 'borg-warning';
+    let warningMsg = '';
+    if(borg2 < 3){
+      warningMsg = `Borg ${borg2}(楽すぎる) → <strong>運動強度が不足</strong>している可能性があります。<br>実際のATはより高い強度に存在すると考えられるため、<strong>もう少し速いペースで再測定</strong>を推奨します。`;
+    } else {
+      warningMsg = `Borg ${borg2}(ややつらい以上) → <strong>運動強度が過剰</strong>である可能性があります。<br>AT域を超えている可能性があるため、<strong>もう少し遅いペースで再測定</strong>を推奨します。`;
+    }
+    warningDiv.innerHTML = `
+      <div style="font-weight:900;margin-bottom:6px;">⚠️ 2回目のBorg指数が目標範囲(3〜4)を外れています</div>
+      ${warningMsg}
+      <div style="font-size:11px;margin-top:8px;opacity:0.8;">※AT相当としての信頼性が低下している可能性があるため、結果の解釈には注意してください。</div>
+    `;
+    document.getElementById('badgeRow').insertAdjacentElement('afterend', warningDiv);
+  }
+
+  renderRPPPanel();
+  renderSelectedList();
+  renderWalkingList();
+  renderOtherList();
+  renderActJudgeTable(parseFloat(calcResults.mets2));
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// RPP・SpO2パネル
+function getRppClass(r){if(!r)return'';if(r<=10000)return'low';if(r<=15000)return'mild';if(r<=20000)return'mod';return'high';}
+function getRppLabel(r){if(!r)return'—';if(r<=10000)return'低負荷';if(r<=15000)return'軽負荷';if(r<=20000)return'中等負荷';return'高負荷';}
+function getRppPanelHtml(label,rpp_rest,rpp_ex){const cls_rest=getRppClass(rpp_rest),cls_ex=getRppClass(rpp_ex),fmt=v=>v?v.toLocaleString():'—';return`<div class="rpp-item ${cls_rest}"><div class="rpp-label">${label} 安静時RPP</div><div class="rpp-val">${fmt(rpp_rest)}</div><div class="rpp-judge">${rpp_rest?getRppLabel(rpp_rest):'未入力'}</div></div><div class="rpp-item ${cls_ex}"><div class="rpp-label">${label} 運動後RPP</div><div class="rpp-val">${fmt(rpp_ex)}</div><div class="rpp-judge">${rpp_ex?getRppLabel(rpp_ex):'未入力'}</div></div>`;}
+function getDiscordHtml(borgLabel,borg,rpp_ex){if(!borg||!rpp_ex)return'';if(borg<=3&&rpp_ex>=16000)return`<div class="discord-box danger"><div class="discord-title">⚠️ ${borgLabel}:主観・客観の乖離(過大評価の可能性)</div>Borg ${borg}(楽〜やや楽)にもかかわらず、二重積 ${rpp_ex.toLocaleString()} と客観的負荷が高い状態です。</div>`;if(borg>=6&&rpp_ex<=10000)return`<div class="discord-box warn"><div class="discord-title">⚠️ ${borgLabel}:主観・客観の乖離(過小評価の可能性)</div>Borg ${borg}(かなりきつい)にもかかわらず、二重積 ${rpp_ex.toLocaleString()} と客観的負荷は低い状態です。</div>`;return`<div class="discord-box ok"><div class="discord-title">✅ ${borgLabel}:主観・客観評価が概ね一致</div>Borg ${borg} と二重積 ${rpp_ex.toLocaleString()} は概ね対応しています。</div>`;}
+function getSpo2Html(label,drop){if(drop===null)return'';if(drop>=3)return`<div class="spo2-box warn"><div style="font-weight:900;">🫁 ${label}:運動誘発性低酸素の可能性</div>SpO₂が安静時比 <strong>${drop.toFixed(1)}%低下</strong>しています(3%以上の低下は臨床的に注意)。</div>`;if(drop>=0)return`<div class="spo2-box ok">🫁 ${label}:SpO₂変動は軽微(${drop.toFixed(1)}%低下) — 問題なし</div>`;return`<div class="spo2-box ok">🫁 ${label}:SpO₂は運動後上昇(${Math.abs(drop).toFixed(1)}%上昇) — 問題なし</div>`;}
+
+function renderRPPPanel(){
+  const R=calcResults;
+  const old=document.getElementById('rppPanel');
+  if(old)old.remove();
+  const div=document.createElement('div');
+  div.id='rppPanel';
+  div.className='rpp-panel';
+  let html='<div class="rpp-title">💓 二重積(Rate Pressure Product)／ SpO₂ ／ 主観・客観評価の一致性</div>';
+  if(R.rpp1_ex||R.rpp1_rest){
+    html+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px;">1回目 自由速度歩行</div>';
+    html+='<div class="rpp-grid">'+getRppPanelHtml('1回目',R.rpp1_rest,R.rpp1_ex)+'</div>';
+    html+=getDiscordHtml('1回目',R.borg1,R.rpp1_ex);
+    html+=getSpo2Html('1回目',R.spo2Drop1);
+  }
+  if(R.rpp2_ex||R.rpp2_rest){
+    html+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin:12px 0 6px;">2回目 AT域歩行</div>';
+    html+='<div class="rpp-grid">'+getRppPanelHtml('2回目',R.rpp2_rest,R.rpp2_ex)+'</div>';
+    html+=getDiscordHtml('2回目',R.borg2,R.rpp2_ex);
+    html+=getSpo2Html('2回目',R.spo2Drop2);
+  }
+  if(!R.rpp1_ex&&!R.rpp1_rest&&!R.rpp2_ex&&!R.rpp2_rest)html+='<div style="font-size:12px;color:var(--gray);">血圧・脈拍を入力すると二重積が表示されます。</div>';
+  html+='<div style="font-size:10px;color:var(--gray);margin-top:8px;line-height:1.6;">※二重積 = 収縮期血圧 × 心拍数</div>';
+  div.innerHTML=html;
+  document.getElementById('badgeRow').insertAdjacentElement('afterend', div);
+}
+
+function renderActJudgeTable(atMets){
+  const occKey=document.getElementById('occupation').value;
+  const occData=OCCUPATION_DATA[occKey];
+  if(!occData) return;
+  const section=document.getElementById('actJudgeSection');
+  section.style.display='block';
+  const atBound1=atMets.toFixed(2),atBound2=(atMets*1.3).toFixed(2);
+  document.getElementById('atThresholdBadges').innerHTML=`<span style="background:var(--green-light);color:var(--green);padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;">✅ AT以下 ≤ ${atBound1} METs</span><span style="background:var(--orange-light);color:var(--orange);padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;">⚠️ AT超〜注意域 ${atBound1}〜${atBound2} METs</span><span style="background:var(--red-light);color:var(--red);padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;">❌ 原則回避 > ${atBound2} METs</span>`;
+  let rows='';
+  occData.actRows.forEach(([actName,metsMax,maxMin,note])=>{
+    let judgeText,judgeColor,rowBg,mc;
+    if(metsMax<=atMets){judgeText='✅ AT以下';judgeColor='#1A7A45';rowBg='#F3FBF6';mc='#1A7A45';}
+    else if(metsMax<=atMets*1.3){judgeText='⚠️ 要注意';judgeColor='#B05E00';rowBg='#FFFBF3';mc='#B05E00';}
+    else{judgeText='❌ 原則回避';judgeColor='#C0392B';rowBg='#FEF5F5';mc='#C0392B';}
+    const margin=(metsMax-atMets).toFixed(2);
+    const marginText=margin>0?`<span style="font-size:10px;color:${judgeColor};">AT+${margin}</span>`:`<span style="font-size:10px;color:var(--green);">AT−${Math.abs(margin)}</span>`;
+    const durText=maxMin?`<span style="font-size:10px;color:var(--gray);">最大${maxMin}分</span>`:'';
+    rows+=`<tr style="background:${rowBg};"><td style="padding:8px 10px;font-size:12px;border-bottom:1px solid #e8eef4;">${actName}</td><td style="padding:8px 6px;text-align:center;font-weight:700;font-size:13px;color:${mc};border-bottom:1px solid #e8eef4;">${metsMax}<br><span style="font-size:10px;font-weight:400;color:var(--gray);">METs</span></td><td style="padding:8px 6px;text-align:center;border-bottom:1px solid #e8eef4;"><span style="font-weight:700;color:${judgeColor};font-size:12px;">${judgeText}</span><br>${marginText} ${durText}</td><td style="padding:8px 10px;font-size:11px;color:var(--gray);border-bottom:1px solid #e8eef4;">${note}</td></tr>`;
+  });
+  document.getElementById('actJudgeTable').innerHTML=`<table style="width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(26,95,168,0.08);"><thead><tr style="background:#1A5FA8;color:white;"><th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;width:35%;">活動内容</th><th style="padding:8px 6px;text-align:center;font-size:11px;font-weight:700;width:12%;">METs</th><th style="padding:8px 6px;text-align:center;font-size:11px;font-weight:700;width:18%;">AT判定</th><th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;">指導ポイント</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function clearAll(){
+  if(!confirm('入力した全データをクリアします。よろしいですか?')) return;
+  document.querySelectorAll('input[type=number], input[type=text]').forEach(i=>i.value='');
+  document.getElementById('occupation').value='';
+  document.getElementById('customOccField').style.display='none';
+  document.getElementById('date').valueAsDate=new Date();
+  document.getElementById('resultsPanel').classList.remove('visible');
+  document.getElementById('actJudgeSection').style.display='none';
+  const oldWarn=document.getElementById('borgWarning');
+  if(oldWarn)oldWarn.remove();
+  const oldRpp=document.getElementById('rppPanel');
+  if(oldRpp)oldRpp.remove();
+  calcResults={};
+  selectedActivities=[];
+  renderSelectedList();
+  renderWalkingList();
+  renderOtherList();
+  clearStorage();
+}
+
+// ============================================
+// DOCX生成
+// ============================================
+function buildDocx(files){const enc=new TextEncoder();const entries=[];let offset=0;const crcTable=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);crcTable[i]=c;}function crc32(data){let crc=0xFFFFFFFF;for(let i=0;i<data.length;i++)crc=(crc>>>8)^crcTable[(crc^data[i])&0xFF];return(crc^0xFFFFFFFF)>>>0;}const centralDir=[];for(const[path,content]of Object.entries(files)){const data=typeof content==='string'?enc.encode(content):content;const name=enc.encode(path);const crc=crc32(data);const size=data.length;const lh=new Uint8Array(30+name.length);const ldv=new DataView(lh.buffer);ldv.setUint32(0,0x04034b50,true);ldv.setUint16(4,20,true);ldv.setUint16(6,0x0800,true);ldv.setUint16(8,0,true);ldv.setUint16(10,0,true);ldv.setUint16(12,0,true);ldv.setUint32(14,crc,true);ldv.setUint32(18,size,true);ldv.setUint32(22,size,true);ldv.setUint16(26,name.length,true);ldv.setUint16(28,0,true);lh.set(name,30);entries.push(lh,data);const cd=new Uint8Array(46+name.length);const cdv=new DataView(cd.buffer);cdv.setUint32(0,0x02014b50,true);cdv.setUint16(4,20,true);cdv.setUint16(6,20,true);cdv.setUint16(8,0x0800,true);cdv.setUint16(10,0,true);cdv.setUint16(12,0,true);cdv.setUint16(14,0,true);cdv.setUint32(16,crc,true);cdv.setUint32(20,size,true);cdv.setUint32(24,size,true);cdv.setUint16(28,name.length,true);cdv.setUint16(30,0,true);cdv.setUint16(32,0,true);cdv.setUint16(34,0,true);cdv.setUint16(36,0,true);cdv.setUint32(38,0,true);cdv.setUint32(42,offset,true);cd.set(name,46);centralDir.push(cd);offset+=lh.length+data.length;}const cdSize=centralDir.reduce((s,b)=>s+b.length,0);const eocd=new Uint8Array(22);const eocdv=new DataView(eocd.buffer);const numFiles=Object.keys(files).length;eocdv.setUint32(0,0x06054b50,true);eocdv.setUint16(4,0,true);eocdv.setUint16(6,0,true);eocdv.setUint16(8,numFiles,true);eocdv.setUint16(10,numFiles,true);eocdv.setUint32(12,cdSize,true);eocdv.setUint32(16,offset,true);eocdv.setUint16(20,0,true);const all=[...entries,...centralDir,eocd];const total=all.reduce((s,b)=>s+b.length,0);const out=new Uint8Array(total);let pos=0;for(const b of all){out.set(b,pos);pos+=b.length;}return out;}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function clr(hex){return String(hex).replace('#','').toUpperCase();}
+function run(text,{sz=18,bold=false,color='000000',font='HGP丸ゴシックM-PRO'}={}){const rpr=[];if(font!=='HGP丸ゴシックM-PRO')rpr.push(`<w:rFonts w:ascii="${font}" w:hAnsi="${font}" w:eastAsia="${font}" w:cs="${font}"/>`);if(sz!==18)rpr.push(`<w:sz w:val="${sz}"/><w:szCs w:val="${sz}"/>`);if(color!=='000000')rpr.push(`<w:color w:val="${clr(color)}"/>`);if(bold)rpr.push('<w:b/>');const rprXml=rpr.length?`<w:rPr>${rpr.join('')}</w:rPr>`:'';return`<w:r>${rprXml}<w:t xml:space="preserve">${esc(text)}</w:t></w:r>`;}
+function para(runs,{align='left',before=40,after=40,borderBottom=null,bullet=false}={}){const ppr=[];if(align!=='left')ppr.push(`<w:jc w:val="${align}"/>`);if(before!==40||after!==40)ppr.push(`<w:spacing w:before="${before}" w:after="${after}"/>`);if(borderBottom)ppr.push(`<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="${clr(borderBottom)}"/></w:pBdr>`);if(bullet)ppr.push('<w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr>');const pprXml=ppr.length?`<w:pPr>${ppr.join('')}</w:pPr>`:'';return`<w:p>${pprXml}${runs}</w:p>`;}
+function secHdr(text,color='1A5FA8'){return para(run(text,{sz:22,bold:true,color,font:'HGP丸ゴシックM-PRO'}),{before:100,after:60,borderBottom:color});}
+function spacer(pt=80){return`<w:p><w:pPr><w:spacing w:before="${pt}" w:after="0"/></w:pPr></w:p>`;}
+function cell(content,wVal,{fill='FFFFFF',borders=null,padTop=50,padBottom=50,padLeft=100,padRight=100}={}){const bdr=borders?`<w:tcBorders>${Object.entries(borders).map(([s,[c,sz]])=>`<w:${s} w:val="single" w:sz="${sz}" w:space="0" w:color="${clr(c)}"/>`).join('')}</w:tcBorders>`:'';const mar=(padTop===50&&padBottom===50&&padLeft===100&&padRight===100)?'':`<w:tcMar><w:top w:w="${padTop}" w:type="dxa"/><w:bottom w:w="${padBottom}" w:type="dxa"/><w:left w:w="${padLeft}" w:type="dxa"/><w:right w:w="${padRight}" w:type="dxa"/></w:tcMar>`;const shd=fill!=='FFFFFF'?`<w:shd w:val="clear" w:color="auto" w:fill="${clr(fill)}"/>`:'';return`<w:tc><w:tcPr><w:tcW w:w="${wVal}" w:type="dxa"/>${bdr}${shd}${mar}</w:tcPr>${content}</w:tc>`;}
+function tblRow(...cells){return`<w:tr>${cells.join('')}</w:tr>`;}
+function tbl(rows,colWidths){const total=colWidths.reduce((s,w)=>s+w,0);const grid=colWidths.map(w=>`<w:gridCol w:w="${w}"/>`).join('');return`<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="${total}" w:type="dxa"/><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>${grid}</w:tblGrid>${rows.join('')}</w:tbl>`;}
+function hdrCell(text,wVal){return cell(para(run(text,{sz:16,bold:true,color:'FFFFFF'}),{before:0,after:0}),wVal,{fill:'1A5FA8'});}
+function hdrCell2(text,wVal,fillColor='2C5F8A'){return cell(para(run(text,{sz:16,bold:true,color:'FFFFFF'}),{before:0,after:0}),wVal,{fill:fillColor});}
+function getJudge(metsMax,atMets){if(metsMax<=atMets)return{badge:'✅ AT以下',bCol:'1A7A45',bBg:'E8F4EC'};if(metsMax<=atMets*1.3)return{badge:'⚠️ 要注意',bCol:'B05E00',bBg:'FFF4E5'};return{badge:'❌ 原則回避',bCol:'C0392B',bBg:'FDE0DE'};}
+
+function buildDocumentXml(R,occData,occLabel,selectedActivities){
+  const CW=11906-1800;const atMets=parseFloat(R.mets2);const parts=[];
+  const lb=(c)=>({top:['AAAAAA',4],bottom:['AAAAAA',4],left:[c,16],right:['AAAAAA',4]});
+  const lbNoRight=(c)=>({top:['AAAAAA',4],bottom:['AAAAAA',4],left:[c,16],right:['FFFFFF',0]});
+  const std={padTop:80,padBottom:80,padLeft:120,padRight:120};
+  const sm={padTop:50,padBottom:50,padLeft:100,padRight:100};
+  parts.push(para(run('6分間歩行テスト　指導資料',{sz:30,bold:true,color:'1A5FA8',font:'HGP丸ゴシックM-PRO'}),{align:'center',before:0,after:60,borderBottom:'1A5FA8'}));
+  parts.push(para(run('6MWT結果にもとづく個別指導資料',{sz:18,color:'5A7A9A',font:'HGP丸ゴシックM-PRO'}),{align:'center',before:30,after:140}));
+  const infoContent=para(run(`氏名:${R.name} 様　　`)+run(`年齢:${R.age}歳　身長:${R.height}cm　体重:${R.weight}kg　　`)+run(`指導日:${R.date||'　　　年　　月　　日'}`),{before:0,after:0});
+  parts.push(tbl([tblRow(cell(infoContent,CW,{fill:'EEF4FB',borders:lb('1A5FA8'),...std}))],[CW]));
+  parts.push(spacer(80));
+
+  // ★Word: 2回目AT域を強調、1回目は参考扱い
+  const halfW=Math.floor(CW/2);
+  const bannerL=para(run('✅  安全に続けられる運動強度(AT域)',{sz:17,bold:true,color:'1A7A45'}),{before:0,after:20})
+    +para(run(`${R.mets2} METs 以下`,{sz:28,bold:true,color:'1A7A45'}),{before:0,after:20})
+    +para(run(`2回目AT域歩行(Borg ${R.borg2})の結果`,{sz:14,color:'2D6A40'}),{before:0,after:10})
+    +para(run('→ この強度以下なら時間を気にせず活動してOK',{sz:16,color:'2D6A40'}),{before:0,after:0});
+  const bannerR=para(run('📝 参考:1回目 自由速度歩行',{sz:17,bold:true,color:'5A7A9A'}),{before:0,after:20})
+    +para(run(`${R.mets1} METs`,{sz:22,bold:true,color:'5A7A9A'}),{before:0,after:20})
+    +para(run(`歩行距離 ${R.dist1}m / Borg ${R.borg1}`,{sz:14,color:'5A7A9A'}),{before:0,after:0})
+    +para(run('※自由速度歩行のため参考値',{sz:13,color:'888888'}),{before:0,after:0});
+  parts.push(tbl([tblRow(cell(bannerL,halfW,{fill:'E8F4EC',borders:lbNoRight('2D9E5C'),...std}),cell(bannerR,CW-halfW,{fill:'F4F8FC',borders:lb('5A7A9A'),...std}))],[halfW,CW-halfW]));
+  parts.push(spacer(80));
+
+  parts.push(secHdr('バイタルサイン'));
+  const vW=[2400,2426,1560,1560];
+  const vHdr=(t,w)=>cell(para(run(t,{sz:16,bold:true,color:'FFFFFF'}),{before:0,after:0}),w,{fill:'1A5FA8',...sm});
+  const vCell=(t,w,fill='FFFFFF')=>cell(para(run(t,{sz:16}),{before:0,after:0}),w,{fill,...sm});
+  const bpD1=R.bpDiff1!=null?` 収縮期${R.bpDiff1>=0?'+':''}${R.bpDiff1}mmHg`:'';
+  const bpD2=R.bpDiff2!=null?` 収縮期${R.bpDiff2>=0?'+':''}${R.bpDiff2}mmHg`:'';
+  const hrD1=R.hrDiff1_val!=null?` (${R.hrDiff1_val>=0?'+':''}${R.hrDiff1_val}回/分)`:'';
+  const hrD2=R.hrDiff2_val!=null?` (${R.hrDiff2_val>=0?'+':''}${R.hrDiff2_val}回/分)`:'';
+  parts.push(tbl([
+    tblRow(vHdr('測定タイミング',vW[0]),vHdr('血圧 (mmHg)',vW[1]),vHdr('脈拍 (回/分)',vW[2]),vHdr('SpO2 (%)',vW[3])),
+    tblRow(vCell('安静時①(1回目前)',vW[0],'F4F8FC'),vCell(R.bp_rest1||'—',vW[1]),vCell(R.hr_rest1||'—',vW[2]),vCell(R.spo2_rest1||'—',vW[3])),
+    tblRow(vCell(`1回目後(直後)${bpD1}`,vW[0],'F4F8FC'),vCell(R.bp_ex1||'—',vW[1],'FFF9F0'),vCell(`${R.hr_ex1||'—'}${hrD1}`,vW[2],'FFF9F0'),vCell(R.spo2_ex1||'—',vW[3],'FFF9F0')),
+    tblRow(vCell('安静時②(2回目前)',vW[0],'F4F8FC'),vCell(R.bp_rest2||'—',vW[1]),vCell(R.hr_rest2||'—',vW[2]),vCell(R.spo2_rest2||'—',vW[3])),
+    tblRow(vCell(`2回目後(直後)${bpD2}`,vW[0],'F4F8FC'),vCell(R.bp_ex2||'—',vW[1],'F0FBF4'),vCell(`${R.hr_ex2||'—'}${hrD2}`,vW[2],'F0FBF4'),vCell(R.spo2_ex2||'—',vW[3],'F0FBF4'))
+  ],vW));
+  parts.push(spacer(80));
+
+  parts.push(secHdr('6分間歩行試験 結果・推定値'));
+  const rW=[3600,Math.floor((CW-3600)/2),CW-3600-Math.floor((CW-3600)/2)];
+  const rHdr=(t,w)=>cell(para(run(t,{sz:16,bold:true,color:'FFFFFF'}),{before:0,after:0}),w,{fill:'1A5FA8',...sm});
+  const rCell=(t,w,fill='FFFFFF',bold=false,color='000000')=>cell(para(run(t,{sz:16,bold,color}),{before:0,after:0}),w,{fill,...sm});
+  parts.push(tbl([
+    tblRow(rHdr('指標',rW[0]),rHdr('1回目 自由速度歩行(参考)',rW[1]),rHdr('2回目 AT域歩行 ⭐(指導基準)',rW[2])),
+    tblRow(rCell('歩行距離',rW[0],'F4F8FC'),rCell(`${R.dist1} m`,rW[1],'FFFFFF',true),rCell(`${R.dist2} m`,rW[2],'FFFFFF',true)),
+    tblRow(rCell('Borg指数(10点法)',rW[0],'F4F8FC'),rCell(`${R.borg1}`,rW[1]),rCell(`${R.borg2}(目標:3〜4)`,rW[2])),
+    tblRow(rCell('予測6MWT距離',rW[0],'F4F8FC'),rCell(`${R.predicted} m`,rW[1]),rCell(`${R.predicted} m`,rW[2])),
+    tblRow(rCell('予測値達成率',rW[0],'F4F8FC'),rCell(`${R.pct1}%`,rW[1]),rCell(`${R.pct2}%`,rW[2])),
+    tblRow(rCell('推定VO₂',rW[0],'F4F8FC'),rCell(`${R.vo2_1} mL/kg/min`,rW[1]),rCell(`${R.vo2_2} mL/kg/min`,rW[2])),
+    tblRow(rCell('推定METs',rW[0],'F4F8FC'),rCell(`約 ${R.mets1} METs`,rW[1],'F4F8FC',true,'5A7A9A'),rCell(`約 ${R.mets2} METs`,rW[2],'E8F4EC',true,'1A7A45'))
+  ],rW));
+  parts.push(para(run('※予測値:Enright & Sherrill式(1998)　推定VO₂:Cahalin式(1996)',{sz:13,color:'888888'}),{before:20,after:0}));
+  parts.push(spacer(80));
+
+  parts.push(secHdr('日常生活・職場での活動目安(AT判定)'));
+  const aW=[3600,1100,1200,1400,CW-3600-1100-1200-1400];
+  const aRows=occData.actRows.map((r,i)=>{
+    const j=getJudge(r[1],atMets);
+    const bg=i%2===0?'FFFFFF':'F4F8FC';
+    return tblRow(
+      cell(para(run(r[0],{sz:15}),{before:0,after:0}),aW[0],{fill:bg,...sm}),
+      cell(para(run(`${r[1]} METs`,{sz:15,bold:true}),{before:0,after:0,align:'center'}),aW[1],{fill:bg,...sm}),
+      cell(para(run(j.badge,{sz:15,bold:true,color:j.bCol}),{before:0,after:0,align:'center'}),aW[2],{fill:j.bBg,...sm}),
+      cell(para(run(r[2]?`最大${r[2]}分`:'—',{sz:14}),{before:0,after:0,align:'center'}),aW[3],{fill:bg,...sm}),
+      cell(para(run(r[3],{sz:14}),{before:0,after:0}),aW[4],{fill:bg,...sm})
+    );
+  });
+  parts.push(tbl([tblRow(hdrCell('活動内容',aW[0]),hdrCell('METs上限',aW[1]),hdrCell('AT判定',aW[2]),hdrCell('最大持続',aW[3]),hdrCell('指導ポイント',aW[4])),...aRows],aW));
+  parts.push(spacer(60));
+
+  // ★Word: 選択活動テーブル(区分列なし・3列構成)
+  if(selectedActivities&&selectedActivities.length>0){
+    parts.push(secHdr('登録済み活動のAT判定','2C5F8A'));
+    const sW=[5400,1600,1800];
+    const sRows=selectedActivities.map((s,i)=>{
+      const j=getJudge(s.mets,atMets);
+      const bg=i%2===0?'FFFFFF':'F4F8FC';
+      return tblRow(
+        cell(para(run(s.label,{sz:15}),{before:0,after:0}),sW[0],{fill:bg,...sm}),
+        cell(para(run(`${s.mets} METs`,{sz:15,bold:true}),{before:0,after:0,align:'center'}),sW[1],{fill:bg,...sm}),
+        cell(para(run(j.badge,{sz:15,bold:true,color:j.bCol}),{before:0,after:0,align:'center'}),sW[2],{fill:j.bBg,...sm})
+      );
+    });
+    parts.push(tbl([tblRow(hdrCell2('活動内容',sW[0]),hdrCell2('参考METs',sW[1]),hdrCell2('AT判定',sW[2])),...sRows],sW));
+    parts.push(spacer(60));
+  }
+
+  parts.push(secHdr(`${occLabel} の注意点 ／ 日常生活アドバイス`));
+  const col1W=Math.floor(CW*0.48),col2W=CW-col1W;
+  const notesXml=occData.notes.map(n=>para(run(n,{sz:16,color:'5A3A00'}),{before:28,after:28,bullet:true})).join('');
+  const advL=para(run(occData.sectionTitle,{sz:17,bold:true,color:'B05E00'}),{before:0,after:50})+notesXml;
+  const advR=para(run('✅ 日常生活でのアドバイス',{sz:17,bold:true,color:'1A7A45'}),{before:0,after:30})
+    +para(run('積極的に行ってよい活動:',{sz:15,bold:true,color:'1A7A45'}),{before:0,after:20})
+    +['ゆっくりした散歩・平地ウォーキング','軽いストレッチ・体操','買い物・家事(急がない範囲で)','自転車(平地・ゆっくり)'].map(t=>para(run(t,{sz:16,color:'1A3A20'}),{before:28,after:28,bullet:true})).join('')
+    +para(run('運動強度の目安(Borg指数):',{sz:15,bold:true,color:'1A7A45'}),{before:50,after:20})
+    +['Borg 3〜4(楽〜ややつらい) → OK','Borg 5以上(ややつらい〜) → 強度を下げる','「歌えるくらいの息」が目安'].map(t=>para(run(t,{sz:16,color:'1A3A20'}),{before:28,after:28,bullet:true})).join('');
+  parts.push(tbl([tblRow(cell(advL,col1W,{fill:'FFF4E5',borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:['E07B00',12],right:['FFFFFF',0]},...std}),cell(advR,col2W,{fill:'E8F4EC',borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:['2D9E5C',12],right:['AAAAAA',4]},...std}))],[col1W,col2W]));
+  parts.push(spacer(80));
+
+  parts.push(secHdr('こんな症状が出たらすぐ休む','C0392B'));
+  const eW2=Math.floor(CW/4);
+  const emerCells=[['💓 動悸・胸の不快感','FDE0DE','C0392B'],['😮 強い息切れ・めまい','FDE0DE','C0392B'],['💢 胸痛・冷や汗','FDE0DE','C0392B'],['🛑 すぐ活動を止め 座って安静に','FFF4E5','E07B00']].map(([t,fill,bCol])=>cell(para(run(t,{sz:15,bold:true,color:bCol}),{before:40,after:40,align:'center'}),eW2,{fill,borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:[bCol,12],right:['AAAAAA',4]},...sm}));
+  parts.push(tbl([tblRow(...emerCells)],[eW2,eW2,eW2,eW2]));
+  parts.push(spacer(50));
+  parts.push(tbl([tblRow(cell(para(run('🏥 こんなときはすぐに受診してください',{sz:18,bold:true,color:'C0392B'}),{before:0,after:40})+para(run('胸の痛み・締め付け感が続く　／　安静にしても動悸・息切れが治まらない　／　足のむくみが急に強くなった　／　体重が2〜3日で2kg以上増えた',{sz:16}),{before:0,after:0}),CW,{fill:'FDE0DE',borders:{top:['AAAAAA',4],bottom:['AAAAAA',4],left:['C0392B',16],right:['AAAAAA',4]},...std}))],[CW]));
+  parts.push(spacer(50));
+  parts.push(para(run('※本資料は6分間歩行試験の結果にもとづく個別指導資料です。計算値はすべて推定値であり、臨床判断を補助するものです。　　担当療法士:＿＿＿＿＿＿＿＿＿',{sz:14,color:'7A7A7A'}),{before:70,after:0}));
+  return`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">\n<w:body>${parts.join('')}\n<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="720" w:right="900" w:bottom="720" w:left="900"/></w:sectPr>\n</w:body></w:document>`;
+}
+
+const DOCX_STATIC={'[Content_Types].xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>`,'_rels/.rels':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`,'word/_rels/document.xml.rels':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/></Relationships>`,'word/styles.xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="HGP丸ゴシックM-PRO" w:hAnsi="HGP丸ゴシックM-PRO" w:cs="HGP丸ゴシックM-PRO" w:eastAsia="HGP丸ゴシックM-PRO"/><w:sz w:val="18"/><w:szCs w:val="18"/><w:color w:val="000000"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:before="40" w:after="40"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:styleId="Normal" w:default="1"><w:name w:val="Normal"/><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:style><w:style w:type="table" w:styleId="TableGrid" w:default="1"><w:name w:val="Table Grid"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:left w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:right w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="AAAAAA"/></w:tblBorders><w:tblCellMar><w:top w:w="50" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="50" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr></w:style></w:styles>`,'word/numbering.xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="0"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="・"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="360" w:hanging="200"/></w:pPr></w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>`,'word/settings.xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:defaultTabStop w:val="720"/></w:settings>`};
+
+function generateDocx(){
+  if(!calcResults.dist1){alert('先に計算を実行してください。');return;}
+  const btn=event.target;
+  btn.disabled=true;
+  document.getElementById('loadingMsg').classList.add('visible');
+  setTimeout(()=>{
+    try{
+      const R=calcResults;
+      const occKey=R.occupation||'retired';
+      const occData=OCCUPATION_DATA[occKey];
+      const occLabel=occKey==='custom'?(R.customOcc||'その他'):occData.label;
+      const docXml=buildDocumentXml(R,occData,occLabel,selectedActivities);
+      const files={...DOCX_STATIC,'word/document.xml':docXml};
+      const bytes=buildDocx(files);
+      const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;
+      const nameStr=R.name && R.name.trim()!=='　　　　　　　　'?`_${R.name.replace(/[\/\\\?%*:|"<>]/g,'')}`:'';
+      a.download=`6MWT指導資料${nameStr}.docx`;
+      a.style.display='none';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(url),2000);
+    }catch(e){alert('生成エラー: '+e.message);console.error(e);}
+    finally{btn.disabled=false;document.getElementById('loadingMsg').classList.remove('visible');}
+  },30);
+}
+
+// ============================================
+// PDF生成
+// ============================================
+function generatePdf(){
+  if(!calcResults.dist1){alert('先に計算を実行してください。');return;}
+  const btn=event.target;
+  btn.disabled=true;
+  const originalText=btn.textContent;
+  btn.textContent='⏳ PDF生成中...';
+
+  const panel=document.getElementById('resultsPanel');
+  const btnRows=panel.querySelectorAll('.btn-row');
+  btnRows.forEach(r=>r.style.display='none');
+  const loading=document.getElementById('loadingMsg');
+  if(loading)loading.style.display='none';
+
+  const nameStr=document.getElementById('name').value?`_${document.getElementById('name').value.replace(/[\/\\\?%*:|"<>]/g,'')}`:'';
+  const dateStr=new Date().toISOString().slice(0,10);
+  const filename=`6MWT指導資料${nameStr}_${dateStr}.pdf`;
+
+  const opt={
+    margin:[10,10,10,10],
+    filename:filename,
+    image:{type:'jpeg',quality:0.95},
+    html2canvas:{scale:2,useCORS:true,logging:false},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['avoid-all','css','legacy']}
+  };
+
+  html2pdf().set(opt).from(panel).save().then(()=>{
+    btnRows.forEach(r=>r.style.display='');
+    btn.disabled=false;
+    btn.textContent=originalText;
+  }).catch(err=>{
+    alert('PDF生成エラー: '+err.message);
+    btnRows.forEach(r=>r.style.display='');
+    btn.disabled=false;
+    btn.textContent=originalText;
+  });
+}
+
+// ============================================
+// 初期化
+// ============================================
+window.addEventListener('DOMContentLoaded', () => {
+  loadInputsFromStorage();
+  attachAutoSave();
+  initActivityUI();
+});
+</script>
+</body>
+</html>
